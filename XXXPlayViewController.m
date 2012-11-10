@@ -6,15 +6,10 @@
 //  Copyright (c) 2012年 FreeBox. All rights reserved.
 //
 
-//NSString *pathStr=@"file:///Users/user/Documents/Downton.Abbey.0306.HDTVx264.mp4"
-
-///Users/user/Desktop/APP4/APP4/subtitleFile
 
 #import "XXXPlayViewController.h"
 
-
 @interface XXXPlayViewController ()
-- (void)setURL:(NSURL *)URL;
 - (void)showStopButton;
 - (void)showPlayButton;
 - (void)syncPlayPauseButtons;
@@ -23,6 +18,8 @@
 - (void)initSubtitle;
 - (void)syncSubtitle;
 - (BOOL)isScrubbing;
+
+-(void)initImageExtractionLayer;
 
 @end
 
@@ -49,22 +46,10 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 @synthesize displayTimeLabel;
 @synthesize displayEngLabel;
 @synthesize displayChiLabel;
+@synthesize imageExtractionLayer;
 @synthesize mURL, mPlayer, mPlayerItem, mPlayView;
+@synthesize mAsset;
 
-
--(void)setURL:(NSURL *)URL{
-    if (mURL!=URL) {
-        mURL=[URL copy];
-        //mURL=[NSURL URLWithString:@"file:///Users/user/Documents/Downton.Abbey.0306.HDTVx264.mp4"];
-        AVURLAsset *asset=[AVURLAsset URLAssetWithURL:mURL options:nil];
-        NSArray *requestedKeys=[NSArray arrayWithObject:@"tracks"];
-        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self prepareToPlayAsset:asset withKeys:requestedKeys];
-            });
-        }];
-    }
-}
 
 
 - (IBAction)Play:(id)sender {
@@ -196,6 +181,8 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     }
 }
 
+
+
 - (BOOL)isScrubbing{
     return mRestoreAfterScrubbingRate !=0.f;
 }
@@ -208,97 +195,139 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     self.mScrubber.enabled=NO;
 }
 
+#pragma mark - subtitle
 -(void)initSubtitle{
-    self.displayEngLabel.text=@"";
-    self.displayChiLabel.text=@"";
     __block typeof(self) bself = self;
     mTimeObserverForSubtitle=[mPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 600) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-        
-        XXXSubtitleSync *subtitleSync=[XXXSubtitleSync new];
-        [subtitleSync initSubtitle];
-        CMTime currentTime=[bself.mPlayer currentTime];
-        [bself.displayTimeLabel setText:[NSString stringWithFormat:@"%@",[bself getTimeStr:currentTime]]];
-
-            for (int i=0; i<[subtitleSync.timelineArray count]; i++) {
-                CMTime timeBegin=[subtitleSync getCMTimeBegin:[subtitleSync.timelineArray objectAtIndex:i]];
-                CMTime timeEnd=[subtitleSync getCMTimeEnd:[subtitleSync.timelineArray objectAtIndex:i]];
-          
-                if ((CMTIME_COMPARE_INLINE(currentTime, >=, timeBegin)) && (CMTIME_COMPARE_INLINE(currentTime, <=, timeEnd)))
-                {
-                    
-                    self.displayEngLabel.text=[subtitleSync.subtitleEngArray objectAtIndex:i];
-                    self.displayChiLabel.text=[subtitleSync.subtitleChiArray objectAtIndex:i];
-                }
-
-        
-                
-                
-            }
-        //            if ((CMTIME_COMPARE_INLINE(currentTime, >=, timeBegin)) && (CMTIME_COMPARE_INLINE(currentTime, <=, timeEnd)))
-        //            {
-        //                self.displayEngLabel.text=[subtitleSync.subtitleEngArray objectAtIndex:i];
-        //                self.displayChiLabel.text=[subtitleSync.subtitleChiArray objectAtIndex:i];
-        //            }else
-        //            {
-        //                self.displayEngLabel.text=@"00";
-        //                self.displayChiLabel.text=@"01";
-        //            }
-        
-        
-        
+        [bself syncSubtitle];
     }];
 }
 
 - (void)syncSubtitle{
-    XXXSubtitleSync *subtitleSync=[XXXSubtitleSync new];
-    [subtitleSync initSubtitle];
-    CMTime currentTime=[mPlayer currentTime];
-    [displayTimeLabel setText:[NSString stringWithFormat:@"%@",[self getTimeStr:currentTime]]];
-    for (int i=0; i<[subtitleSync.timelineArray count]; i++) {
-        CMTime timeBegin=[subtitleSync getCMTimeBegin:[subtitleSync.timelineArray objectAtIndex:i]];
-        CMTime timeEnd=[subtitleSync getCMTimeEnd:[subtitleSync.timelineArray objectAtIndex:i]];
-        
-        if ((CMTIME_COMPARE_INLINE(currentTime, >=, timeBegin)) && (CMTIME_COMPARE_INLINE(currentTime, <=, timeEnd)))
-        {
-            self.displayEngLabel.text=[subtitleSync.subtitleEngArray objectAtIndex:i];
-            self.displayChiLabel.text=[subtitleSync.subtitleChiArray objectAtIndex:i];
-        }
-//        else
-//        {
-//            self.displayEngLabel.text=@"00";
-//            self.displayChiLabel.text=@"01";
-//        }
-        
-    }
+    SubtitlePackage *subtitlePackage=[[SubtitlePackage alloc]initWithFile:@"/Users/user/Desktop/APP4new/APP4/subtitleFile"];
+    CMTime currentTime=[self.mPlayer currentTime];
     
+    self.displayTimeLabel.text=[NSString stringWithFormat:@"%@",[self getTimeStr:currentTime]];
+    
+    NSUInteger index=[subtitlePackage indexOfProperSubtitleWithGivenCMTime:currentTime];
+    IndividualSubtitle *currentSubtitle=[subtitlePackage.subtitleItems objectAtIndex:index];
+    self.displayEngLabel.text=currentSubtitle.EngSubtitle;
+    self.displayChiLabel.text=currentSubtitle.ChiSubtitle;
 }
 
 - (NSString *)getTimeStr:(CMTime)time{
     int timeInSecond=(int)CMTimeGetSeconds(time);
+    
     NSString *hour;
-    if (timeInSecond/3600>0) {
+    if (timeInSecond/3600>0)
         hour=[NSString stringWithFormat:@"%d:",timeInSecond/3600];
-    }else{
+    else
         hour=@" ";
-    }
+    
     NSString *min=[NSString stringWithFormat:@"%d:",timeInSecond%3600/60];
+    
     NSString *sec;
-    if (timeInSecond%3600%60<10) {
+    if (timeInSecond%3600%60<10)
         sec=[NSString stringWithFormat:@"0%d",timeInSecond%3600%60];
-    }else{
+    else
         sec=[NSString stringWithFormat:@"%d",timeInSecond%3600%60];
-    }
+    
     NSString *timeStr=[[hour stringByAppendingString:min] stringByAppendingString:sec];
     return timeStr;
 }
 
+#pragma mark - extractImage
+
+-(void)initImageExtractionLayer{
+    [self.mPlayView addSubview:self.imageExtractionLayer];
+}
+
+- (IBAction)extractImages:(id)sender {
+    self.imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:mAsset];
+    CMTime currentTime=[self.mPlayer currentTime];
+    NSError *error;
+    
+    CGImageRef image=[self.imageGenerator copyCGImageAtTime:currentTime actualTime:NULL error:&error];
+    UIImage *imageToSave=[self resizeImage:image toWidth:320 height:200];
+    NSData *imageData=[NSData dataWithData:UIImageJPEGRepresentation(imageToSave, 1)];
+    
+    //NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    //NSString *documentDirectory= [paths objectAtIndex:0];
+    //NSString *savePath=[documentDirectory stringByAppendingString:[self getImageSaveName:currentTime]];
+    
+    NSString *path=@"/Users/user/Desktop/APP4/saveImages/";
+    NSString *savePath=[path stringByAppendingString:[self getImageSaveName:currentTime]];
+    
+    [imageData writeToFile:savePath atomically:YES];
+}
+
+- (UIImage*)resizeImage:(CGImageRef)image toWidth:(NSInteger)width height:(NSInteger)height
+{
+    CGSize size = CGSizeMake(width, height);
+    UIGraphicsBeginImageContextWithOptions(size, YES, 0);
+
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextTranslateCTM(context, 0.0, height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    
+    CGContextSetBlendMode(context, kCGBlendModeCopy);
+    CGContextDrawImage(context, CGRectMake(0.0, 0.0, width, height), image);
+    
+    UIImage *imageOut = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return imageOut;
+}
+
+
+- (NSString *)getImageSaveName:(CMTime)time {
+    float timeInSecond=CMTimeGetSeconds(time);
+    
+    NSString *hour;
+    if (timeInSecond/3600>0) {
+        hour=[NSString stringWithFormat:@"0%d-",(int)timeInSecond/3600];
+    }
+    else{
+        hour=@"00-";
+    }
+    
+    NSString *min;
+    if ((int)timeInSecond%3600/60<10) {
+        min=[NSString stringWithFormat:@"0%d-",(int)timeInSecond%3600/60];
+    }else{
+        min=[NSString stringWithFormat:@"%d-",(int)timeInSecond%3600/60];        
+    }
+    
+    
+    NSString *sec;
+    if ((int)timeInSecond%3600%60<10) {
+        sec=[NSString stringWithFormat:@"0%d-",(int)timeInSecond%3600%60];
+    }else{
+        sec=[NSString stringWithFormat:@"%d-",(int)timeInSecond%3600%60];
+    }
+    
+    float fract=(timeInSecond-(int)timeInSecond)*100;
+    NSString *fra;
+    if (fract<10) {
+        fra=[NSString stringWithFormat:@"0%d",(int)fract];
+    }else{
+        fra=[NSString stringWithFormat:@"%d",(int)fract];
+    }
+    
+    
+    NSString *imageSaveName=[[[[hour stringByAppendingString:min] stringByAppendingString:sec] stringByAppendingString:fra] stringByAppendingString:@".jpeg"];
+    return imageSaveName;
+}
+
+
+#pragma mark - extractAudio
 
 
 
 
-
-
-
+#pragma mark - viewLoad
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -313,14 +342,17 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 
 - (void)viewDidLoad
 {
-    mURL=[NSURL URLWithString:@"file:///Users/apple/Desktop/Downton.Abbey.0306.HDTVx264.mp4"];
-    AVURLAsset *asset=[AVURLAsset URLAssetWithURL:mURL options:nil];
+    
+    mURL=[NSURL URLWithString:@"file:///Users/user/Documents/Downton.Abbey.0306.HDTVx264.mp4"];
+    mAsset=[AVURLAsset URLAssetWithURL:mURL options:nil];
     NSArray *requestedKeys=[NSArray arrayWithObject:@"tracks"];
-    [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
+    [mAsset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self prepareToPlayAsset:asset withKeys:requestedKeys];
+            [self prepareToPlayAsset:mAsset withKeys:requestedKeys];
         });
     }];
+    
+
     
 
     
@@ -349,6 +381,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [self setDisplayEngLabel:nil];
     [self setDisplayChiLabel:nil];
     [self setDisplayTimeLabel:nil];
+    [self setImageExtractionLayer:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -376,6 +409,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         }
     }
 }
+
 
 @end
 
@@ -490,6 +524,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
                 [self initSubtitle];
                 [self enablePlayerButtons];
                 [self enableScrubber];
+                [self initImageExtractionLayer];
             }
                 break;
                 

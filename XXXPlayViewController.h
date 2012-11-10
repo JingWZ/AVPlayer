@@ -10,13 +10,15 @@
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
 #import "XXXPlayView.h"
-#import "XXXSubtitleSync.h"
+#import "SubtitlePackage.h"
 
 @interface XXXPlayViewController : UIViewController{
     
     NSURL *mURL;
     AVPlayer *mPlayer;
     AVPlayerItem *mPlayerItem;
+    AVURLAsset *mAsset;
+    
     
     float mRestoreAfterScrubbingRate;
     BOOL seekToZeroBeforePlay;
@@ -29,6 +31,7 @@
 @property (retain, nonatomic) NSURL *mURL;
 @property (retain, nonatomic) AVPlayer *mPlayer;
 @property (retain, nonatomic) AVPlayerItem *mPlayerItem;
+@property (retain, nonatomic) AVURLAsset *mAsset;
 @property (strong, nonatomic) IBOutlet XXXPlayView *mPlayView;
 
 @property (strong, nonatomic) IBOutlet UIToolbar *mToolbar;
@@ -41,11 +44,19 @@
 @property (strong, nonatomic) IBOutlet UILabel *displayChiLabel;
 
 
+
+@property (strong, nonatomic) IBOutlet UIControl *imageExtractionLayer;
+@property (strong) AVAssetImageGenerator *imageGenerator;
+
+
 - (IBAction)Play:(id)sender;
 - (IBAction)Pause:(id)sender;
 - (IBAction)Scrub:(id)sender;
 - (IBAction)beginScrubbing:(id)sender;
 - (IBAction)endScrubbing:(id)sender;
+- (IBAction)extractImages:(id)sender;
+
+
 
 @end
 

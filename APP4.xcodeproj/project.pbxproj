@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18AE64F81644029A00209ADD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18AE64F71644029A00209ADD /* Default-568h@2x.png */; };
 		CE012805163A61B6002C02B6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE012804163A61B6002C02B6 /* CoreMedia.framework */; };
-		CECC05F01640E0F400A86CBD /* XXXSubtitleSync.m in Sources */ = {isa = PBXBuildFile; fileRef = CECC05EF1640E0F400A86CBD /* XXXSubtitleSync.m */; };
 		CED998B6163FAF84003B585C /* subtitleFile in Resources */ = {isa = PBXBuildFile; fileRef = CED998B5163FAF84003B585C /* subtitleFile */; };
 		CEDD6E7216390258000F3D6D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7116390258000F3D6D /* UIKit.framework */; };
 		CEDD6E7416390258000F3D6D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7316390258000F3D6D /* Foundation.framework */; };
@@ -23,13 +21,12 @@
 		CEDD6E92163902D3000F3D6D /* XXXPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDD6E90163902D3000F3D6D /* XXXPlayViewController.xib */; };
 		CEDD6E9816390331000F3D6D /* XXXPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E9716390331000F3D6D /* XXXPlayView.m */; };
 		CEDD6E9A1639037E000F3D6D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E991639037E000F3D6D /* AVFoundation.framework */; };
+		CEDEA8D5164B49A100416965 /* XXXExtractAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDEA8D4164B49A100416965 /* XXXExtractAudio.m */; };
+		CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		18AE64F71644029A00209ADD /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CE012804163A61B6002C02B6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		CECC05EE1640E0F400A86CBD /* XXXSubtitleSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXXSubtitleSync.h; sourceTree = "<group>"; };
-		CECC05EF1640E0F400A86CBD /* XXXSubtitleSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXXSubtitleSync.m; sourceTree = "<group>"; };
 		CED998B5163FAF84003B585C /* subtitleFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = subtitleFile; sourceTree = "<group>"; };
 		CEDD6E6D16390258000F3D6D /* APP4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APP4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDD6E7116390258000F3D6D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -50,6 +47,10 @@
 		CEDD6E9616390331000F3D6D /* XXXPlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXXPlayView.h; sourceTree = "<group>"; };
 		CEDD6E9716390331000F3D6D /* XXXPlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXXPlayView.m; sourceTree = "<group>"; };
 		CEDD6E991639037E000F3D6D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		CEDEA8D3164B49A100416965 /* XXXExtractAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXXExtractAudio.h; sourceTree = "<group>"; };
+		CEDEA8D4164B49A100416965 /* XXXExtractAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXXExtractAudio.m; sourceTree = "<group>"; };
+		CEFB9254164CE8A700BFADEC /* SubtitlePackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubtitlePackage.h; sourceTree = "<group>"; };
+		CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubtitlePackage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +72,6 @@
 		CEDD6E6216390258000F3D6D = {
 			isa = PBXGroup;
 			children = (
-				18AE64F71644029A00209ADD /* Default-568h@2x.png */,
 				CEDD6E7716390258000F3D6D /* APP4 */,
 				CEDD6E7016390258000F3D6D /* Frameworks */,
 				CEDD6E6E16390258000F3D6D /* Products */,
@@ -108,10 +108,12 @@
 				CEDD6E8616390258000F3D6D /* XXXViewController.xib */,
 				CEDD6E8E163902D3000F3D6D /* XXXPlayViewController.h */,
 				CEDD6E8F163902D3000F3D6D /* XXXPlayViewController.m */,
-				CECC05EE1640E0F400A86CBD /* XXXSubtitleSync.h */,
-				CECC05EF1640E0F400A86CBD /* XXXSubtitleSync.m */,
+				CEDEA8D3164B49A100416965 /* XXXExtractAudio.h */,
+				CEDEA8D4164B49A100416965 /* XXXExtractAudio.m */,
 				CEDD6E9616390331000F3D6D /* XXXPlayView.h */,
 				CEDD6E9716390331000F3D6D /* XXXPlayView.m */,
+				CEFB9254164CE8A700BFADEC /* SubtitlePackage.h */,
+				CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */,
 				CEDD6E90163902D3000F3D6D /* XXXPlayViewController.xib */,
 				CEDD6E7816390258000F3D6D /* Supporting Files */,
 			);
@@ -186,7 +188,6 @@
 				CEDD6E8816390258000F3D6D /* XXXViewController.xib in Resources */,
 				CEDD6E92163902D3000F3D6D /* XXXPlayViewController.xib in Resources */,
 				CED998B6163FAF84003B585C /* subtitleFile in Resources */,
-				18AE64F81644029A00209ADD /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,7 +203,8 @@
 				CEDD6E8516390258000F3D6D /* XXXViewController.m in Sources */,
 				CEDD6E91163902D3000F3D6D /* XXXPlayViewController.m in Sources */,
 				CEDD6E9816390331000F3D6D /* XXXPlayView.m in Sources */,
-				CECC05F01640E0F400A86CBD /* XXXSubtitleSync.m in Sources */,
+				CEDEA8D5164B49A100416965 /* XXXExtractAudio.m in Sources */,
+				CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
