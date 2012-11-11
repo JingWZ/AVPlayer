@@ -18,6 +18,7 @@
     AVPlayer *mPlayer;
     AVPlayerItem *mPlayerItem;
     AVURLAsset *mAsset;
+    SubtitlePackage *mSubtitlePackage;
     
     
     float mRestoreAfterScrubbingRate;
@@ -32,6 +33,8 @@
 @property (retain, nonatomic) AVPlayer *mPlayer;
 @property (retain, nonatomic) AVPlayerItem *mPlayerItem;
 @property (retain, nonatomic) AVURLAsset *mAsset;
+@property (retain) SubtitlePackage *mSubtitlePackage;
+
 @property (strong, nonatomic) IBOutlet XXXPlayView *mPlayView;
 
 @property (strong, nonatomic) IBOutlet UIToolbar *mToolbar;

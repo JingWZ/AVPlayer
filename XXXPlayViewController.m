@@ -49,6 +49,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 @synthesize imageExtractionLayer;
 @synthesize mURL, mPlayer, mPlayerItem, mPlayView;
 @synthesize mAsset;
+@synthesize mSubtitlePackage;
 
 
 
@@ -204,13 +205,13 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 - (void)syncSubtitle{
-    SubtitlePackage *subtitlePackage=[[SubtitlePackage alloc]initWithFile:@"/Users/user/Desktop/APP4new/APP4/subtitleFile"];
+    mSubtitlePackage=[[SubtitlePackage alloc]initWithFile:@"/Users/apple/Desktop/DowntonSubtitle0306"];
     CMTime currentTime=[self.mPlayer currentTime];
     
     self.displayTimeLabel.text=[NSString stringWithFormat:@"%@",[self getTimeStr:currentTime]];
     
-    NSUInteger index=[subtitlePackage indexOfProperSubtitleWithGivenCMTime:currentTime];
-    IndividualSubtitle *currentSubtitle=[subtitlePackage.subtitleItems objectAtIndex:index];
+    NSUInteger index=[self.mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:currentTime];
+    IndividualSubtitle *currentSubtitle=[self.mSubtitlePackage.subtitleItems objectAtIndex:index];
     self.displayEngLabel.text=currentSubtitle.EngSubtitle;
     self.displayChiLabel.text=currentSubtitle.ChiSubtitle;
 }
@@ -324,6 +325,9 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 
 #pragma mark - extractAudio
 
+- (void)extractAudios:(CMTime)time{
+    
+}
 
 
 
@@ -343,7 +347,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 - (void)viewDidLoad
 {
     
-    mURL=[NSURL URLWithString:@"file:///Users/user/Documents/Downton.Abbey.0306.HDTVx264.mp4"];
+    mURL=[NSURL URLWithString:@"file:///Users/apple/Desktop/Downton.Abbey.0306.HDTVx264.mp4"];
     mAsset=[AVURLAsset URLAssetWithURL:mURL options:nil];
     NSArray *requestedKeys=[NSArray arrayWithObject:@"tracks"];
     [mAsset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		CE012805163A61B6002C02B6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE012804163A61B6002C02B6 /* CoreMedia.framework */; };
-		CED998B6163FAF84003B585C /* subtitleFile in Resources */ = {isa = PBXBuildFile; fileRef = CED998B5163FAF84003B585C /* subtitleFile */; };
 		CEDD6E7216390258000F3D6D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7116390258000F3D6D /* UIKit.framework */; };
 		CEDD6E7416390258000F3D6D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7316390258000F3D6D /* Foundation.framework */; };
 		CEDD6E7616390258000F3D6D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7516390258000F3D6D /* CoreGraphics.framework */; };
@@ -27,7 +26,6 @@
 
 /* Begin PBXFileReference section */
 		CE012804163A61B6002C02B6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		CED998B5163FAF84003B585C /* subtitleFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = subtitleFile; sourceTree = "<group>"; };
 		CEDD6E6D16390258000F3D6D /* APP4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APP4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDD6E7116390258000F3D6D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CEDD6E7316390258000F3D6D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -126,7 +124,6 @@
 				CEDD6E7916390258000F3D6D /* APP4-Info.plist */,
 				CEDD6E7A16390258000F3D6D /* InfoPlist.strings */,
 				CEDD6E7D16390258000F3D6D /* main.m */,
-				CED998B5163FAF84003B585C /* subtitleFile */,
 				CEDD6E7F16390258000F3D6D /* APP4-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -187,7 +184,6 @@
 				CEDD6E7C16390258000F3D6D /* InfoPlist.strings in Resources */,
 				CEDD6E8816390258000F3D6D /* XXXViewController.xib in Resources */,
 				CEDD6E92163902D3000F3D6D /* XXXPlayViewController.xib in Resources */,
-				CED998B6163FAF84003B585C /* subtitleFile in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
