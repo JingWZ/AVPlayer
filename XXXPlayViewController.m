@@ -49,7 +49,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 @synthesize imageExtractionLayer;
 @synthesize mURL, mPlayer, mPlayerItem, mPlayView;
 @synthesize mAsset;
-@synthesize mSubtitlePackage;
+@synthesize mSubtitlePackage, mAudiosPackage, mImagesPackage;
 
 
 
@@ -205,7 +205,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 - (void)syncSubtitle{
-    mSubtitlePackage=[[SubtitlePackage alloc]initWithFile:@"/Users/apple/Desktop/DowntonSubtitle0306"];
+
     CMTime currentTime=[self.mPlayer currentTime];
     
     self.displayTimeLabel.text=[NSString stringWithFormat:@"%@",[self getTimeStr:currentTime]];
@@ -237,96 +237,24 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     return timeStr;
 }
 
-#pragma mark - extractImage
+#pragma mark - extractImageAndAudio
 
 -(void)initImageExtractionLayer{
     [self.mPlayView addSubview:self.imageExtractionLayer];
 }
 
-- (IBAction)extractImages:(id)sender {
-    self.imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:mAsset];
+- (IBAction)extractImageAndAudio:(id)sender {
+    
     CMTime currentTime=[self.mPlayer currentTime];
-    NSError *error;
+    NSUInteger index=[self.mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:currentTime];
+    IndividualSubtitle *currentSubtitle=[self.mSubtitlePackage.subtitleItems objectAtIndex:index];
     
-    CGImageRef image=[self.imageGenerator copyCGImageAtTime:currentTime actualTime:NULL error:&error];
-    UIImage *imageToSave=[self resizeImage:image toWidth:320 height:200];
-    NSData *imageData=[NSData dataWithData:UIImageJPEGRepresentation(imageToSave, 1)];
+    //extract image
+    [self.mImagesPackage extractImagewithCMTime:currentTime andIndex:index];
     
-    //NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    //NSString *documentDirectory= [paths objectAtIndex:0];
-    //NSString *savePath=[documentDirectory stringByAppendingString:[self getImageSaveName:currentTime]];
-    
-    NSString *path=@"/Users/user/Desktop/APP4/saveImages/";
-    NSString *savePath=[path stringByAppendingString:[self getImageSaveName:currentTime]];
-    
-    [imageData writeToFile:savePath atomically:YES];
-}
+    //extract audio
+    [self.mAudiosPackage extractAudioWithStartTime:currentSubtitle.startTime endTime:currentSubtitle.endTime andIndex:currentSubtitle.index];
 
-- (UIImage*)resizeImage:(CGImageRef)image toWidth:(NSInteger)width height:(NSInteger)height
-{
-    CGSize size = CGSizeMake(width, height);
-    UIGraphicsBeginImageContextWithOptions(size, YES, 0);
-
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextTranslateCTM(context, 0.0, height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    
-    CGContextSetBlendMode(context, kCGBlendModeCopy);
-    CGContextDrawImage(context, CGRectMake(0.0, 0.0, width, height), image);
-    
-    UIImage *imageOut = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-    return imageOut;
-}
-
-
-- (NSString *)getImageSaveName:(CMTime)time {
-    float timeInSecond=CMTimeGetSeconds(time);
-    
-    NSString *hour;
-    if (timeInSecond/3600>0) {
-        hour=[NSString stringWithFormat:@"0%d-",(int)timeInSecond/3600];
-    }
-    else{
-        hour=@"00-";
-    }
-    
-    NSString *min;
-    if ((int)timeInSecond%3600/60<10) {
-        min=[NSString stringWithFormat:@"0%d-",(int)timeInSecond%3600/60];
-    }else{
-        min=[NSString stringWithFormat:@"%d-",(int)timeInSecond%3600/60];        
-    }
-    
-    
-    NSString *sec;
-    if ((int)timeInSecond%3600%60<10) {
-        sec=[NSString stringWithFormat:@"0%d-",(int)timeInSecond%3600%60];
-    }else{
-        sec=[NSString stringWithFormat:@"%d-",(int)timeInSecond%3600%60];
-    }
-    
-    float fract=(timeInSecond-(int)timeInSecond)*100;
-    NSString *fra;
-    if (fract<10) {
-        fra=[NSString stringWithFormat:@"0%d",(int)fract];
-    }else{
-        fra=[NSString stringWithFormat:@"%d",(int)fract];
-    }
-    
-    
-    NSString *imageSaveName=[[[[hour stringByAppendingString:min] stringByAppendingString:sec] stringByAppendingString:fra] stringByAppendingString:@".jpeg"];
-    return imageSaveName;
-}
-
-
-#pragma mark - extractAudio
-
-- (void)extractAudios:(CMTime)time{
-    
 }
 
 
@@ -348,7 +276,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 {
     
     mURL=[NSURL URLWithString:@"file:///Users/apple/Desktop/Downton.Abbey.0306.HDTVx264.mp4"];
-    mAsset=[AVURLAsset URLAssetWithURL:mURL options:nil];
+    self.mAsset=[AVURLAsset URLAssetWithURL:mURL options:nil];
     NSArray *requestedKeys=[NSArray arrayWithObject:@"tracks"];
     [mAsset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -369,6 +297,11 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [self syncScrubber];
     [self initSubtitle];
     [self syncSubtitle];
+    
+    self.mSubtitlePackage=[[SubtitlePackage alloc]initWithFile:@"/Users/apple/Desktop/DowntonSubtitle0306"];
+    self.mAudiosPackage=[[AudiosPackage alloc]initWithAsset:self.mAsset];
+    self.mImagesPackage=[[ImagesPackage alloc]initWithAsset:self.mAsset];
+    
     self.displayTimeLabel.text=@"";
     
     [super viewDidLoad];

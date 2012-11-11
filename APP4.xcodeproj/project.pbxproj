@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A288B164F4485001D8F5E /* ImagesPackage.m */; };
+		181A2894164F6157001D8F5E /* AudiosPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A2893164F6157001D8F5E /* AudiosPackage.m */; };
 		CE012805163A61B6002C02B6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE012804163A61B6002C02B6 /* CoreMedia.framework */; };
 		CEDD6E7216390258000F3D6D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7116390258000F3D6D /* UIKit.framework */; };
 		CEDD6E7416390258000F3D6D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7316390258000F3D6D /* Foundation.framework */; };
@@ -25,6 +27,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		181A288A164F4485001D8F5E /* ImagesPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagesPackage.h; sourceTree = "<group>"; };
+		181A288B164F4485001D8F5E /* ImagesPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagesPackage.m; sourceTree = "<group>"; };
+		181A2892164F6157001D8F5E /* AudiosPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudiosPackage.h; sourceTree = "<group>"; };
+		181A2893164F6157001D8F5E /* AudiosPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudiosPackage.m; sourceTree = "<group>"; };
 		CE012804163A61B6002C02B6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		CEDD6E6D16390258000F3D6D /* APP4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APP4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDD6E7116390258000F3D6D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -112,6 +118,10 @@
 				CEDD6E9716390331000F3D6D /* XXXPlayView.m */,
 				CEFB9254164CE8A700BFADEC /* SubtitlePackage.h */,
 				CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */,
+				181A288A164F4485001D8F5E /* ImagesPackage.h */,
+				181A288B164F4485001D8F5E /* ImagesPackage.m */,
+				181A2892164F6157001D8F5E /* AudiosPackage.h */,
+				181A2893164F6157001D8F5E /* AudiosPackage.m */,
 				CEDD6E90163902D3000F3D6D /* XXXPlayViewController.xib */,
 				CEDD6E7816390258000F3D6D /* Supporting Files */,
 			);
@@ -201,6 +211,8 @@
 				CEDD6E9816390331000F3D6D /* XXXPlayView.m in Sources */,
 				CEDEA8D5164B49A100416965 /* XXXExtractAudio.m in Sources */,
 				CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */,
+				181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */,
+				181A2894164F6157001D8F5E /* AudiosPackage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

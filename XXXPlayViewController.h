@@ -11,6 +11,8 @@
 #import <CoreMedia/CoreMedia.h>
 #import "XXXPlayView.h"
 #import "SubtitlePackage.h"
+#import "ImagesPackage.h"
+#import "AudiosPackage.h"
 
 @interface XXXPlayViewController : UIViewController{
     
@@ -19,6 +21,7 @@
     AVPlayerItem *mPlayerItem;
     AVURLAsset *mAsset;
     SubtitlePackage *mSubtitlePackage;
+    
     
     
     float mRestoreAfterScrubbingRate;
@@ -34,6 +37,8 @@
 @property (retain, nonatomic) AVPlayerItem *mPlayerItem;
 @property (retain, nonatomic) AVURLAsset *mAsset;
 @property (retain) SubtitlePackage *mSubtitlePackage;
+@property (retain) ImagesPackage *mImagesPackage;
+@property (retain) AudiosPackage *mAudiosPackage;
 
 @property (strong, nonatomic) IBOutlet XXXPlayView *mPlayView;
 
@@ -57,7 +62,7 @@
 - (IBAction)Scrub:(id)sender;
 - (IBAction)beginScrubbing:(id)sender;
 - (IBAction)endScrubbing:(id)sender;
-- (IBAction)extractImages:(id)sender;
+- (IBAction)extractImageAndAudio:(id)sender;
 
 
 

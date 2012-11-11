@@ -11,6 +11,7 @@
 
 //暂时不写NSCoding，等用的时候再说
 
+
 @interface IndividualSubtitle : NSObject
 
 @property (assign) NSUInteger index;
