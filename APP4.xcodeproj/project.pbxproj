@@ -10,6 +10,9 @@
 		181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A288B164F4485001D8F5E /* ImagesPackage.m */; };
 		181A2894164F6157001D8F5E /* AudiosPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A2893164F6157001D8F5E /* AudiosPackage.m */; };
 		CE012805163A61B6002C02B6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE012804163A61B6002C02B6 /* CoreMedia.framework */; };
+		CE263EF61650E643002E2AF4 /* GlossaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE263EF41650E643002E2AF4 /* GlossaryViewController.m */; };
+		CE263EF71650E643002E2AF4 /* GlossaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE263EF51650E643002E2AF4 /* GlossaryViewController.xib */; };
+		CE441FA8165379D100F88A8B /* GlossaryPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = CE441FA7165379D100F88A8B /* GlossaryPackage.m */; };
 		CEDD6E7216390258000F3D6D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7116390258000F3D6D /* UIKit.framework */; };
 		CEDD6E7416390258000F3D6D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7316390258000F3D6D /* Foundation.framework */; };
 		CEDD6E7616390258000F3D6D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7516390258000F3D6D /* CoreGraphics.framework */; };
@@ -22,7 +25,6 @@
 		CEDD6E92163902D3000F3D6D /* XXXPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDD6E90163902D3000F3D6D /* XXXPlayViewController.xib */; };
 		CEDD6E9816390331000F3D6D /* XXXPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E9716390331000F3D6D /* XXXPlayView.m */; };
 		CEDD6E9A1639037E000F3D6D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E991639037E000F3D6D /* AVFoundation.framework */; };
-		CEDEA8D5164B49A100416965 /* XXXExtractAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDEA8D4164B49A100416965 /* XXXExtractAudio.m */; };
 		CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +34,11 @@
 		181A2892164F6157001D8F5E /* AudiosPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudiosPackage.h; sourceTree = "<group>"; };
 		181A2893164F6157001D8F5E /* AudiosPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudiosPackage.m; sourceTree = "<group>"; };
 		CE012804163A61B6002C02B6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		CE263EF31650E643002E2AF4 /* GlossaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryViewController.h; sourceTree = "<group>"; };
+		CE263EF41650E643002E2AF4 /* GlossaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossaryViewController.m; sourceTree = "<group>"; };
+		CE263EF51650E643002E2AF4 /* GlossaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GlossaryViewController.xib; sourceTree = "<group>"; };
+		CE441FA6165379D100F88A8B /* GlossaryPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryPackage.h; sourceTree = "<group>"; };
+		CE441FA7165379D100F88A8B /* GlossaryPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossaryPackage.m; sourceTree = "<group>"; };
 		CEDD6E6D16390258000F3D6D /* APP4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APP4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDD6E7116390258000F3D6D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CEDD6E7316390258000F3D6D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -51,8 +58,6 @@
 		CEDD6E9616390331000F3D6D /* XXXPlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXXPlayView.h; sourceTree = "<group>"; };
 		CEDD6E9716390331000F3D6D /* XXXPlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXXPlayView.m; sourceTree = "<group>"; };
 		CEDD6E991639037E000F3D6D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		CEDEA8D3164B49A100416965 /* XXXExtractAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXXExtractAudio.h; sourceTree = "<group>"; };
-		CEDEA8D4164B49A100416965 /* XXXExtractAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXXExtractAudio.m; sourceTree = "<group>"; };
 		CEFB9254164CE8A700BFADEC /* SubtitlePackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubtitlePackage.h; sourceTree = "<group>"; };
 		CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubtitlePackage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -112,8 +117,10 @@
 				CEDD6E8616390258000F3D6D /* XXXViewController.xib */,
 				CEDD6E8E163902D3000F3D6D /* XXXPlayViewController.h */,
 				CEDD6E8F163902D3000F3D6D /* XXXPlayViewController.m */,
-				CEDEA8D3164B49A100416965 /* XXXExtractAudio.h */,
-				CEDEA8D4164B49A100416965 /* XXXExtractAudio.m */,
+				CEDD6E90163902D3000F3D6D /* XXXPlayViewController.xib */,
+				CE263EF31650E643002E2AF4 /* GlossaryViewController.h */,
+				CE263EF41650E643002E2AF4 /* GlossaryViewController.m */,
+				CE263EF51650E643002E2AF4 /* GlossaryViewController.xib */,
 				CEDD6E9616390331000F3D6D /* XXXPlayView.h */,
 				CEDD6E9716390331000F3D6D /* XXXPlayView.m */,
 				CEFB9254164CE8A700BFADEC /* SubtitlePackage.h */,
@@ -122,7 +129,8 @@
 				181A288B164F4485001D8F5E /* ImagesPackage.m */,
 				181A2892164F6157001D8F5E /* AudiosPackage.h */,
 				181A2893164F6157001D8F5E /* AudiosPackage.m */,
-				CEDD6E90163902D3000F3D6D /* XXXPlayViewController.xib */,
+				CE441FA6165379D100F88A8B /* GlossaryPackage.h */,
+				CE441FA7165379D100F88A8B /* GlossaryPackage.m */,
 				CEDD6E7816390258000F3D6D /* Supporting Files */,
 			);
 			path = APP4;
@@ -194,6 +202,7 @@
 				CEDD6E7C16390258000F3D6D /* InfoPlist.strings in Resources */,
 				CEDD6E8816390258000F3D6D /* XXXViewController.xib in Resources */,
 				CEDD6E92163902D3000F3D6D /* XXXPlayViewController.xib in Resources */,
+				CE263EF71650E643002E2AF4 /* GlossaryViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,10 +218,11 @@
 				CEDD6E8516390258000F3D6D /* XXXViewController.m in Sources */,
 				CEDD6E91163902D3000F3D6D /* XXXPlayViewController.m in Sources */,
 				CEDD6E9816390331000F3D6D /* XXXPlayView.m in Sources */,
-				CEDEA8D5164B49A100416965 /* XXXExtractAudio.m in Sources */,
 				CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */,
 				181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */,
 				181A2894164F6157001D8F5E /* AudiosPackage.m in Sources */,
+				CE263EF61650E643002E2AF4 /* GlossaryViewController.m in Sources */,
+				CE441FA8165379D100F88A8B /* GlossaryPackage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

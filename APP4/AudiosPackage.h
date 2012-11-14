@@ -10,19 +10,13 @@
 #import <CoreMedia/CoreMedia.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface IndividualAudio : NSObject
-
-@property (assign) NSUInteger index;
-@property (retain) AVMutableComposition *audioComposition;
-
-@end
-
 
 @interface AudiosPackage : NSObject
 
-@property NSMutableArray *audioItems;
-@property AVAssetTrack *audioTrack;
+@property AVAsset *asset;
 
-- (AudiosPackage *)initWithAsset:(AVAsset *)asset;
-- (void)extractAudioWithStartTime:(CMTime)startTime endTime:(CMTime)endTIme andIndex:(NSUInteger)index;
+- (AudiosPackage *)initWithAsset:(AVAsset *)theAsset;
+
+- (void)saveAudioWithRange:(CMTimeRange)range inPath:(NSString *)path;
+
 @end

@@ -8,6 +8,7 @@
 
 #import "XXXViewController.h"
 #import "XXXPlayViewController.h"
+#import "GlossaryViewController.h"
 
 
 @interface XXXViewController ()
@@ -16,6 +17,7 @@
 
 @implementation XXXViewController
 @synthesize playViewController;
+@synthesize glossaryViewController;
 
 - (void)viewDidLoad
 {
@@ -36,8 +38,16 @@
 
 - (IBAction)playPressed:(id)sender {
     self.playViewController=[[XXXPlayViewController alloc]initWithNibName:@"XXXPlayViewController" bundle:nil];
-    [self.view addSubview:playViewController.view];
+    [self.navigationController pushViewController:self.playViewController animated:YES];
+    [self.playViewController.navigationController setNavigationBarHidden:YES];
+    
 
+}
+
+- (IBAction)glossaryPredded:(id)sender {
+    self.glossaryViewController=[[GlossaryViewController alloc]initWithNibName:@"GlossaryViewController" bundle:nil];
+    [self.navigationController pushViewController:self.glossaryViewController animated:YES];
+    //[self.glossaryViewController.navigationController setNavigationBarHidden:YES];
 }
 
 

@@ -8,27 +8,22 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreMedia/CoreMedia.h>
+#import <AVFoundation/AVFoundation.h>
 
-//暂时不写NSCoding，等用的时候再说
 
-
-@interface IndividualSubtitle : NSObject
-
-@property (assign) NSUInteger index;
+@interface IndividualSubtitle : NSObject <NSCoding,NSCopying>
 @property (assign) CMTime startTime;
 @property (assign) CMTime endTime;
 @property (copy) NSString *EngSubtitle;
 @property (copy) NSString *ChiSubtitle;
-
 @end
 
 
-@interface SubtitlePackage : NSObject
-
+@interface SubtitlePackage : NSObject <NSCoding>
 @property (retain) NSMutableArray *subtitleItems;
 
 - (SubtitlePackage *)initWithFile:(NSString *)filePath;
 - (NSUInteger)indexOfProperSubtitleWithGivenCMTime:(CMTime)time;
-
+- (void)saveSubtitleWithTime:(CMTime)time inPath:(NSString *)path;
 
 @end

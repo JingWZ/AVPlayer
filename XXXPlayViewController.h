@@ -14,6 +14,15 @@
 #import "ImagesPackage.h"
 #import "AudiosPackage.h"
 
+//#define videoPath @"file:///Users/user/Documents/Downton.Abbey.0306.HDTVx264.mp4"
+//#define subtitlePath @"/Users/user/Documents/DowntonSubtitle0306"
+//#define savePath @"/Users/user/Documents/save/"
+
+#define videoPath @"file:///Users/apple/Desktop/Downton.Abbey.0306.HDTVx264.mp4"
+#define subtitlePath @"/Users/apple/Desktop/DowntonSubtitle0306"
+#define savePath @"/Users/apple/Desktop/save/"
+
+
 @interface XXXPlayViewController : UIViewController{
     
     NSURL *mURL;
@@ -37,8 +46,7 @@
 @property (retain, nonatomic) AVPlayerItem *mPlayerItem;
 @property (retain, nonatomic) AVURLAsset *mAsset;
 @property (retain) SubtitlePackage *mSubtitlePackage;
-@property (retain) ImagesPackage *mImagesPackage;
-@property (retain) AudiosPackage *mAudiosPackage;
+
 
 @property (strong, nonatomic) IBOutlet XXXPlayView *mPlayView;
 

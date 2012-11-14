@@ -16,4 +16,6 @@
 
 @property (strong, nonatomic) XXXViewController *viewController;
 
+@property (strong, nonatomic) UINavigationController *navigationController;
+
 @end

@@ -9,6 +9,8 @@
 
 #import "XXXPlayViewController.h"
 
+
+
 @interface XXXPlayViewController ()
 - (void)showStopButton;
 - (void)showPlayButton;
@@ -49,18 +51,20 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 @synthesize imageExtractionLayer;
 @synthesize mURL, mPlayer, mPlayerItem, mPlayView;
 @synthesize mAsset;
-@synthesize mSubtitlePackage, mAudiosPackage, mImagesPackage;
-
-
+@synthesize mSubtitlePackage;
 
 - (IBAction)Play:(id)sender {
+    
+    
     if (YES==seekToZeroBeforePlay) {
         seekToZeroBeforePlay=NO;
         [mPlayer seekToTime:kCMTimeZero];
     }
     [mPlayer play];
     [self showStopButton];
+    
 }
+
 
 - (IBAction)Pause:(id)sender {
     [mPlayer pause];
@@ -112,7 +116,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         interval=0.5f * duration/width;
     }
     
-
+    
     __block typeof(self) bself = self;
     mTimeObserver=[mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         [bself syncScrubber];
@@ -205,7 +209,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 - (void)syncSubtitle{
-
+    
     CMTime currentTime=[self.mPlayer currentTime];
     
     self.displayTimeLabel.text=[NSString stringWithFormat:@"%@",[self getTimeStr:currentTime]];
@@ -246,17 +250,69 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 - (IBAction)extractImageAndAudio:(id)sender {
     
     CMTime currentTime=[self.mPlayer currentTime];
+    NSString *saveName=[self makeSubtitleAndImageAndAudioSaveName:currentTime];
+    NSString *path=[savePath stringByAppendingString:saveName];
     NSUInteger index=[self.mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:currentTime];
-    IndividualSubtitle *currentSubtitle=[self.mSubtitlePackage.subtitleItems objectAtIndex:index];
     
-    //extract image
-    [self.mImagesPackage extractImagewithCMTime:currentTime andIndex:index];
+    if (index) {//如果没有字幕，则不截图
+        
+        //extract subtitle
+        [self.mSubtitlePackage saveSubtitleWithTime:currentTime inPath:path];
+        
+        //extract image
+        ImagesPackage *imagePackage=[[ImagesPackage alloc]initWithAsset:self.mAsset];
+        [imagePackage saveImageWithTime:currentTime inPath:path];
+        
+        //extract audio
+        AudiosPackage *audioPackage=[[AudiosPackage alloc]initWithAsset:self.mAsset];
+        
+        IndividualSubtitle *currentSubtitle=[self.mSubtitlePackage.subtitleItems objectAtIndex:index];
+        CMTimeRange range=CMTimeRangeFromTimeToTime(currentSubtitle.startTime, currentSubtitle.endTime);
+        
+        [audioPackage saveAudioWithRange:range inPath:path];
+    }
     
-    //extract audio
-    [self.mAudiosPackage extractAudioWithStartTime:currentSubtitle.startTime endTime:currentSubtitle.endTime andIndex:currentSubtitle.index];
-
 }
 
+
+- (NSString *)makeSubtitleAndImageAndAudioSaveName:(CMTime)time {
+    float timeInSecond=CMTimeGetSeconds(time);
+    
+    NSString *hour;
+    if (timeInSecond/3600>0) {
+        hour=[NSString stringWithFormat:@"0%d-",(int)timeInSecond/3600];
+    }
+    else{
+        hour=@"00-";
+    }
+    
+    NSString *min;
+    if ((int)timeInSecond%3600/60<10) {
+        min=[NSString stringWithFormat:@"0%d-",(int)timeInSecond%3600/60];
+    }else{
+        min=[NSString stringWithFormat:@"%d-",(int)timeInSecond%3600/60];
+    }
+    
+    
+    NSString *sec;
+    if ((int)timeInSecond%3600%60<10) {
+        sec=[NSString stringWithFormat:@"0%d-",(int)timeInSecond%3600%60];
+    }else{
+        sec=[NSString stringWithFormat:@"%d-",(int)timeInSecond%3600%60];
+    }
+    
+    float fract=(timeInSecond-(int)timeInSecond)*100;
+    NSString *fra;
+    if (fract<10) {
+        fra=[NSString stringWithFormat:@"0%d",(int)fract];
+    }else{
+        fra=[NSString stringWithFormat:@"%d",(int)fract];
+    }
+    
+    
+    NSString *saveName=[[[hour stringByAppendingString:min] stringByAppendingString:sec] stringByAppendingString:fra];
+    return saveName;
+}
 
 
 #pragma mark - viewLoad
@@ -275,7 +331,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 - (void)viewDidLoad
 {
     
-    mURL=[NSURL URLWithString:@"file:///Users/apple/Desktop/Downton.Abbey.0306.HDTVx264.mp4"];
+    mURL=[NSURL URLWithString:videoPath];
     self.mAsset=[AVURLAsset URLAssetWithURL:mURL options:nil];
     NSArray *requestedKeys=[NSArray arrayWithObject:@"tracks"];
     [mAsset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
@@ -284,9 +340,9 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         });
     }];
     
-
     
-
+    
+    
     
     // Do any additional setup after loading the view from its nib.
     UIBarButtonItem *scrubberItem=[[UIBarButtonItem alloc] initWithCustomView:mScrubber];
@@ -298,9 +354,8 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [self initSubtitle];
     [self syncSubtitle];
     
-    self.mSubtitlePackage=[[SubtitlePackage alloc]initWithFile:@"/Users/apple/Desktop/DowntonSubtitle0306"];
-    self.mAudiosPackage=[[AudiosPackage alloc]initWithAsset:self.mAsset];
-    self.mImagesPackage=[[ImagesPackage alloc]initWithAsset:self.mAsset];
+    self.mSubtitlePackage=[[SubtitlePackage alloc]initWithFile:subtitlePath];
+    
     
     self.displayTimeLabel.text=@"";
     
@@ -335,7 +390,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 - (void)setviewDisplayName{
-        /* Set the view title to the last component of the asset URL. */
+    /* Set the view title to the last component of the asset URL. */
     self.title=[mURL lastPathComponent];
     
     /* Or if the item has a AVMetadataCommonKeyTitle metadata, use that instead. */
@@ -382,23 +437,23 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 -(void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys{
-//    for (NSString *thisKey in requestedKeys){
-//        NSError *error=nil;
-//        AVKeyValueStatus keyStatus=[asset statusOfValueForKey:thisKey error:&error];
-//        if (keyStatus==AVKeyValueStatusFailed) {
-//            [self assetFailedToPrepareForPlayback:error];
-//            return;
-//        }
-//    }
+    //    for (NSString *thisKey in requestedKeys){
+    //        NSError *error=nil;
+    //        AVKeyValueStatus keyStatus=[asset statusOfValueForKey:thisKey error:&error];
+    //        if (keyStatus==AVKeyValueStatusFailed) {
+    //            [self assetFailedToPrepareForPlayback:error];
+    //            return;
+    //        }
+    //    }
     
-//    if (!asset.playable) {
-//        NSString *localizedDescription=NSLocalizedString(@"Item cannot be played", @"Item cannot be played description");
-//        NSString *localizedFailureReason=NSLocalizedString(@"The assets tracks were loaded, but could not be made playable.", @"Item cannot be played failure reason");
-//        NSDictionary *errorDict=[NSDictionary dictionaryWithObjectsAndKeys:localizedDescription, NSLocalizedDescriptionKey, localizedFailureReason, NSLocalizedFailureReasonErrorKey, nil];
-//        NSError *assetCannotBePlayedError=[NSError errorWithDomain:@"StitchedStreamPlayer" code:0 userInfo:errorDict];
-//        [self assetFailedToPrepareForPlayback:assetCannotBePlayedError];
-//        return;
-//    }
+    //    if (!asset.playable) {
+    //        NSString *localizedDescription=NSLocalizedString(@"Item cannot be played", @"Item cannot be played description");
+    //        NSString *localizedFailureReason=NSLocalizedString(@"The assets tracks were loaded, but could not be made playable.", @"Item cannot be played failure reason");
+    //        NSDictionary *errorDict=[NSDictionary dictionaryWithObjectsAndKeys:localizedDescription, NSLocalizedDescriptionKey, localizedFailureReason, NSLocalizedFailureReasonErrorKey, nil];
+    //        NSError *assetCannotBePlayedError=[NSError errorWithDomain:@"StitchedStreamPlayer" code:0 userInfo:errorDict];
+    //        [self assetFailedToPrepareForPlayback:assetCannotBePlayedError];
+    //        return;
+    //    }
     
     if (self.mPlayerItem) {
         [self.mPlayerItem removeObserver:self forKeyPath:@"status"];

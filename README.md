@@ -15,8 +15,11 @@ It can play __vedio__ file and show external __subtitle__ file (__.srt__), and e
 3. a setting view that user can choose the audio and .srt file to player.
 
 ---
+
 ---
+
 ---
+        
 
 ###中文版 （Chinese Version）
 

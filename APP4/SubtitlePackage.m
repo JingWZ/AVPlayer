@@ -29,7 +29,6 @@
 
 - (void)makeIndividualSubtitle:(NSString *)context{
     NSArray *contextLine=[context componentsSeparatedByString:@"\n"];
-    NSUInteger indexNum=1;
     
     for (int i=0; i<[contextLine count]; i++)
     {
@@ -55,14 +54,12 @@
                     }else{
                         subtitle.EngSubtitle=@" ";
                     }
-                    subtitle.index=indexNum;
                     [self.subtitleItems addObject:subtitle];
-                    indexNum++;
                 }
                 else
                 {
                     //如果字幕索引下不是时间轴，则出错
-                    NSLog(@"wrong");
+                    NSLog(@"subtitle package wrong");
                 }
             }
         }
@@ -85,6 +82,23 @@
     }else{
         return theIndex;
     }
+    
+}
+
+#pragma mark -
+
+- (void)saveSubtitleWithTime:(CMTime)time inPath:(NSString *)path{
+    
+    NSUInteger index=[self indexOfProperSubtitleWithGivenCMTime:time];
+    
+    IndividualSubtitle *currentSubtitle=[self.subtitleItems objectAtIndex:index];
+    
+    NSMutableData *data=[[NSMutableData alloc]init];
+    NSKeyedArchiver *archiver=[[NSKeyedArchiver alloc]initForWritingWithMutableData:data];
+    [archiver encodeObject:currentSubtitle forKey:@"subtitle"];
+    [archiver finishEncoding];
+    
+    [data writeToFile:path atomically:YES];
     
 }
 
@@ -118,7 +132,24 @@
     return time;
 }
 
+
+
+#pragma mark - NSCoding & NSCopying
+
+- (void)encodeWithCoder:(NSCoder *)aCoder{
+    [aCoder encodeObject:subtitleItems forKey:@"subtitleItems"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder{
+    if (self=[super init]) {
+        subtitleItems=[aDecoder decodeObjectForKey:@"subtitleItems"];
+    }
+    return self;
+}
+
 @end
+
+
 
 #pragma mark -
 
@@ -126,7 +157,34 @@
 @implementation IndividualSubtitle
 @synthesize startTime, endTime;
 @synthesize EngSubtitle, ChiSubtitle;
-@synthesize index;
 
+
+
+- (void)encodeWithCoder:(NSCoder *)aCoder{
+    [aCoder encodeCMTime:startTime forKey:@"startTime"];
+    [aCoder encodeCMTime:endTime forKey:@"endTime"];
+    [aCoder encodeObject:EngSubtitle forKey:@"EngSubtitle"];
+    [aCoder encodeObject:ChiSubtitle forKey:@"ChiSubtitle"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder{
+    if (self=[super init]) {
+        startTime=[aDecoder decodeCMTimeForKey:@"startTime"];
+        endTime=[aDecoder decodeCMTimeForKey:@"endTime"];
+        EngSubtitle=[aDecoder decodeObjectForKey:@"EngSubtitle"];
+        ChiSubtitle=[aDecoder decodeObjectForKey:@"ChiSubtitle"];
+        
+    }
+    return self;
+}
+
+-(id)copyWithZone:(NSZone *)zone{
+    IndividualSubtitle *copy=[[[self class] allocWithZone:zone]init];
+    copy.startTime=self.startTime;
+    copy.endTime=self.endTime;
+    copy.EngSubtitle=[self.EngSubtitle copyWithZone:zone];
+    copy.ChiSubtitle=[self.ChiSubtitle copyWithZone:zone];
+    return copy;
+}
 
 @end

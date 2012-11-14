@@ -9,62 +9,38 @@
 #import "AudiosPackage.h"
 
 @implementation AudiosPackage
-@synthesize audioTrack;
+@synthesize asset;
 
--(AudiosPackage *)initWithAsset:(AVAsset *)asset{
-    NSArray *audioTracks=[asset tracksWithMediaType:AVMediaTypeAudio];
-    if (audioTracks.count) {
-        self.audioTrack=[audioTracks objectAtIndex:0];
-        self.audioItems=[NSMutableArray arrayWithCapacity:0];
+-(AudiosPackage *)initWithAsset:(AVAsset *)theAsset{
+    
+    if (theAsset) {
+        self.asset=theAsset;
     }else{
-        NSLog(@"No audio track found!");
+        NSLog(@"no asset, can't init audioPackage!");
     }
     
     return self;
 }
 
-- (void)extractAudioWithStartTime:(CMTime)startTime endTime:(CMTime)endTime andIndex:(NSUInteger)index{
-    CMTimeRange extractRange=CMTimeRangeFromTimeToTime(startTime, endTime);
+-(void)saveAudioWithRange:(CMTimeRange)range inPath:(NSString *)path{
     
+    NSString *audioPath=[path stringByAppendingPathExtension:@"m4a"];
+    NSURL *pathURL=[NSURL fileURLWithPath:audioPath];
     
-    IndividualAudio *individualAudio=[IndividualAudio new];
-    individualAudio.audioComposition=[AVMutableComposition composition];
-    AVMutableCompositionTrack *compositionTrack=[individualAudio.audioComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVAssetExportSession *exportSession=[AVAssetExportSession exportSessionWithAsset:self.asset presetName:AVAssetExportPresetAppleM4A];
     
-    NSError *error;
-    [compositionTrack insertTimeRange:extractRange ofTrack:self.audioTrack atTime:kCMTimeZero error:&error];
+    exportSession.outputURL=pathURL;
+    exportSession.outputFileType=AVFileTypeAppleM4A;
+    exportSession.timeRange=range;
     
-    individualAudio.index=index;
+    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+        if (exportSession.status==AVAssetExportSessionStatusFailed) {
+            NSLog(@"can't export audio!");
+        }
+    }];
     
-    [self.audioItems addObject:individualAudio];
 }
 
-/*
- 
- 保存音频
- 
- AVAssetExportSession *exportSession=[AVAssetExportSession exportSessionWithAsset:audioComposition presetName:AVAssetExportPresetMediumQuality];
- [exportSession setOutputFileType:@"com.apple.quicktime-movie"];
- [exportSession setOutputURL:pathurl];
- 
- [exportSession exportAsynchronouslyWithCompletionHandler:^{
- if (exportSession.status==AVAssetExportSessionStatusFailed) {
- NSLog(@"failed");
- }else if (exportSession.status==AVAssetExportSessionStatusCompleted){
- NSLog(@"completed");
- }
- }];
- 
-
- 
- */
 
 @end
 
-
-@implementation IndividualAudio
-
-@synthesize index;
-@synthesize audioComposition;
-
-@end
