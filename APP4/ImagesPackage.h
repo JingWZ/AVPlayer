@@ -20,4 +20,6 @@
 
 - (void)saveImageWithTime:(CMTime)time inPath:(NSString *)path;
 
+-(void)extractImageWithCMTime:(CMTime)time;
+
 @end

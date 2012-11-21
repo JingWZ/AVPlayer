@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "XXXPlayViewController.h"
+#import "SettingViewController.h"
 
 
 //用来存放从文件中读取的每一组 字幕、音频和图片 的路径

@@ -63,6 +63,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [mPlayer play];
     [self showStopButton];
     
+    
 }
 
 

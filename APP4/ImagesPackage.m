@@ -21,6 +21,8 @@
 -(ImagesPackage *)initWithAsset:(AVAsset *)asset{
     if (asset) {
         self.imageGenerator=[AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
+        self.imageGenerator.requestedTimeToleranceBefore=kCMTimeZero;
+        self.imageGenerator.requestedTimeToleranceAfter=kCMTimeZero;
     }else {
         NSLog(@"no asset, can't initialize the ImagePackage!");
     }
@@ -40,12 +42,13 @@
 
 -(void)extractImageWithCMTime:(CMTime)time{
     
+    CMTime actualTime;
+    
     NSError *error;
-    CGImageRef cgimage=[self.imageGenerator copyCGImageAtTime:time actualTime:NULL error:&error];
+    CGImageRef cgimage=[self.imageGenerator copyCGImageAtTime:time actualTime:&actualTime error:&error];
     if (error) {
         NSLog(@"%@",[error localizedDescription]);
     }
-    
     
     self.image=[self resizeImage:cgimage toWidth:kImageWidth height:kImageHeight];
     

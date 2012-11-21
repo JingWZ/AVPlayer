@@ -33,10 +33,17 @@
     }
     NSString *content=[self.dataArray objectAtIndex:indexPath.row];
     [cell.textLabel setText:content];
+    [cell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
     return cell;
 }
 
-#pragma mark - action when row selected
+#pragma mark - row selected
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    SettingViewController *settingViewController=[[SettingViewController alloc]initWithNibName:@"SettingViewController" bundle:nil];
+    settingViewController.fileName=[self.dataArray objectAtIndex:indexPath.row];
+    [self.navigationController pushViewController:settingViewController animated:YES];
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger index=indexPath.row;
