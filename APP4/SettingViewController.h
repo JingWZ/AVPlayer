@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingViewController : UIViewController
+@interface SettingViewController : UIViewController <UIActionSheetDelegate>
 
 @property (copy, nonatomic) NSString *fileName;
 
@@ -22,6 +22,7 @@
 @property (strong, nonatomic) AVURLAsset *asset;
 
 @property (strong, nonatomic) SubtitlePackage *subtitlePackage;
+
 
 //必须要用这个方法，才可以不断同步当前的CMTime
 @property (assign, nonatomic) NSInteger imageStepperValue;
@@ -39,10 +40,10 @@
 @property (weak, nonatomic) IBOutlet UIStepper *imageStepper;
 
 
-- (IBAction)modifyImage:(id)sender;
-- (IBAction)modifyAudioStartTime:(id)sender;
-- (IBAction)modifyAudioEndTime:(id)sender;
-- (IBAction)mergeAudio:(id)sender;
+- (IBAction)modifyImage:(UIStepper *)sender;
+- (IBAction)modifyAudioStartTime:(UIStepper *)sender;
+- (IBAction)modifyAudioEndTime:(UIStepper *)sender;
+- (IBAction)mergeAudio:(UIStepper *)sender;
 
 
 - (IBAction)saveAndBack:(id)sender;
