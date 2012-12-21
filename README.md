@@ -14,24 +14,4 @@ It can play __vedio__ file and show external __subtitle__ file (__.srt__), and e
 
 3. a setting view that user can choose the audio and .srt file to player.
 
----
-
----
-
----
-        
-
-###中文版 （Chinese Version）
-
-这个app的目的在于通过__美剧/英剧__学英语，需要.srt外挂字幕
-
-准备提供的功能包括
-
-* 在视频播放时截图和该字幕段所对应的音频(已完成)
-
-* 把截的图片和音频生成一个生词本，该生词本为一个表示图，点击图片文件名会从右边移出图片，并自动播放相应的音频
-
-* 可以手动修改音频的时间，比如向前或向后增加一秒，或者向后合并一段字幕音频
-
-
 
