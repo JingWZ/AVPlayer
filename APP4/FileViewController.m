@@ -14,12 +14,12 @@
 @end
 
 @implementation FileViewController
+
+#define kDefaultNumber 1111
+
 @synthesize mTableVIew;
 @synthesize videoFiles, subtitleFiles;
-@synthesize isCheckingOfSectionOne, isCheckingOfSectionTwo;
-@synthesize checkingNumOfSectionOne, checkingNumOfSectionTwo;
-
-@synthesize checkNum;
+@synthesize selectedSubtitleNumber,selectedVideoNumber;
 
 #pragma mark - tableView
 
@@ -57,12 +57,12 @@
     
     if (indexPath.section==0) {
         cell.textLabel.text=[self.videoFiles objectAtIndex:indexPath.row];
-        if ([[isCheckingOfSectionOne objectAtIndex:indexPath.row] boolValue]) {
+        if (self.selectedVideoNumber!=kDefaultNumber) {
             [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
         }
     } else if (indexPath.section==1) {
         cell.textLabel.text=[self.subtitleFiles objectAtIndex:indexPath.row];
-        if ([[isCheckingOfSectionTwo objectAtIndex:indexPath.row] boolValue]) {
+        if (self.selectedSubtitleNumber!=kDefaultNumber) {
             [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
         }
     }
@@ -73,26 +73,27 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if (indexPath.section==0) {
-        
-        if ([[self.isCheckingOfSectionOne objectAtIndex:indexPath.row] boolValue]) {
-                [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryNone];
-            [self.isCheckingOfSectionOne removeObjectAtIndex:indexPath.row];
-            [self.isCheckingOfSectionOne insertObject:[NSNumber numberWithBool:NO] atIndex:indexPath.row];
-            
-            NSLog(@"fsf");
-            
-        } else {
+        if (indexPath.row==self.selectedVideoNumber) {
+            [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryNone];
+            self.selectedVideoNumber=kDefaultNumber;
+        }else {
+            NSIndexPath *lastIndex=[[NSIndexPath indexPathWithIndex:0] indexPathByAddingIndex:self.selectedVideoNumber];
+            [[tableView cellForRowAtIndexPath:lastIndex] setAccessoryType:UITableViewCellAccessoryNone];
             [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryCheckmark];
-            [self.isCheckingOfSectionOne removeObjectAtIndex:indexPath.row];
-            [self.isCheckingOfSectionOne insertObject:[NSNumber numberWithBool:YES] atIndex:indexPath.row];
+            self.selectedVideoNumber=indexPath.row;
         }
-        
-    } else if (indexPath.section==1) {
-        
+    }else if (indexPath.section==1) {
+        if (indexPath.row==self.selectedSubtitleNumber) {
+            [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryNone];
+            self.selectedSubtitleNumber=kDefaultNumber;
+        }else {
+            NSIndexPath *lastIndex=[[NSIndexPath indexPathWithIndex:1] indexPathByAddingIndex:self.selectedSubtitleNumber];
+            [[tableView cellForRowAtIndexPath:lastIndex] setAccessoryType:UITableViewCellAccessoryNone];
+            [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryCheckmark];
+            self.selectedSubtitleNumber=indexPath.row;
+        }
     }
-    
-    [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryCheckmark];
-    self.checkNum++;
+
 }
 
 #pragma mark - init
@@ -100,12 +101,10 @@
 - (void)initVideoFiles{
     
     self.videoFiles=[NSMutableArray arrayWithCapacity:0];
-    self.isCheckingOfSectionOne=[NSMutableArray arrayWithCapacity:0];
 
     for (NSString *path in [self fileContent]) {
         if ([[path pathExtension] isEqualToString:@"mp4"]) {
             [self.videoFiles addObject:path];
-            [self.isCheckingOfSectionOne addObject:[NSNumber numberWithBool:NO]];
         }
     }
     
@@ -114,13 +113,10 @@
 - (void)initSubtitleFiles{
     
     self.subtitleFiles=[NSMutableArray arrayWithCapacity:0];
-    self.isCheckingOfSectionTwo=[NSMutableArray arrayWithCapacity:0];
     
     for (NSString *path in [self fileContent]) {
         if ([[path pathExtension] isEqualToString:@"srt"]) {
             [self.subtitleFiles addObject:path];
-            [self.isCheckingOfSectionTwo addObject:[NSNumber numberWithBool:NO]];
-
         }
     }
 
@@ -138,16 +134,22 @@
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    if ([keyPath isEqualToString:@"checkNum"]) {
-        if (self.checkNum==2) {
-            //设置导航的右边的item
-            UIBarButtonItem *playItem=[[UIBarButtonItem alloc] initWithTitle:@"Play" style:UIBarButtonItemStylePlain target:self action:@selector(moveToPlayView)];
-            [self.navigationItem setRightBarButtonItem:playItem animated:YES];
-        } else {
-            [self.navigationItem setRightBarButtonItem:nil];
-        }
+    
+    if ((self.selectedVideoNumber!=kDefaultNumber) && (self.selectedSubtitleNumber!=kDefaultNumber) ) {
+        
+        UIBarButtonItem *playButton=[[UIBarButtonItem alloc] initWithTitle:@"Play" style:UIBarButtonItemStylePlain target:self action:@selector(moveToPlayView)];
+        
+        [self.navigationItem setRightBarButtonItem:playButton animated:NO];
+
+    }else {
+        
+        [self.navigationItem setRightBarButtonItem:nil animated:YES];
+        
     }
+    
 }
+
+#pragma mark - action
 
 - (void)moveToPlayView{
     
@@ -157,11 +159,24 @@
     [playVC.navigationController setNavigationBarHidden:NO];
     [playVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
 
-    //NSString *videoPath=[self userPath]
-    //playVC.mURL=[NSURL fileURLWithPath:]
+    
 }
 
 #pragma mark - defaults
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [self removeObserver:self forKeyPath:@"selectedVideoNumber"];
+    [self removeObserver:self forKeyPath:@"selectedSubtitleNumber"];
+
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    
+    //监控check的情况
+    [self addObserver:self forKeyPath:@"selectedVideoNumber" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"selectedSubtitleNumber" options:NSKeyValueObservingOptionNew context:nil];
+
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -177,23 +192,29 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    [self.navigationItem setTitle:@"文件"];
+    [self.navigationItem setRightBarButtonItem:nil animated:YES];
+    
+    
     [self.mTableVIew setDelegate:self];
     [self.mTableVIew setDataSource:self];
     
-    [self.mTableVIew setBackgroundColor:[UIColor blackColor]];
-    
+    //获取文件中的视频和字幕文件名
     [self initVideoFiles];
     [self initSubtitleFiles];
     
-
-    //监控check的数量
-    //[self addObserver:self forKeyPath:@"checkNum" options:NSKeyValueObservingOptionNew context:nil];
-
+    //初始化两个selectedNumber
+    self.selectedVideoNumber=kDefaultNumber;
+    self.selectedSubtitleNumber=kDefaultNumber;
+    
 }
 
 - (void)viewDidUnload
 {
     [self setMTableVIew:nil];
+    self.videoFiles=nil;
+    self.subtitleFiles=nil;
+    
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;

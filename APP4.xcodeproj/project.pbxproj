@@ -33,7 +33,6 @@
 		1872B54B16842E6E0079944A /* House.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52016842E6E0079944A /* House.jpg */; };
 		1872B54C16842E6E0079944A /* How I Met Your Mother.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52116842E6E0079944A /* How I Met Your Mother.jpg */; };
 		1872B54D16842E6E0079944A /* Legend of The Seeker.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52216842E6E0079944A /* Legend of The Seeker.jpg */; };
-		1872B54E16842E6E0079944A /* Lost2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52316842E6E0079944A /* Lost2.jpg */; };
 		1872B55016842E6E0079944A /* Nikita.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52616842E6E0079944A /* Nikita.jpg */; };
 		1872B55116842E6E0079944A /* Nip Tuck.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52716842E6E0079944A /* Nip Tuck.jpg */; };
 		1872B55216842E6E0079944A /* Prison Break.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52816842E6E0079944A /* Prison Break.jpg */; };
@@ -56,8 +55,6 @@
 		1872B56416842E6E0079944A /* Weeds.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53A16842E6E0079944A /* Weeds.jpg */; };
 		1872B56516842E6E0079944A /* Will and Grace.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53B16842E6E0079944A /* Will and Grace.jpg */; };
 		1872B56816842EFC0079944A /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 1872B56716842EFC0079944A /* MBProgressHUD.m */; };
-		189BBD55168007C8008C5DE4 /* CoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189BBD53168007C8008C5DE4 /* CoverViewController.m */; };
-		189BBD56168007C8008C5DE4 /* CoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 189BBD54168007C8008C5DE4 /* CoverViewController.xib */; };
 		18FCC0E616800F050038ADBB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCC0E516800F050038ADBB /* GLKit.framework */; };
 		18FCC111168023AD0038ADBB /* Friends.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 18FCC110168023AD0038ADBB /* Friends.jpg */; };
 		18FCC14F1682B5480038ADBB /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FCC14D1682B5480038ADBB /* FirstViewController.m */; };
@@ -73,8 +70,6 @@
 		CEDD6E7C16390258000F3D6D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEDD6E7A16390258000F3D6D /* InfoPlist.strings */; };
 		CEDD6E7E16390258000F3D6D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E7D16390258000F3D6D /* main.m */; };
 		CEDD6E8216390258000F3D6D /* XXXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E8116390258000F3D6D /* XXXAppDelegate.m */; };
-		CEDD6E8516390258000F3D6D /* XXXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E8416390258000F3D6D /* XXXViewController.m */; };
-		CEDD6E8816390258000F3D6D /* XXXViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDD6E8616390258000F3D6D /* XXXViewController.xib */; };
 		CEDD6E9816390331000F3D6D /* XXXPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E9716390331000F3D6D /* XXXPlayView.m */; };
 		CEDD6E9A1639037E000F3D6D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E991639037E000F3D6D /* AVFoundation.framework */; };
 		CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */; };
@@ -112,7 +107,6 @@
 		1872B52016842E6E0079944A /* House.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = House.jpg; sourceTree = "<group>"; };
 		1872B52116842E6E0079944A /* How I Met Your Mother.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "How I Met Your Mother.jpg"; sourceTree = "<group>"; };
 		1872B52216842E6E0079944A /* Legend of The Seeker.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Legend of The Seeker.jpg"; sourceTree = "<group>"; };
-		1872B52316842E6E0079944A /* Lost2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Lost2.jpg; sourceTree = "<group>"; };
 		1872B52616842E6E0079944A /* Nikita.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Nikita.jpg; sourceTree = "<group>"; };
 		1872B52716842E6E0079944A /* Nip Tuck.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Nip Tuck.jpg"; sourceTree = "<group>"; };
 		1872B52816842E6E0079944A /* Prison Break.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Prison Break.jpg"; sourceTree = "<group>"; };
@@ -136,9 +130,6 @@
 		1872B53B16842E6E0079944A /* Will and Grace.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Will and Grace.jpg"; sourceTree = "<group>"; };
 		1872B56616842EFC0079944A /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		1872B56716842EFC0079944A /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
-		189BBD52168007C8008C5DE4 /* CoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverViewController.h; sourceTree = "<group>"; };
-		189BBD53168007C8008C5DE4 /* CoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoverViewController.m; sourceTree = "<group>"; };
-		189BBD54168007C8008C5DE4 /* CoverViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CoverViewController.xib; sourceTree = "<group>"; };
 		18FCC0E516800F050038ADBB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		18FCC110168023AD0038ADBB /* Friends.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Friends.jpg; sourceTree = "<group>"; };
 		18FCC14C1682B5480038ADBB /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
@@ -161,9 +152,6 @@
 		CEDD6E7F16390258000F3D6D /* APP4-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "APP4-Prefix.pch"; sourceTree = "<group>"; };
 		CEDD6E8016390258000F3D6D /* XXXAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XXXAppDelegate.h; sourceTree = "<group>"; };
 		CEDD6E8116390258000F3D6D /* XXXAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XXXAppDelegate.m; sourceTree = "<group>"; };
-		CEDD6E8316390258000F3D6D /* XXXViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XXXViewController.h; sourceTree = "<group>"; };
-		CEDD6E8416390258000F3D6D /* XXXViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XXXViewController.m; sourceTree = "<group>"; };
-		CEDD6E8716390258000F3D6D /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/XXXViewController.xib; sourceTree = "<group>"; };
 		CEDD6E9616390331000F3D6D /* XXXPlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XXXPlayView.h; path = APP4/XXXPlayView.h; sourceTree = "<group>"; };
 		CEDD6E9716390331000F3D6D /* XXXPlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XXXPlayView.m; path = APP4/XXXPlayView.m; sourceTree = "<group>"; };
 		CEDD6E991639037E000F3D6D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -227,7 +215,6 @@
 				1872B52016842E6E0079944A /* House.jpg */,
 				1872B52116842E6E0079944A /* How I Met Your Mother.jpg */,
 				1872B52216842E6E0079944A /* Legend of The Seeker.jpg */,
-				1872B52316842E6E0079944A /* Lost2.jpg */,
 				1872B52616842E6E0079944A /* Nikita.jpg */,
 				1872B52716842E6E0079944A /* Nip Tuck.jpg */,
 				1872B52816842E6E0079944A /* Prison Break.jpg */,
@@ -295,12 +282,6 @@
 				18FCC14C1682B5480038ADBB /* FirstViewController.h */,
 				18FCC14D1682B5480038ADBB /* FirstViewController.m */,
 				18FCC14E1682B5480038ADBB /* FirstViewController.xib */,
-				CEDD6E8316390258000F3D6D /* XXXViewController.h */,
-				CEDD6E8416390258000F3D6D /* XXXViewController.m */,
-				CEDD6E8616390258000F3D6D /* XXXViewController.xib */,
-				189BBD52168007C8008C5DE4 /* CoverViewController.h */,
-				189BBD53168007C8008C5DE4 /* CoverViewController.m */,
-				189BBD54168007C8008C5DE4 /* CoverViewController.xib */,
 				180BE2BC1678237D00BFBBF4 /* FileViewController.h */,
 				180BE2BD1678237D00BFBBF4 /* FileViewController.m */,
 				180BE2BE1678237D00BFBBF4 /* FileViewController.xib */,
@@ -385,12 +366,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDD6E7C16390258000F3D6D /* InfoPlist.strings in Resources */,
-				CEDD6E8816390258000F3D6D /* XXXViewController.xib in Resources */,
 				CE263EF71650E643002E2AF4 /* GlossaryViewController.xib in Resources */,
 				CE00ED101654895300CC4888 /* SettingViewController.xib in Resources */,
 				180BE2C01678237E00BFBBF4 /* FileViewController.xib in Resources */,
 				180BE2ED16785E5500BFBBF4 /* XXXPlayViewController.xib in Resources */,
-				189BBD56168007C8008C5DE4 /* CoverViewController.xib in Resources */,
 				18FCC111168023AD0038ADBB /* Friends.jpg in Resources */,
 				18FCC1501682B5480038ADBB /* FirstViewController.xib in Resources */,
 				1872B53C16842E6E0079944A /* 2 Broke Girls.jpg in Resources */,
@@ -411,7 +390,6 @@
 				1872B54B16842E6E0079944A /* House.jpg in Resources */,
 				1872B54C16842E6E0079944A /* How I Met Your Mother.jpg in Resources */,
 				1872B54D16842E6E0079944A /* Legend of The Seeker.jpg in Resources */,
-				1872B54E16842E6E0079944A /* Lost2.jpg in Resources */,
 				1872B55016842E6E0079944A /* Nikita.jpg in Resources */,
 				1872B55116842E6E0079944A /* Nip Tuck.jpg in Resources */,
 				1872B55216842E6E0079944A /* Prison Break.jpg in Resources */,
@@ -445,7 +423,6 @@
 			files = (
 				CEDD6E7E16390258000F3D6D /* main.m in Sources */,
 				CEDD6E8216390258000F3D6D /* XXXAppDelegate.m in Sources */,
-				CEDD6E8516390258000F3D6D /* XXXViewController.m in Sources */,
 				CEDD6E9816390331000F3D6D /* XXXPlayView.m in Sources */,
 				CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */,
 				181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */,
@@ -455,7 +432,6 @@
 				181A2915165CAEE5001D8F5E /* Playback.m in Sources */,
 				180BE2BF1678237E00BFBBF4 /* FileViewController.m in Sources */,
 				180BE2EC16785E5500BFBBF4 /* XXXPlayViewController.m in Sources */,
-				189BBD55168007C8008C5DE4 /* CoverViewController.m in Sources */,
 				18FCC14F1682B5480038ADBB /* FirstViewController.m in Sources */,
 				1872B56816842EFC0079944A /* MBProgressHUD.m in Sources */,
 			);
@@ -470,14 +446,6 @@
 				CEDD6E7B16390258000F3D6D /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		CEDD6E8616390258000F3D6D /* XXXViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CEDD6E8716390258000F3D6D /* en */,
-			);
-			name = XXXViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

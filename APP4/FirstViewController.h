@@ -16,13 +16,19 @@
 
 @interface FirstViewController : UIViewController
 
-@property (strong, nonatomic) NSMutableArray *postersName;
+@property (strong, nonatomic) UITapGestureRecognizer *tapGesture;
 
+@property (strong, nonatomic) NSMutableArray *postersName;
 @property (strong, nonatomic) NSMutableArray *posters;
 @property (strong, nonatomic) NSMutableArray *postersCenterY;
 
 @property (assign, nonatomic) float currentTime;
 @property (strong) NSTimer *timer;
+
+@property (weak, nonatomic) IBOutlet UIView *menuView;
+
+- (IBAction)playPressed:(id)sender;
+
 
 
 @end

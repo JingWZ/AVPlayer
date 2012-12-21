@@ -10,9 +10,6 @@
 
 #import "FirstViewController.h"
 
-#import "CoverViewController.h"
-
-
 @implementation XXXAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -22,9 +19,6 @@
 
     //隐藏电池条
     [application setStatusBarHidden:YES];
-    
-    //CoverViewController *coverVC=[[CoverViewController alloc] initWithNibName:@"CoverViewController" bundle:nil];
-    
     
     FirstViewController *firstVC=[[FirstViewController alloc] initWithNibName:@"FirstViewController" bundle:nil];
     

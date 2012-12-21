@@ -7,6 +7,9 @@
 //
 #import <GLKit/GLKit.h>
 
+#import "FileViewController.h"
+#import "GlossaryViewController.h"
+
 #import "FirstViewController.h"
 
 @interface FirstViewController ()
@@ -34,14 +37,32 @@
 static NSString *posterPath=@"/Users/apple/Code/AVPlayer/APP4/posters";
 //uiview在左上角，quartz在左下角
 
+@synthesize tapGesture;
 @synthesize currentTime;
 @synthesize timer;
+@synthesize menuView;
+
+#pragma mark -action
+
+- (IBAction)playPressed:(id)sender {
+    
+    FileViewController *fileVC=[[FileViewController alloc] initWithNibName:@"FileViewController" bundle:nil];
+    [self.navigationController pushViewController:fileVC animated:YES];
+    
+    [fileVC.navigationController setNavigationBarHidden:NO];
+    [fileVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
+
+
+}
 
 #pragma mark - animation
 
 - (void)tap:(UITapGestureRecognizer *)gesture{
     
     timer = [NSTimer scheduledTimerWithTimeInterval:kTimeInterval target:self selector:@selector(movePosters) userInfo:nil repeats:YES];
+    
+    
+    //[self.menuView setAlpha:0];
 
 }
 
@@ -56,8 +77,13 @@ static NSString *posterPath=@"/Users/apple/Code/AVPlayer/APP4/posters";
             CGFloat pointY=PRTweenTimingFunctionBounceOut(currentTime, startValue, kEndValue-startValue, 1.5);
             [imageView setCenter:CGPointMake(imageView.center.x, pointY)];
         }
+        
+        [self.menuView setAlpha:(currentTime/animationDuration)];
+        
     }else{
         [timer invalidate];
+        [self.view removeGestureRecognizer:tapGesture];
+        
     }
     
 }
@@ -76,7 +102,7 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     } else {
         result = c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
     }
-    //NSLog(@"%g=%g",t,result);
+    
     return result;
     
 }
@@ -176,6 +202,15 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
 
 #pragma mark - defaults
 
+//-(void)viewDidAppear:(BOOL)animated{
+//    [self.navigationController setNavigationBarHidden:YES];
+//}
+
+- (void)viewWillAppear:(BOOL)animated{
+    
+    [self.navigationController setNavigationBarHidden:YES];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -191,9 +226,12 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     // Do any additional setup after loading the view from its nib.
     
     //手势识别
-    UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+    tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     [self.view addGestureRecognizer:tapGesture];
     
+    
+    [self.view addSubview:self.menuView];
+    [self.menuView setAlpha:0];
     //初始化所有海报
     self.posters=[NSMutableArray arrayWithCapacity:0];
     self.postersCenterY=[NSMutableArray arrayWithCapacity:0];
@@ -208,12 +246,15 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
 
 - (void)viewDidUnload
 {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    
     self.postersName=nil;
     self.posters=nil;
     self.postersCenterY=nil;
+
+    [self setMenuView:nil];
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
 
 }
 
@@ -221,5 +262,6 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
 
 @end
