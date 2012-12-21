@@ -47,6 +47,8 @@
 								<int key="NSvFlags">266</int>
 								<string key="NSFrame">{{0, 416}, {320, 44}}</string>
 								<reference key="NSSuperview" ref="773866030"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -57,8 +59,9 @@
 							<object class="IBUILabel" id="142469440">
 								<reference key="NSNextResponder" ref="773866030"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{20, 349}, {280, 21}}</string>
+								<string key="NSFrame">{{20, 320}, {280, 21}}</string>
 								<reference key="NSSuperview" ref="773866030"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="559384185"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -91,8 +94,9 @@
 							<object class="IBUILabel" id="559384185">
 								<reference key="NSNextResponder" ref="773866030"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{20, 369}, {280, 21}}</string>
+								<string key="NSFrame">{{20, 349}, {280, 21}}</string>
 								<reference key="NSSuperview" ref="773866030"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1053862553"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -116,8 +120,9 @@
 							<object class="IBUILabel" id="1053862553">
 								<reference key="NSNextResponder" ref="773866030"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{255, 384}, {56, 21}}</string>
+								<string key="NSFrame">{{255, 300}, {56, 21}}</string>
 								<reference key="NSSuperview" ref="773866030"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="731925435"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -141,6 +146,7 @@
 						</array>
 						<string key="NSFrameSize">{320, 460}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="142469440"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor" id="957161016">
@@ -152,6 +158,7 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="773866030"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -4867,7 +4874,109 @@ AAgAAAAIAAIACAACAAAAAgAAAAEAAQABAAE</bytes>
 			<nil key="sourceID"/>
 			<int key="maxID">41</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">XXXPlayView</string>
+					<string key="superclassName">UIView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/XXXPlayView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">XXXPlayViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="Pause:">id</string>
+						<string key="Play:">id</string>
+						<string key="Scrub:">id</string>
+						<string key="beginScrubbing:">id</string>
+						<string key="endScrubbing:">id</string>
+						<string key="extractImageAndAudio:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="Pause:">
+							<string key="name">Pause:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="Play:">
+							<string key="name">Play:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="Scrub:">
+							<string key="name">Scrub:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="beginScrubbing:">
+							<string key="name">beginScrubbing:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="endScrubbing:">
+							<string key="name">endScrubbing:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="extractImageAndAudio:">
+							<string key="name">extractImageAndAudio:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="displayChiLabel">UILabel</string>
+						<string key="displayEngLabel">UILabel</string>
+						<string key="displayTimeLabel">UILabel</string>
+						<string key="imageExtractionLayer">UIControl</string>
+						<string key="mPauseButton">UIBarButtonItem</string>
+						<string key="mPlayButton">UIBarButtonItem</string>
+						<string key="mPlayView">XXXPlayView</string>
+						<string key="mScrubber">UISlider</string>
+						<string key="mToolbar">UIToolbar</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="displayChiLabel">
+							<string key="name">displayChiLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="displayEngLabel">
+							<string key="name">displayEngLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="displayTimeLabel">
+							<string key="name">displayTimeLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="imageExtractionLayer">
+							<string key="name">imageExtractionLayer</string>
+							<string key="candidateClassName">UIControl</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mPauseButton">
+							<string key="name">mPauseButton</string>
+							<string key="candidateClassName">UIBarButtonItem</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mPlayButton">
+							<string key="name">mPlayButton</string>
+							<string key="candidateClassName">UIBarButtonItem</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mPlayView">
+							<string key="name">mPlayView</string>
+							<string key="candidateClassName">XXXPlayView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mScrubber">
+							<string key="name">mScrubber</string>
+							<string key="candidateClassName">UISlider</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mToolbar">
+							<string key="name">mToolbar</string>
+							<string key="candidateClassName">UIToolbar</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/XXXPlayViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">

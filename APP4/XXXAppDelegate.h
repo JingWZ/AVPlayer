@@ -8,13 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@class XXXViewController;
-
 @interface XXXAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
-@property (strong, nonatomic) XXXViewController *viewController;
 
 @property (strong, nonatomic) UINavigationController *navigationController;
 

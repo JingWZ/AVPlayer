@@ -7,6 +7,7 @@
 //
 
 #import "GlossaryViewController.h"
+#import "Playback.h"
 
 #import <UIKit/UIKit.h>
 

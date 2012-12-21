@@ -7,8 +7,11 @@
 //
 
 #import "XXXViewController.h"
-#import "XXXPlayViewController.h"
+#import "FileViewController.h"
 #import "GlossaryViewController.h"
+
+#import "XXXPlayViewController.h"
+
 
 
 @interface XXXViewController ()
@@ -16,8 +19,27 @@
 @end
 
 @implementation XXXViewController
-@synthesize playViewController;
-@synthesize glossaryViewController;
+@synthesize aView;
+
+
+- (IBAction)playPressed:(id)sender {
+    
+    FileViewController *fileVC=[[FileViewController alloc] initWithNibName:@"FileViewController" bundle:nil];
+    [self.navigationController pushViewController:fileVC animated:YES];
+    
+    [fileVC.navigationController setNavigationBarHidden:NO];
+    [fileVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];    
+}
+
+- (IBAction)glossaryPressed:(id)sender {
+    GlossaryViewController *glossaryVC=[[GlossaryViewController alloc]initWithNibName:@"GlossaryViewController" bundle:nil];
+    [self.navigationController pushViewController:glossaryVC animated:YES];
+    
+    [glossaryVC.navigationController setNavigationBarHidden:NO];
+    [glossaryVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
+}
+
+#pragma mark - defaults
 
 - (void)viewDidLoad
 {
@@ -27,6 +49,7 @@
 
 - (void)viewDidUnload
 {
+    [self setAView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -35,37 +58,5 @@
 {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
-
-- (IBAction)playPressed:(id)sender {
-    self.playViewController=[[XXXPlayViewController alloc]initWithNibName:@"XXXPlayViewController" bundle:nil];
-    [self.navigationController pushViewController:self.playViewController animated:YES];
-    [self.playViewController.navigationController setNavigationBarHidden:YES];
-    
-
-}
-
-- (IBAction)glossaryPredded:(id)sender {
-    self.glossaryViewController=[[GlossaryViewController alloc]initWithNibName:@"GlossaryViewController" bundle:nil];
-    [self.navigationController pushViewController:self.glossaryViewController animated:YES];
-    //[self.glossaryViewController.navigationController setNavigationBarHidden:YES];
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @end

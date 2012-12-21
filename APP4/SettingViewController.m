@@ -184,10 +184,9 @@
     CMTimeShow(self.startTime);
     CMTimeShow(self.endTime);
     
-    UIActionSheet *actionSheet=[[UIActionSheet alloc]initWithTitle:@"already" delegate:self cancelButtonTitle:@"yes" destructiveButtonTitle:nil otherButtonTitles: nil];
-    
-    [actionSheet showInView:self.view];
-    
+    Playback *new=[Playback alloc];
+    [new initAsset];
+
     /*
     //getSaveName
     [self makeSubtitleAndImageAndAudioSaveName:self.currentTime];
@@ -324,6 +323,7 @@
     [self addObserver:self forKeyPath:@"currentTime" options:NSKeyValueObservingOptionNew context:NULL];
     
 }
+
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     [self syncImageView:self.currentTime];

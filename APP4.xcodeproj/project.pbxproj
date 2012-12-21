@@ -7,8 +7,61 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		180BE2BF1678237E00BFBBF4 /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 180BE2BD1678237D00BFBBF4 /* FileViewController.m */; };
+		180BE2C01678237E00BFBBF4 /* FileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 180BE2BE1678237D00BFBBF4 /* FileViewController.xib */; };
+		180BE2EC16785E5500BFBBF4 /* XXXPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 180BE2EA16785E5500BFBBF4 /* XXXPlayViewController.m */; };
+		180BE2ED16785E5500BFBBF4 /* XXXPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 180BE2EB16785E5500BFBBF4 /* XXXPlayViewController.xib */; };
+		180BE30F16799D8100BFBBF4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 180BE30E16799D8100BFBBF4 /* QuartzCore.framework */; };
 		181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A288B164F4485001D8F5E /* ImagesPackage.m */; };
 		181A2894164F6157001D8F5E /* AudiosPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A2893164F6157001D8F5E /* AudiosPackage.m */; };
+		181A2915165CAEE5001D8F5E /* Playback.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A2914165CAEE5001D8F5E /* Playback.m */; };
+		1872B53C16842E6E0079944A /* 2 Broke Girls.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51116842E6E0079944A /* 2 Broke Girls.jpg */; };
+		1872B53D16842E6E0079944A /* Bones.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51216842E6E0079944A /* Bones.jpg */; };
+		1872B53E16842E6E0079944A /* Boston Legal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51316842E6E0079944A /* Boston Legal.jpg */; };
+		1872B53F16842E6E0079944A /* Brothers and Sisters.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51416842E6E0079944A /* Brothers and Sisters.jpg */; };
+		1872B54016842E6E0079944A /* Cold Case.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51516842E6E0079944A /* Cold Case.jpg */; };
+		1872B54116842E6E0079944A /* Criminal Minds.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51616842E6E0079944A /* Criminal Minds.jpg */; };
+		1872B54216842E6E0079944A /* CSI.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51716842E6E0079944A /* CSI.jpg */; };
+		1872B54316842E6E0079944A /* Desperate Housewives.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51816842E6E0079944A /* Desperate Housewives.jpg */; };
+		1872B54416842E6E0079944A /* Dexter.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51916842E6E0079944A /* Dexter.jpg */; };
+		1872B54516842E6E0079944A /* Downton Abbey.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51A16842E6E0079944A /* Downton Abbey.jpg */; };
+		1872B54616842E6E0079944A /* Friends2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51B16842E6E0079944A /* Friends2.jpg */; };
+		1872B54716842E6E0079944A /* Fringe.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51C16842E6E0079944A /* Fringe.jpg */; };
+		1872B54816842E6E0079944A /* Gossip Girl.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51D16842E6E0079944A /* Gossip Girl.jpg */; };
+		1872B54916842E6E0079944A /* Grey's Anatomy.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51E16842E6E0079944A /* Grey's Anatomy.jpg */; };
+		1872B54A16842E6E0079944A /* Heroes.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51F16842E6E0079944A /* Heroes.jpg */; };
+		1872B54B16842E6E0079944A /* House.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52016842E6E0079944A /* House.jpg */; };
+		1872B54C16842E6E0079944A /* How I Met Your Mother.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52116842E6E0079944A /* How I Met Your Mother.jpg */; };
+		1872B54D16842E6E0079944A /* Legend of The Seeker.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52216842E6E0079944A /* Legend of The Seeker.jpg */; };
+		1872B54E16842E6E0079944A /* Lost2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52316842E6E0079944A /* Lost2.jpg */; };
+		1872B55016842E6E0079944A /* Nikita.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52616842E6E0079944A /* Nikita.jpg */; };
+		1872B55116842E6E0079944A /* Nip Tuck.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52716842E6E0079944A /* Nip Tuck.jpg */; };
+		1872B55216842E6E0079944A /* Prison Break.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52816842E6E0079944A /* Prison Break.jpg */; };
+		1872B55416842E6E0079944A /* Revenge.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52A16842E6E0079944A /* Revenge.jpg */; };
+		1872B55516842E6E0079944A /* Rome.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52B16842E6E0079944A /* Rome.jpg */; };
+		1872B55616842E6E0079944A /* Sherlock.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52C16842E6E0079944A /* Sherlock.jpg */; };
+		1872B55716842E6E0079944A /* Skins.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52D16842E6E0079944A /* Skins.jpg */; };
+		1872B55816842E6E0079944A /* South Park.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52E16842E6E0079944A /* South Park.jpg */; };
+		1872B55916842E6E0079944A /* The 4400.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B52F16842E6E0079944A /* The 4400.jpg */; };
+		1872B55A16842E6E0079944A /* The Big Bang Theory.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53016842E6E0079944A /* The Big Bang Theory.jpg */; };
+		1872B55B16842E6E0079944A /* The Big Bang Theory2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53116842E6E0079944A /* The Big Bang Theory2.jpg */; };
+		1872B55C16842E6E0079944A /* The Closer.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53216842E6E0079944A /* The Closer.jpg */; };
+		1872B55D16842E6E0079944A /* The Good Wife.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53316842E6E0079944A /* The Good Wife.jpg */; };
+		1872B55E16842E6E0079944A /* The Killing.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53416842E6E0079944A /* The Killing.jpg */; };
+		1872B55F16842E6E0079944A /* The Office.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53516842E6E0079944A /* The Office.jpg */; };
+		1872B56016842E6E0079944A /* The Pretender.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53616842E6E0079944A /* The Pretender.jpg */; };
+		1872B56116842E6E0079944A /* The Prisoner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53716842E6E0079944A /* The Prisoner.jpg */; };
+		1872B56216842E6E0079944A /* True Blood.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53816842E6E0079944A /* True Blood.jpg */; };
+		1872B56316842E6E0079944A /* Ugly Betty.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53916842E6E0079944A /* Ugly Betty.jpg */; };
+		1872B56416842E6E0079944A /* Weeds.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53A16842E6E0079944A /* Weeds.jpg */; };
+		1872B56516842E6E0079944A /* Will and Grace.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53B16842E6E0079944A /* Will and Grace.jpg */; };
+		1872B56816842EFC0079944A /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 1872B56716842EFC0079944A /* MBProgressHUD.m */; };
+		189BBD55168007C8008C5DE4 /* CoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189BBD53168007C8008C5DE4 /* CoverViewController.m */; };
+		189BBD56168007C8008C5DE4 /* CoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 189BBD54168007C8008C5DE4 /* CoverViewController.xib */; };
+		18FCC0E616800F050038ADBB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCC0E516800F050038ADBB /* GLKit.framework */; };
+		18FCC111168023AD0038ADBB /* Friends.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 18FCC110168023AD0038ADBB /* Friends.jpg */; };
+		18FCC14F1682B5480038ADBB /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FCC14D1682B5480038ADBB /* FirstViewController.m */; };
+		18FCC1501682B5480038ADBB /* FirstViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18FCC14E1682B5480038ADBB /* FirstViewController.xib */; };
 		CE00ED0F1654895300CC4888 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE00ED0D1654895300CC4888 /* SettingViewController.m */; };
 		CE00ED101654895300CC4888 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE00ED0E1654895300CC4888 /* SettingViewController.xib */; };
 		CE012805163A61B6002C02B6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE012804163A61B6002C02B6 /* CoreMedia.framework */; };
@@ -22,18 +75,75 @@
 		CEDD6E8216390258000F3D6D /* XXXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E8116390258000F3D6D /* XXXAppDelegate.m */; };
 		CEDD6E8516390258000F3D6D /* XXXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E8416390258000F3D6D /* XXXViewController.m */; };
 		CEDD6E8816390258000F3D6D /* XXXViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDD6E8616390258000F3D6D /* XXXViewController.xib */; };
-		CEDD6E91163902D3000F3D6D /* XXXPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E8F163902D3000F3D6D /* XXXPlayViewController.m */; };
-		CEDD6E92163902D3000F3D6D /* XXXPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDD6E90163902D3000F3D6D /* XXXPlayViewController.xib */; };
 		CEDD6E9816390331000F3D6D /* XXXPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDD6E9716390331000F3D6D /* XXXPlayView.m */; };
 		CEDD6E9A1639037E000F3D6D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E991639037E000F3D6D /* AVFoundation.framework */; };
 		CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */ = {isa = PBXBuildFile; fileRef = CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		181A288A164F4485001D8F5E /* ImagesPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagesPackage.h; sourceTree = "<group>"; };
-		181A288B164F4485001D8F5E /* ImagesPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagesPackage.m; sourceTree = "<group>"; };
-		181A2892164F6157001D8F5E /* AudiosPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudiosPackage.h; sourceTree = "<group>"; };
-		181A2893164F6157001D8F5E /* AudiosPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudiosPackage.m; sourceTree = "<group>"; };
+		180BE2BC1678237D00BFBBF4 /* FileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileViewController.h; sourceTree = "<group>"; };
+		180BE2BD1678237D00BFBBF4 /* FileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileViewController.m; sourceTree = "<group>"; };
+		180BE2BE1678237D00BFBBF4 /* FileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileViewController.xib; sourceTree = "<group>"; };
+		180BE2E916785E5500BFBBF4 /* XXXPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXXPlayViewController.h; sourceTree = "<group>"; };
+		180BE2EA16785E5500BFBBF4 /* XXXPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXXPlayViewController.m; sourceTree = "<group>"; };
+		180BE2EB16785E5500BFBBF4 /* XXXPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XXXPlayViewController.xib; sourceTree = "<group>"; };
+		180BE30E16799D8100BFBBF4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		181A288A164F4485001D8F5E /* ImagesPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImagesPackage.h; path = APP4/ImagesPackage.h; sourceTree = "<group>"; };
+		181A288B164F4485001D8F5E /* ImagesPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImagesPackage.m; path = APP4/ImagesPackage.m; sourceTree = "<group>"; };
+		181A2892164F6157001D8F5E /* AudiosPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudiosPackage.h; path = APP4/AudiosPackage.h; sourceTree = "<group>"; };
+		181A2893164F6157001D8F5E /* AudiosPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudiosPackage.m; path = APP4/AudiosPackage.m; sourceTree = "<group>"; };
+		181A2913165CAEE5001D8F5E /* Playback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playback.h; sourceTree = "<group>"; };
+		181A2914165CAEE5001D8F5E /* Playback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Playback.m; sourceTree = "<group>"; };
+		1872B51116842E6E0079944A /* 2 Broke Girls.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "2 Broke Girls.jpg"; sourceTree = "<group>"; };
+		1872B51216842E6E0079944A /* Bones.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Bones.jpg; sourceTree = "<group>"; };
+		1872B51316842E6E0079944A /* Boston Legal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Boston Legal.jpg"; sourceTree = "<group>"; };
+		1872B51416842E6E0079944A /* Brothers and Sisters.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Brothers and Sisters.jpg"; sourceTree = "<group>"; };
+		1872B51516842E6E0079944A /* Cold Case.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Cold Case.jpg"; sourceTree = "<group>"; };
+		1872B51616842E6E0079944A /* Criminal Minds.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Criminal Minds.jpg"; sourceTree = "<group>"; };
+		1872B51716842E6E0079944A /* CSI.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = CSI.jpg; sourceTree = "<group>"; };
+		1872B51816842E6E0079944A /* Desperate Housewives.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Desperate Housewives.jpg"; sourceTree = "<group>"; };
+		1872B51916842E6E0079944A /* Dexter.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Dexter.jpg; sourceTree = "<group>"; };
+		1872B51A16842E6E0079944A /* Downton Abbey.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Downton Abbey.jpg"; sourceTree = "<group>"; };
+		1872B51B16842E6E0079944A /* Friends2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Friends2.jpg; sourceTree = "<group>"; };
+		1872B51C16842E6E0079944A /* Fringe.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Fringe.jpg; sourceTree = "<group>"; };
+		1872B51D16842E6E0079944A /* Gossip Girl.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Gossip Girl.jpg"; sourceTree = "<group>"; };
+		1872B51E16842E6E0079944A /* Grey's Anatomy.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Grey's Anatomy.jpg"; sourceTree = "<group>"; };
+		1872B51F16842E6E0079944A /* Heroes.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Heroes.jpg; sourceTree = "<group>"; };
+		1872B52016842E6E0079944A /* House.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = House.jpg; sourceTree = "<group>"; };
+		1872B52116842E6E0079944A /* How I Met Your Mother.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "How I Met Your Mother.jpg"; sourceTree = "<group>"; };
+		1872B52216842E6E0079944A /* Legend of The Seeker.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Legend of The Seeker.jpg"; sourceTree = "<group>"; };
+		1872B52316842E6E0079944A /* Lost2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Lost2.jpg; sourceTree = "<group>"; };
+		1872B52616842E6E0079944A /* Nikita.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Nikita.jpg; sourceTree = "<group>"; };
+		1872B52716842E6E0079944A /* Nip Tuck.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Nip Tuck.jpg"; sourceTree = "<group>"; };
+		1872B52816842E6E0079944A /* Prison Break.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Prison Break.jpg"; sourceTree = "<group>"; };
+		1872B52A16842E6E0079944A /* Revenge.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Revenge.jpg; sourceTree = "<group>"; };
+		1872B52B16842E6E0079944A /* Rome.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Rome.jpg; sourceTree = "<group>"; };
+		1872B52C16842E6E0079944A /* Sherlock.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Sherlock.jpg; sourceTree = "<group>"; };
+		1872B52D16842E6E0079944A /* Skins.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Skins.jpg; sourceTree = "<group>"; };
+		1872B52E16842E6E0079944A /* South Park.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "South Park.jpg"; sourceTree = "<group>"; };
+		1872B52F16842E6E0079944A /* The 4400.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The 4400.jpg"; sourceTree = "<group>"; };
+		1872B53016842E6E0079944A /* The Big Bang Theory.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The Big Bang Theory.jpg"; sourceTree = "<group>"; };
+		1872B53116842E6E0079944A /* The Big Bang Theory2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The Big Bang Theory2.jpg"; sourceTree = "<group>"; };
+		1872B53216842E6E0079944A /* The Closer.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The Closer.jpg"; sourceTree = "<group>"; };
+		1872B53316842E6E0079944A /* The Good Wife.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The Good Wife.jpg"; sourceTree = "<group>"; };
+		1872B53416842E6E0079944A /* The Killing.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The Killing.jpg"; sourceTree = "<group>"; };
+		1872B53516842E6E0079944A /* The Office.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The Office.jpg"; sourceTree = "<group>"; };
+		1872B53616842E6E0079944A /* The Pretender.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The Pretender.jpg"; sourceTree = "<group>"; };
+		1872B53716842E6E0079944A /* The Prisoner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The Prisoner.jpg"; sourceTree = "<group>"; };
+		1872B53816842E6E0079944A /* True Blood.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "True Blood.jpg"; sourceTree = "<group>"; };
+		1872B53916842E6E0079944A /* Ugly Betty.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Ugly Betty.jpg"; sourceTree = "<group>"; };
+		1872B53A16842E6E0079944A /* Weeds.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Weeds.jpg; sourceTree = "<group>"; };
+		1872B53B16842E6E0079944A /* Will and Grace.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Will and Grace.jpg"; sourceTree = "<group>"; };
+		1872B56616842EFC0079944A /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		1872B56716842EFC0079944A /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		189BBD52168007C8008C5DE4 /* CoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverViewController.h; sourceTree = "<group>"; };
+		189BBD53168007C8008C5DE4 /* CoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoverViewController.m; sourceTree = "<group>"; };
+		189BBD54168007C8008C5DE4 /* CoverViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CoverViewController.xib; sourceTree = "<group>"; };
+		18FCC0E516800F050038ADBB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		18FCC110168023AD0038ADBB /* Friends.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Friends.jpg; sourceTree = "<group>"; };
+		18FCC14C1682B5480038ADBB /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
+		18FCC14D1682B5480038ADBB /* FirstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
+		18FCC14E1682B5480038ADBB /* FirstViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirstViewController.xib; sourceTree = "<group>"; };
 		CE00ED0C1654895300CC4888 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		CE00ED0D1654895300CC4888 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		CE00ED0E1654895300CC4888 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
@@ -54,14 +164,11 @@
 		CEDD6E8316390258000F3D6D /* XXXViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XXXViewController.h; sourceTree = "<group>"; };
 		CEDD6E8416390258000F3D6D /* XXXViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XXXViewController.m; sourceTree = "<group>"; };
 		CEDD6E8716390258000F3D6D /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/XXXViewController.xib; sourceTree = "<group>"; };
-		CEDD6E8E163902D3000F3D6D /* XXXPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XXXPlayViewController.h; path = ../XXXPlayViewController.h; sourceTree = "<group>"; };
-		CEDD6E8F163902D3000F3D6D /* XXXPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XXXPlayViewController.m; path = ../XXXPlayViewController.m; sourceTree = "<group>"; };
-		CEDD6E90163902D3000F3D6D /* XXXPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = XXXPlayViewController.xib; path = ../XXXPlayViewController.xib; sourceTree = "<group>"; };
-		CEDD6E9616390331000F3D6D /* XXXPlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XXXPlayView.h; sourceTree = "<group>"; };
-		CEDD6E9716390331000F3D6D /* XXXPlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XXXPlayView.m; sourceTree = "<group>"; };
+		CEDD6E9616390331000F3D6D /* XXXPlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XXXPlayView.h; path = APP4/XXXPlayView.h; sourceTree = "<group>"; };
+		CEDD6E9716390331000F3D6D /* XXXPlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XXXPlayView.m; path = APP4/XXXPlayView.m; sourceTree = "<group>"; };
 		CEDD6E991639037E000F3D6D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		CEFB9254164CE8A700BFADEC /* SubtitlePackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubtitlePackage.h; sourceTree = "<group>"; };
-		CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubtitlePackage.m; sourceTree = "<group>"; };
+		CEFB9254164CE8A700BFADEC /* SubtitlePackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SubtitlePackage.h; path = APP4/SubtitlePackage.h; sourceTree = "<group>"; };
+		CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SubtitlePackage.m; path = APP4/SubtitlePackage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +176,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18FCC0E616800F050038ADBB /* GLKit.framework in Frameworks */,
+				180BE30F16799D8100BFBBF4 /* QuartzCore.framework in Frameworks */,
 				CE012805163A61B6002C02B6 /* CoreMedia.framework in Frameworks */,
 				CEDD6E9A1639037E000F3D6D /* AVFoundation.framework in Frameworks */,
 				CEDD6E7216390258000F3D6D /* UIKit.framework in Frameworks */,
@@ -80,9 +189,76 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		180BE2BB167822D800BFBBF4 /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				1872B56616842EFC0079944A /* MBProgressHUD.h */,
+				1872B56716842EFC0079944A /* MBProgressHUD.m */,
+				CEDD6E9616390331000F3D6D /* XXXPlayView.h */,
+				CEDD6E9716390331000F3D6D /* XXXPlayView.m */,
+				CEFB9254164CE8A700BFADEC /* SubtitlePackage.h */,
+				CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */,
+				181A288A164F4485001D8F5E /* ImagesPackage.h */,
+				181A288B164F4485001D8F5E /* ImagesPackage.m */,
+				181A2892164F6157001D8F5E /* AudiosPackage.h */,
+				181A2893164F6157001D8F5E /* AudiosPackage.m */,
+			);
+			name = Class;
+			sourceTree = "<group>";
+		};
+		1872B51016842E6E0079944A /* posters */ = {
+			isa = PBXGroup;
+			children = (
+				1872B51116842E6E0079944A /* 2 Broke Girls.jpg */,
+				1872B51216842E6E0079944A /* Bones.jpg */,
+				1872B51316842E6E0079944A /* Boston Legal.jpg */,
+				1872B51416842E6E0079944A /* Brothers and Sisters.jpg */,
+				1872B51516842E6E0079944A /* Cold Case.jpg */,
+				1872B51616842E6E0079944A /* Criminal Minds.jpg */,
+				1872B51716842E6E0079944A /* CSI.jpg */,
+				1872B51816842E6E0079944A /* Desperate Housewives.jpg */,
+				1872B51916842E6E0079944A /* Dexter.jpg */,
+				1872B51A16842E6E0079944A /* Downton Abbey.jpg */,
+				1872B51B16842E6E0079944A /* Friends2.jpg */,
+				1872B51C16842E6E0079944A /* Fringe.jpg */,
+				1872B51D16842E6E0079944A /* Gossip Girl.jpg */,
+				1872B51E16842E6E0079944A /* Grey's Anatomy.jpg */,
+				1872B51F16842E6E0079944A /* Heroes.jpg */,
+				1872B52016842E6E0079944A /* House.jpg */,
+				1872B52116842E6E0079944A /* How I Met Your Mother.jpg */,
+				1872B52216842E6E0079944A /* Legend of The Seeker.jpg */,
+				1872B52316842E6E0079944A /* Lost2.jpg */,
+				1872B52616842E6E0079944A /* Nikita.jpg */,
+				1872B52716842E6E0079944A /* Nip Tuck.jpg */,
+				1872B52816842E6E0079944A /* Prison Break.jpg */,
+				1872B52A16842E6E0079944A /* Revenge.jpg */,
+				1872B52B16842E6E0079944A /* Rome.jpg */,
+				1872B52C16842E6E0079944A /* Sherlock.jpg */,
+				1872B52D16842E6E0079944A /* Skins.jpg */,
+				1872B52E16842E6E0079944A /* South Park.jpg */,
+				1872B52F16842E6E0079944A /* The 4400.jpg */,
+				1872B53016842E6E0079944A /* The Big Bang Theory.jpg */,
+				1872B53116842E6E0079944A /* The Big Bang Theory2.jpg */,
+				1872B53216842E6E0079944A /* The Closer.jpg */,
+				1872B53316842E6E0079944A /* The Good Wife.jpg */,
+				1872B53416842E6E0079944A /* The Killing.jpg */,
+				1872B53516842E6E0079944A /* The Office.jpg */,
+				1872B53616842E6E0079944A /* The Pretender.jpg */,
+				1872B53716842E6E0079944A /* The Prisoner.jpg */,
+				1872B53816842E6E0079944A /* True Blood.jpg */,
+				1872B53916842E6E0079944A /* Ugly Betty.jpg */,
+				1872B53A16842E6E0079944A /* Weeds.jpg */,
+				1872B53B16842E6E0079944A /* Will and Grace.jpg */,
+			);
+			name = posters;
+			path = APP4/posters;
+			sourceTree = "<group>";
+		};
 		CEDD6E6216390258000F3D6D = {
 			isa = PBXGroup;
 			children = (
+				1872B51016842E6E0079944A /* posters */,
+				180BE2BB167822D800BFBBF4 /* Class */,
 				CEDD6E7716390258000F3D6D /* APP4 */,
 				CEDD6E7016390258000F3D6D /* Frameworks */,
 				CEDD6E6E16390258000F3D6D /* Products */,
@@ -100,6 +276,8 @@
 		CEDD6E7016390258000F3D6D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				18FCC0E516800F050038ADBB /* GLKit.framework */,
+				180BE30E16799D8100BFBBF4 /* QuartzCore.framework */,
 				CE012804163A61B6002C02B6 /* CoreMedia.framework */,
 				CEDD6E991639037E000F3D6D /* AVFoundation.framework */,
 				CEDD6E7116390258000F3D6D /* UIKit.framework */,
@@ -114,26 +292,29 @@
 			children = (
 				CEDD6E8016390258000F3D6D /* XXXAppDelegate.h */,
 				CEDD6E8116390258000F3D6D /* XXXAppDelegate.m */,
+				18FCC14C1682B5480038ADBB /* FirstViewController.h */,
+				18FCC14D1682B5480038ADBB /* FirstViewController.m */,
+				18FCC14E1682B5480038ADBB /* FirstViewController.xib */,
 				CEDD6E8316390258000F3D6D /* XXXViewController.h */,
 				CEDD6E8416390258000F3D6D /* XXXViewController.m */,
 				CEDD6E8616390258000F3D6D /* XXXViewController.xib */,
-				CEDD6E8E163902D3000F3D6D /* XXXPlayViewController.h */,
-				CEDD6E8F163902D3000F3D6D /* XXXPlayViewController.m */,
-				CEDD6E90163902D3000F3D6D /* XXXPlayViewController.xib */,
+				189BBD52168007C8008C5DE4 /* CoverViewController.h */,
+				189BBD53168007C8008C5DE4 /* CoverViewController.m */,
+				189BBD54168007C8008C5DE4 /* CoverViewController.xib */,
+				180BE2BC1678237D00BFBBF4 /* FileViewController.h */,
+				180BE2BD1678237D00BFBBF4 /* FileViewController.m */,
+				180BE2BE1678237D00BFBBF4 /* FileViewController.xib */,
+				180BE2E916785E5500BFBBF4 /* XXXPlayViewController.h */,
+				180BE2EA16785E5500BFBBF4 /* XXXPlayViewController.m */,
+				180BE2EB16785E5500BFBBF4 /* XXXPlayViewController.xib */,
 				CE263EF31650E643002E2AF4 /* GlossaryViewController.h */,
 				CE263EF41650E643002E2AF4 /* GlossaryViewController.m */,
 				CE263EF51650E643002E2AF4 /* GlossaryViewController.xib */,
 				CE00ED0C1654895300CC4888 /* SettingViewController.h */,
 				CE00ED0D1654895300CC4888 /* SettingViewController.m */,
 				CE00ED0E1654895300CC4888 /* SettingViewController.xib */,
-				CEDD6E9616390331000F3D6D /* XXXPlayView.h */,
-				CEDD6E9716390331000F3D6D /* XXXPlayView.m */,
-				CEFB9254164CE8A700BFADEC /* SubtitlePackage.h */,
-				CEFB9255164CE8A700BFADEC /* SubtitlePackage.m */,
-				181A288A164F4485001D8F5E /* ImagesPackage.h */,
-				181A288B164F4485001D8F5E /* ImagesPackage.m */,
-				181A2892164F6157001D8F5E /* AudiosPackage.h */,
-				181A2893164F6157001D8F5E /* AudiosPackage.m */,
+				181A2913165CAEE5001D8F5E /* Playback.h */,
+				181A2914165CAEE5001D8F5E /* Playback.m */,
 				CEDD6E7816390258000F3D6D /* Supporting Files */,
 			);
 			path = APP4;
@@ -145,6 +326,7 @@
 				CEDD6E7916390258000F3D6D /* APP4-Info.plist */,
 				CEDD6E7A16390258000F3D6D /* InfoPlist.strings */,
 				CEDD6E7D16390258000F3D6D /* main.m */,
+				18FCC110168023AD0038ADBB /* Friends.jpg */,
 				CEDD6E7F16390258000F3D6D /* APP4-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -204,9 +386,53 @@
 			files = (
 				CEDD6E7C16390258000F3D6D /* InfoPlist.strings in Resources */,
 				CEDD6E8816390258000F3D6D /* XXXViewController.xib in Resources */,
-				CEDD6E92163902D3000F3D6D /* XXXPlayViewController.xib in Resources */,
 				CE263EF71650E643002E2AF4 /* GlossaryViewController.xib in Resources */,
 				CE00ED101654895300CC4888 /* SettingViewController.xib in Resources */,
+				180BE2C01678237E00BFBBF4 /* FileViewController.xib in Resources */,
+				180BE2ED16785E5500BFBBF4 /* XXXPlayViewController.xib in Resources */,
+				189BBD56168007C8008C5DE4 /* CoverViewController.xib in Resources */,
+				18FCC111168023AD0038ADBB /* Friends.jpg in Resources */,
+				18FCC1501682B5480038ADBB /* FirstViewController.xib in Resources */,
+				1872B53C16842E6E0079944A /* 2 Broke Girls.jpg in Resources */,
+				1872B53D16842E6E0079944A /* Bones.jpg in Resources */,
+				1872B53E16842E6E0079944A /* Boston Legal.jpg in Resources */,
+				1872B53F16842E6E0079944A /* Brothers and Sisters.jpg in Resources */,
+				1872B54016842E6E0079944A /* Cold Case.jpg in Resources */,
+				1872B54116842E6E0079944A /* Criminal Minds.jpg in Resources */,
+				1872B54216842E6E0079944A /* CSI.jpg in Resources */,
+				1872B54316842E6E0079944A /* Desperate Housewives.jpg in Resources */,
+				1872B54416842E6E0079944A /* Dexter.jpg in Resources */,
+				1872B54516842E6E0079944A /* Downton Abbey.jpg in Resources */,
+				1872B54616842E6E0079944A /* Friends2.jpg in Resources */,
+				1872B54716842E6E0079944A /* Fringe.jpg in Resources */,
+				1872B54816842E6E0079944A /* Gossip Girl.jpg in Resources */,
+				1872B54916842E6E0079944A /* Grey's Anatomy.jpg in Resources */,
+				1872B54A16842E6E0079944A /* Heroes.jpg in Resources */,
+				1872B54B16842E6E0079944A /* House.jpg in Resources */,
+				1872B54C16842E6E0079944A /* How I Met Your Mother.jpg in Resources */,
+				1872B54D16842E6E0079944A /* Legend of The Seeker.jpg in Resources */,
+				1872B54E16842E6E0079944A /* Lost2.jpg in Resources */,
+				1872B55016842E6E0079944A /* Nikita.jpg in Resources */,
+				1872B55116842E6E0079944A /* Nip Tuck.jpg in Resources */,
+				1872B55216842E6E0079944A /* Prison Break.jpg in Resources */,
+				1872B55416842E6E0079944A /* Revenge.jpg in Resources */,
+				1872B55516842E6E0079944A /* Rome.jpg in Resources */,
+				1872B55616842E6E0079944A /* Sherlock.jpg in Resources */,
+				1872B55716842E6E0079944A /* Skins.jpg in Resources */,
+				1872B55816842E6E0079944A /* South Park.jpg in Resources */,
+				1872B55916842E6E0079944A /* The 4400.jpg in Resources */,
+				1872B55A16842E6E0079944A /* The Big Bang Theory.jpg in Resources */,
+				1872B55B16842E6E0079944A /* The Big Bang Theory2.jpg in Resources */,
+				1872B55C16842E6E0079944A /* The Closer.jpg in Resources */,
+				1872B55D16842E6E0079944A /* The Good Wife.jpg in Resources */,
+				1872B55E16842E6E0079944A /* The Killing.jpg in Resources */,
+				1872B55F16842E6E0079944A /* The Office.jpg in Resources */,
+				1872B56016842E6E0079944A /* The Pretender.jpg in Resources */,
+				1872B56116842E6E0079944A /* The Prisoner.jpg in Resources */,
+				1872B56216842E6E0079944A /* True Blood.jpg in Resources */,
+				1872B56316842E6E0079944A /* Ugly Betty.jpg in Resources */,
+				1872B56416842E6E0079944A /* Weeds.jpg in Resources */,
+				1872B56516842E6E0079944A /* Will and Grace.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,13 +446,18 @@
 				CEDD6E7E16390258000F3D6D /* main.m in Sources */,
 				CEDD6E8216390258000F3D6D /* XXXAppDelegate.m in Sources */,
 				CEDD6E8516390258000F3D6D /* XXXViewController.m in Sources */,
-				CEDD6E91163902D3000F3D6D /* XXXPlayViewController.m in Sources */,
 				CEDD6E9816390331000F3D6D /* XXXPlayView.m in Sources */,
 				CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */,
 				181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */,
 				181A2894164F6157001D8F5E /* AudiosPackage.m in Sources */,
 				CE263EF61650E643002E2AF4 /* GlossaryViewController.m in Sources */,
 				CE00ED0F1654895300CC4888 /* SettingViewController.m in Sources */,
+				181A2915165CAEE5001D8F5E /* Playback.m in Sources */,
+				180BE2BF1678237E00BFBBF4 /* FileViewController.m in Sources */,
+				180BE2EC16785E5500BFBBF4 /* XXXPlayViewController.m in Sources */,
+				189BBD55168007C8008C5DE4 /* CoverViewController.m in Sources */,
+				18FCC14F1682B5480038ADBB /* FirstViewController.m in Sources */,
+				1872B56816842EFC0079944A /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

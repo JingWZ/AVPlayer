@@ -8,7 +8,10 @@
 
 #import "XXXAppDelegate.h"
 
-#import "XXXViewController.h"
+#import "FirstViewController.h"
+
+#import "CoverViewController.h"
+
 
 @implementation XXXAppDelegate
 
@@ -16,10 +19,21 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.viewController = [[XXXViewController alloc] initWithNibName:@"XXXViewController" bundle:nil];
-    self.navigationController=[[UINavigationController alloc]initWithRootViewController:self.viewController];
-    self.window.rootViewController = self.navigationController;
-    [self.viewController.navigationController setNavigationBarHidden:YES];
+
+    //隐藏电池条
+    [application setStatusBarHidden:YES];
+    
+    //CoverViewController *coverVC=[[CoverViewController alloc] initWithNibName:@"CoverViewController" bundle:nil];
+    
+    
+    FirstViewController *firstVC=[[FirstViewController alloc] initWithNibName:@"FirstViewController" bundle:nil];
+    
+    self.navigationController=[[UINavigationController alloc]initWithRootViewController:firstVC];
+    
+    [firstVC.navigationController setNavigationBarHidden:YES];
+
+    
+    self.window.rootViewController = self.navigationController;    
     [self.window makeKeyAndVisible];
     return YES;
 }
