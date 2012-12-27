@@ -47,12 +47,22 @@ static NSString *posterPath=@"/Users/apple/Code/AVPlayer/APP4/posters";
 - (IBAction)playPressed:(id)sender {
     
     FileViewController *fileVC=[[FileViewController alloc] initWithNibName:@"FileViewController" bundle:nil];
-    [self.navigationController pushViewController:fileVC animated:YES];
     
+    [self.navigationController pushViewController:fileVC animated:YES];
     [fileVC.navigationController setNavigationBarHidden:NO];
     [fileVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
+    
 
+}
 
+- (IBAction)glossaryPressed:(id)sender {
+    
+    GlossaryViewController *glossaryVC=[[GlossaryViewController alloc] initWithNibName:@"GlossaryViewController" bundle:nil];
+
+    [self.navigationController pushViewController:glossaryVC animated:YES];
+    [glossaryVC.navigationController setNavigationBarHidden:NO];
+    [glossaryVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
+    
 }
 
 #pragma mark - animation
@@ -61,9 +71,6 @@ static NSString *posterPath=@"/Users/apple/Code/AVPlayer/APP4/posters";
     
     timer = [NSTimer scheduledTimerWithTimeInterval:kTimeInterval target:self selector:@selector(movePosters) userInfo:nil repeats:YES];
     
-    
-    //[self.menuView setAlpha:0];
-
 }
 
 - (void)movePosters{

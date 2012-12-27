@@ -9,6 +9,7 @@
 #import "XXXAppDelegate.h"
 
 #import "FirstViewController.h"
+#import "CardViewController.h"
 
 @implementation XXXAppDelegate
 
@@ -20,12 +21,21 @@
     //隐藏电池条
     [application setStatusBarHidden:YES];
     
+    
     FirstViewController *firstVC=[[FirstViewController alloc] initWithNibName:@"FirstViewController" bundle:nil];
     
     self.navigationController=[[UINavigationController alloc]initWithRootViewController:firstVC];
     
     [firstVC.navigationController setNavigationBarHidden:YES];
 
+     
+    
+    /*
+    CardViewController *cardVC=[[CardViewController alloc] initWithNibName:@"CardViewController" bundle:nil];
+    self.navigationController=[[UINavigationController alloc] initWithRootViewController:cardVC];
+    [cardVC.navigationController setNavigationBarHidden:YES];
+    */
+    
     
     self.window.rootViewController = self.navigationController;    
     [self.window makeKeyAndVisible];

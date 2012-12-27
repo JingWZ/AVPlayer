@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
+#import "CardViewController.h"
 #import "XXXPlayView.h"
 #import "SubtitlePackage.h"
 #import "ImagesPackage.h"
@@ -18,10 +19,9 @@
 //#define subtitlePath @"/Users/user/Documents/DowntonSubtitle0306"
 //#define savePath @"/Users/user/Documents/save/"
 
-#define videoPath @"file:///Users/apple/Desktop/Downton.Abbey.0306.HDTVx264.mp4"
-#define subtitlePath @"/Users/apple/Desktop/DowntonSubtitle0306"
-#define savePath @"/Users/apple/Desktop/save/"
-
+//#define videoPath @"file:///Users/apple/Desktop/Downton.Abbey.0306.HDTVx264.mp4"
+//#define subtitlePath @"/Users/apple/Desktop/DowntonSubtitle0306"
+//#define savePath @"/Users/apple/Desktop/save/"
 
 @interface XXXPlayViewController : UIViewController{
     
@@ -31,12 +31,9 @@
     AVURLAsset *mAsset;
     SubtitlePackage *mSubtitlePackage;
     
-    
-    
     float mRestoreAfterScrubbingRate;
     BOOL seekToZeroBeforePlay;
     id mTimeObserver;
-    id mTimeObserverForSubtitle;
     
     IBOutlet XXXPlayView *mPlayView;
 }
@@ -47,6 +44,13 @@
 @property (retain, nonatomic) AVURLAsset *mAsset;
 @property (retain) SubtitlePackage *mSubtitlePackage;
 
+@property (assign, nonatomic) CMTime timeToStart;
+
+@property (copy, nonatomic) NSString *videoPath;
+@property (copy, nonatomic) NSString *subtitlePath;
+@property (strong, nonatomic) NSMutableArray *playerInfo;
+
+@property (strong) NSTimer *timer;
 
 @property (strong, nonatomic) IBOutlet XXXPlayView *mPlayView;
 
@@ -54,14 +58,12 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *mPlayButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *mPauseButton;
 @property (strong, nonatomic) IBOutlet UISlider *mScrubber;
-@property (strong, nonatomic) IBOutlet UILabel *displayTimeLabel;
 
-@property (strong, nonatomic) IBOutlet UILabel *displayEngLabel;
-@property (strong, nonatomic) IBOutlet UILabel *displayChiLabel;
+@property (weak, nonatomic) IBOutlet UILabel *displayTimeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *displayRemainTime;
+@property (weak, nonatomic) IBOutlet UILabel *displayEngLabel;
+@property (weak, nonatomic) IBOutlet UILabel *displayChiLabel;
 
-
-
-@property (strong, nonatomic) IBOutlet UIControl *imageExtractionLayer;
 @property (strong) AVAssetImageGenerator *imageGenerator;
 
 
@@ -71,8 +73,6 @@
 - (IBAction)beginScrubbing:(id)sender;
 - (IBAction)endScrubbing:(id)sender;
 - (IBAction)extractImageAndAudio:(id)sender;
-
-
 
 @end
 

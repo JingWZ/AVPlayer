@@ -115,9 +115,11 @@
     self.subtitleFiles=[NSMutableArray arrayWithCapacity:0];
     
     for (NSString *path in [self fileContent]) {
-        if ([[path pathExtension] isEqualToString:@"srt"]) {
-            [self.subtitleFiles addObject:path];
-        }
+        [self.subtitleFiles addObject:path];
+
+//        if ([[path pathExtension] isEqualToString:@"srt"]) {
+//            [self.subtitleFiles addObject:path];
+//        }
     }
 
 }
@@ -134,9 +136,9 @@
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    
+
     if ((self.selectedVideoNumber!=kDefaultNumber) && (self.selectedSubtitleNumber!=kDefaultNumber) ) {
-        
+
         UIBarButtonItem *playButton=[[UIBarButtonItem alloc] initWithTitle:@"Play" style:UIBarButtonItemStylePlain target:self action:@selector(moveToPlayView)];
         
         [self.navigationItem setRightBarButtonItem:playButton animated:NO];
@@ -152,14 +154,20 @@
 #pragma mark - action
 
 - (void)moveToPlayView{
+
+    NSString *videoName=[self.videoFiles objectAtIndex:self.selectedVideoNumber];
+    NSString *subtitleName=[self.subtitleFiles objectAtIndex:self.selectedSubtitleNumber];
     
     XXXPlayViewController *playVC=[[XXXPlayViewController alloc] initWithNibName:@"XXXPlayViewController" bundle:nil];
+    
+    playVC.videoPath=[[self userPath] stringByAppendingPathComponent:videoName];
+    playVC.subtitlePath=[[self userPath] stringByAppendingPathComponent:subtitleName];
+
     [self.navigationController pushViewController:playVC animated:YES];
     
     [playVC.navigationController setNavigationBarHidden:NO];
     [playVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
 
-    
 }
 
 #pragma mark - defaults

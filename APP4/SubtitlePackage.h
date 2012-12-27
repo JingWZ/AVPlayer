@@ -16,14 +16,16 @@
 @property (assign) CMTime endTime;
 @property (copy) NSString *EngSubtitle;
 @property (copy) NSString *ChiSubtitle;
+- (void)savesubtitleInPath:(NSString *)path;
+- (IndividualSubtitle *)initSubtitle;
 @end
 
 
 @interface SubtitlePackage : NSObject <NSCoding>
 @property (retain) NSMutableArray *subtitleItems;
-
 - (SubtitlePackage *)initWithFile:(NSString *)filePath;
 - (NSUInteger)indexOfProperSubtitleWithGivenCMTime:(CMTime)time;
 - (void)saveSubtitleWithTime:(CMTime)time inPath:(NSString *)path;
+
 
 @end

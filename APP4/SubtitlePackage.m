@@ -85,7 +85,7 @@
     
 }
 
-#pragma mark -
+#pragma mark - save
 
 - (void)saveSubtitleWithTime:(CMTime)time inPath:(NSString *)path{
     
@@ -101,6 +101,8 @@
     [data writeToFile:path atomically:YES];
     
 }
+
+
 
 #pragma mark - make CMTime from String
 
@@ -158,7 +160,22 @@
 @synthesize startTime, endTime;
 @synthesize EngSubtitle, ChiSubtitle;
 
+- (IndividualSubtitle *)initSubtitle{
+    IndividualSubtitle *subtitle=[IndividualSubtitle new];
+    subtitle.startTime=kCMTimeZero;
+    subtitle.endTime=kCMTimeZero;
+    return subtitle;
+}
 
+- (void)savesubtitleInPath:(NSString *)path{
+    
+    NSMutableData *data=[[NSMutableData alloc]init];
+    NSKeyedArchiver *archiver=[[NSKeyedArchiver alloc]initForWritingWithMutableData:data];
+    [archiver encodeObject:self forKey:@"subtitle"];
+    [archiver finishEncoding];
+    
+    [data writeToFile:path atomically:YES];
+}
 
 - (void)encodeWithCoder:(NSCoder *)aCoder{
     [aCoder encodeCMTime:startTime forKey:@"startTime"];

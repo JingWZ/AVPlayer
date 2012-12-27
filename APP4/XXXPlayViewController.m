@@ -8,24 +8,25 @@
 
 
 #import "XXXPlayViewController.h"
+#import "MBProgressHUD.h"
 
-
+#define kTimescale 60.0
+#define kHideInterval 5.0
+#define kPlayerInfo @"playerInfo"
+#define KVGlossaryDefaults @"glossaryDefaults"
 
 @interface XXXPlayViewController ()
+
 - (void)showStopButton;
 - (void)showPlayButton;
 - (void)syncPlayPauseButtons;
-- (void)initScrubberTimer;
+- (void)initDisplayItems;
 - (void)syncScrubber;
-- (void)initSubtitle;
-- (void)syncSubtitle;
-- (BOOL)isScrubbing;
-
--(void)initImageExtractionLayer;
 
 @end
 
 @interface XXXPlayViewController (Player)
+
 - (BOOL)isPlaying;
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys;
 - (CMTime)playerItemDuration;
@@ -33,28 +34,25 @@
 - (void)playerItemDidReachEnd:(NSNotification *)notification;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context;
 
-
 @end
 
 static void *PlayViewControllerRateObservationContext = &PlayViewControllerRateObservationContext;
 static void *PlayViewControllerStatusObservationContext = &PlayViewControllerStatusObservationContext;
 static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControllerCurrentItemObservationContext;
 
+
 @implementation XXXPlayViewController
-@synthesize mToolbar;
-@synthesize mPlayButton;
-@synthesize mPauseButton;
-@synthesize mScrubber;
-@synthesize displayTimeLabel;
-@synthesize displayEngLabel;
-@synthesize displayChiLabel;
-@synthesize imageExtractionLayer;
-@synthesize mURL, mPlayer, mPlayerItem, mPlayView;
-@synthesize mAsset;
+
+@synthesize mToolbar, mPlayButton, mPauseButton, mScrubber;
+@synthesize displayTimeLabel, displayRemainTime, displayEngLabel, displayChiLabel;
+@synthesize mURL, mAsset, mPlayer, mPlayerItem, mPlayView;
 @synthesize mSubtitlePackage;
+@synthesize videoPath, subtitlePath, playerInfo;
+@synthesize timer;
+
+#pragma mark - button
 
 - (IBAction)Play:(id)sender {
-    
     
     if (YES==seekToZeroBeforePlay) {
         seekToZeroBeforePlay=NO;
@@ -62,10 +60,8 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     }
     [mPlayer play];
     [self showStopButton];
-    
-    
-}
 
+}
 
 - (IBAction)Pause:(id)sender {
     [mPlayer pause];
@@ -103,44 +99,72 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     self.mPauseButton.enabled=NO;
 }
 
+#pragma mark - display items
 
-
-- (void)initScrubberTimer{
-    double interval=.1f;
-    CMTime playDuration=[self playerItemDuration];
-    if (CMTIME_IS_INVALID(playDuration)) {
-        return;
-    }
-    double duration = CMTimeGetSeconds(playDuration);
-    if (isfinite(duration)) {
-        CGFloat width=CGRectGetWidth([mScrubber bounds]);
-        interval=0.5f * duration/width;
-    }
-    
+//显示进度条，字幕，时间标签
+- (void)initDisplayItems{
     
     __block typeof(self) bself = self;
-    mTimeObserver=[mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+    mTimeObserver=[mPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, kTimescale) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         [bself syncScrubber];
+        [bself syncSubtitle];
+        [bself syncTimeLabel];
     }];
+    
 }
 
+- (void)hideDisplayItems{
+    
+    [timer invalidate];
+    
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [mToolbar setHidden:YES];
+    [self.displayTimeLabel setHidden:YES];
+    [self.displayRemainTime setHidden:YES];
+}
+
+- (void)showDisplayItems:(UITapGestureRecognizer *)gesture{
+    
+    CGPoint point=[gesture locationInView:self.view];
+    
+    //如果点在上下导航栏上，则显示导航栏；否则截图和音频
+    if (point.y<self.navigationController.navigationBar.bounds.size.height || point.y>=(self.view.bounds.size.height-self.mToolbar.bounds.size.height)) {
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+        [mToolbar setHidden:NO];
+        [self.displayTimeLabel setHidden:NO];
+        [self.displayRemainTime setHidden:NO];
+
+        timer=[NSTimer scheduledTimerWithTimeInterval:kHideInterval target:self selector:@selector(hideDisplayItems) userInfo:nil repeats:NO];
+    }else{
+        [self extractImageAndAudio];
+    }
+
+}
+
+#pragma mark - scrubber
+
 -(void)syncScrubber{
+    
     CMTime playerDuration=[self playerItemDuration];
+    
     if (CMTIME_IS_INVALID(playerDuration)) {
         mScrubber.minimumValue=0.0;
         return;
     }
+    
     double duration=CMTimeGetSeconds(playerDuration);
+    
     if (isfinite(duration)) {
         float minValue=[mScrubber minimumValue];
         float maxValue=[mScrubber maximumValue];
         double time=CMTimeGetSeconds([mPlayer currentTime]);
         [mScrubber setValue:(maxValue-minValue)*time/duration+minValue];
-        
     }
+    
 }
 
 - (IBAction)Scrub:(id)sender {
+    
     if ([sender isKindOfClass:[UISlider class]]) {
         UISlider *slider=sender;
         CMTime playerDuration=[self playerItemDuration];
@@ -154,29 +178,38 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
             float value=[slider value];
             double time=duration * (value-minValue)/(maxValue-minValue);
             [mPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+            [self syncTimeLabel];
+            [self syncSubtitle];
         }
     }
 }
 
 - (IBAction)beginScrubbing:(id)sender {
+
     mRestoreAfterScrubbingRate=[mPlayer rate];
     [mPlayer setRate:0.f];
     [self removePlayerTimeObserver];
+    
+    [timer invalidate];
+    
 }
 
 - (IBAction)endScrubbing:(id)sender {
+    
     if (!mTimeObserver) {
+        
         CMTime playerDuration=[self playerItemDuration];
         if (CMTIME_IS_INVALID(playerDuration)) {
             return;
         }
+        
         double duration=CMTimeGetSeconds(playerDuration);
         if (isfinite(duration)) {
-            CGFloat width=CGRectGetWidth([mScrubber bounds]);
-            double tolerance=0.5f*duration/width;
             __block typeof(self) bself = self;
-            mTimeObserver=[mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
+            mTimeObserver=[mPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, kTimescale) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
                 [bself syncScrubber];
+                [bself syncSubtitle];
+                [bself syncTimeLabel];
             }];
         }
     }
@@ -185,12 +218,8 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         [mPlayer setRate:mRestoreAfterScrubbingRate];
         mRestoreAfterScrubbingRate=0.f;
     }
-}
-
-
-
-- (BOOL)isScrubbing{
-    return mRestoreAfterScrubbingRate !=0.f;
+    
+    timer=[NSTimer scheduledTimerWithTimeInterval:kHideInterval target:self selector:@selector(hideDisplayItems) userInfo:nil repeats:NO];
 }
 
 - (void)enableScrubber{
@@ -201,24 +230,17 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     self.mScrubber.enabled=NO;
 }
 
-#pragma mark - subtitle
--(void)initSubtitle{
-    __block typeof(self) bself = self;
-    mTimeObserverForSubtitle=[mPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, 600) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-        [bself syncSubtitle];
-    }];
-}
+#pragma mark - time label
 
-- (void)syncSubtitle{
+- (void)syncTimeLabel{
     
+    CMTime playerDuration=[self playerItemDuration];
     CMTime currentTime=[self.mPlayer currentTime];
+    CMTime remainTime=CMTimeSubtract(playerDuration, currentTime);
     
     self.displayTimeLabel.text=[NSString stringWithFormat:@"%@",[self getTimeStr:currentTime]];
-    
-    NSUInteger index=[self.mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:currentTime];
-    IndividualSubtitle *currentSubtitle=[self.mSubtitlePackage.subtitleItems objectAtIndex:index];
-    self.displayEngLabel.text=currentSubtitle.EngSubtitle;
-    self.displayChiLabel.text=currentSubtitle.ChiSubtitle;
+    self.displayRemainTime.text=[NSString stringWithFormat:@"%@",[self getTimeStr:remainTime]];
+
 }
 
 - (NSString *)getTimeStr:(CMTime)time{
@@ -242,20 +264,59 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     return timeStr;
 }
 
-#pragma mark - extractImageAndAudio
+#pragma mark - subtitle
 
--(void)initImageExtractionLayer{
-    [self.mPlayView addSubview:self.imageExtractionLayer];
-}
-
-- (IBAction)extractImageAndAudio:(id)sender {
+- (void)syncSubtitle{
     
     CMTime currentTime=[self.mPlayer currentTime];
-    NSString *saveName=[self makeSubtitleAndImageAndAudioSaveName:currentTime];
-    NSString *path=[savePath stringByAppendingString:saveName];
     NSUInteger index=[self.mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:currentTime];
     
-    if (index) {//如果没有字幕，则不截图
+    IndividualSubtitle *currentSubtitle=[self.mSubtitlePackage.subtitleItems objectAtIndex:index];
+    self.displayEngLabel.text=currentSubtitle.EngSubtitle;
+    self.displayChiLabel.text=currentSubtitle.ChiSubtitle;
+    
+}
+
+
+#pragma mark - extractImageAndAudio
+
+- (void)extractImageAndAudio {
+
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[self savePath]]) {
+        
+        //创建一个以视频名为名的文件夹，存储图片和音频
+        [[NSFileManager defaultManager] createDirectoryAtPath:[self savePath] withIntermediateDirectories:NO attributes:nil error:nil];
+        
+        //把该文件夹的路径存入默认生词本的array，再存入userDefaults，以便在glossaryView里面使用
+        NSMutableArray *glossaryDefaults;
+        if (![[NSUserDefaults standardUserDefaults] arrayForKey:KVGlossaryDefaults]) {
+             glossaryDefaults=[NSMutableArray arrayWithCapacity:0];
+        }else{
+            glossaryDefaults=[NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] arrayForKey:KVGlossaryDefaults]];
+        }
+        [glossaryDefaults addObject:[self savePath]];
+        [[NSUserDefaults standardUserDefaults] setObject:glossaryDefaults forKey:KVGlossaryDefaults];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
+        
+        //把视频路径和字幕路径存入该文件，以便之后在settingView中要修改图片音频时使用
+        NSString *saveVideoPath=[[self savePath] stringByAppendingPathComponent:@"videoPath"];
+        NSString *saveSubtitlePath=[[self savePath] stringByAppendingPathComponent:@"subtitlePath"];
+        
+        [self.videoPath writeToFile:saveVideoPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        [self.subtitlePath writeToFile:saveSubtitlePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    }
+    
+    CMTime currentTime=[self.mPlayer currentTime];
+    
+    NSString *saveName=[self makeSaveName:currentTime];
+    NSString *path=[[self savePath] stringByAppendingPathComponent:saveName];
+    
+    NSUInteger index=[self.mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:currentTime];
+    IndividualSubtitle *currentSubtitle=[self.mSubtitlePackage.subtitleItems objectAtIndex:index];
+    
+    if (index && (![currentSubtitle.EngSubtitle isEqualToString:@" "])) {//如果没有英文字幕，则不截图
         
         //extract subtitle
         [self.mSubtitlePackage saveSubtitleWithTime:currentTime inPath:path];
@@ -275,8 +336,14 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
 }
 
+- (NSString *)savePath{
+    NSString *userPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *fileName=[[self.videoPath lastPathComponent] stringByDeletingPathExtension];
+    NSString *savePath=[userPath stringByAppendingPathComponent:fileName];
+    return savePath;
+}
 
-- (NSString *)makeSubtitleAndImageAndAudioSaveName:(CMTime)time {
+- (NSString *)makeSaveName:(CMTime)time {
     float timeInSecond=CMTimeGetSeconds(time);
     
     NSString *hour;
@@ -315,9 +382,130 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     return saveName;
 }
 
+#pragma mark - action
 
-#pragma mark - viewLoad
+- (void)backToFileView{
+    
+    if (CMTIME_IS_VALID(mPlayer.currentTime)) {
+        
+        [self.playerInfo removeAllObjects];
+        
+        [self.playerInfo addObject:self.videoPath];
+        [self.playerInfo addObject:self.subtitlePath];
+        
+        //如果视频已经播放到结束，则存入开始时间
+        float seconds;
+        if (!CMTimeCompare(mPlayerItem.duration, mPlayer.currentTime)) {
+            seconds=0.f;
+        }else{
+            seconds=CMTimeGetSeconds(mPlayer.currentTime);
+        }
+        [self.playerInfo addObject:[NSNumber numberWithFloat:seconds]];
+        
+        [self savePlayInfo];
+    }
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
 
+- (void)moveToCardView{
+    
+    CardViewController *cardVC=[[CardViewController alloc] initWithNibName:@"CardViewController" bundle:nil];
+    cardVC.savePath=[self savePath];
+    cardVC.videoPath=self.videoPath;
+    cardVC.subtitlePath=self.subtitlePath;
+    [self.navigationController pushViewController:cardVC animated:YES];
+    
+}
+
+- (void)savePlayInfo{
+    NSUserDefaults *lastPlayInfo=[NSUserDefaults standardUserDefaults];
+    [lastPlayInfo setObject:playerInfo forKey:kPlayerInfo];
+    [lastPlayInfo synchronize];
+}
+
+#pragma mark - view did appear
+
+- (void)initMPlayer{
+    
+    mURL=[NSURL fileURLWithPath:self.videoPath];
+    self.mAsset=[AVURLAsset URLAssetWithURL:mURL options:nil];
+    
+    NSArray *requestedKeys=[NSArray arrayWithObject:@"tracks"];
+    [mAsset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self prepareToPlayAsset:mAsset withKeys:requestedKeys];
+        });
+    }];
+    
+    self.mSubtitlePackage=[[SubtitlePackage alloc] initWithFile:self.subtitlePath];
+    
+    
+}
+
+
+- (void)viewDidAppear:(BOOL)animated{
+    
+    self.playerInfo=[NSMutableArray arrayWithCapacity:3];
+    
+    //获得上次播放信息
+    if ([[NSUserDefaults standardUserDefaults] arrayForKey:kPlayerInfo]) {
+        self.playerInfo=[NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] arrayForKey:kPlayerInfo]];
+    }
+    
+    //判断之前是否已经播放过
+    if (self.playerInfo.count==3) {
+        
+        NSString *lastVideo=[self.playerInfo objectAtIndex:0];
+        NSString *lastSubtitle=[self.playerInfo objectAtIndex:1];
+        
+        //之前已经播放过，重新载入当时的时间
+        if ([self.videoPath isEqualToString:lastVideo] && [self.subtitlePath isEqualToString:lastSubtitle]) {
+            
+            self.timeToStart=CMTimeMakeWithSeconds([[self.playerInfo objectAtIndex:2] floatValue], kTimescale);
+            [self initMPlayer];
+            
+        }else {
+            self.timeToStart=kCMTimeZero;
+            [self initMPlayer];
+        }
+        
+    }else{
+        
+        self.timeToStart=kCMTimeZero;
+        [self initMPlayer];
+    }
+    
+    [self initDisplayItems];
+    [self syncPlayPauseButtons];
+    
+    //加入手势识别，以调出上/下导航栏
+    UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showDisplayItems:)];
+    [self.view addGestureRecognizer:tapGesture];
+
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [mPlayer pause];
+    [super viewWillDisappear:animated];
+}
+
+- (void)setviewDisplayName{
+    /* Set the view title to the last component of the asset URL. */
+    self.title=[[mURL lastPathComponent] stringByDeletingPathExtension];
+    
+    /* Or if the item has a AVMetadataCommonKeyTitle metadata, use that instead. */
+    for (AVMetadataItem *item in ([[[mPlayer currentItem] asset] commonMetadata])){
+        NSString *commonKey=[item commonKey];
+        if ([commonKey isEqualToString:AVMetadataCommonKeyTitle]) {
+            self.title=[item stringValue];
+        }
+    }
+}
+
+#pragma mark - view did load
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -331,34 +519,19 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 
 - (void)viewDidLoad
 {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    mURL=[NSURL URLWithString:videoPath];
-    self.mAsset=[AVURLAsset URLAssetWithURL:mURL options:nil];
-    NSArray *requestedKeys=[NSArray arrayWithObject:@"tracks"];
-    [mAsset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self prepareToPlayAsset:mAsset withKeys:requestedKeys];
-        });
-    }];
-    
-    
-    
-    
-    
-    // Do any additional setup after loading the view from its nib.
+    //显示下方的barButton
     UIBarButtonItem *scrubberItem=[[UIBarButtonItem alloc] initWithCustomView:mScrubber];
     UIBarButtonItem *flexItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     mToolbar.items=[NSArray arrayWithObjects:mPlayButton,scrubberItem,flexItem, nil];
-    [self initScrubberTimer];
-    [self syncPlayPauseButtons];
-    [self syncScrubber];
-    [self initSubtitle];
-    [self syncSubtitle];
     
-    self.mSubtitlePackage=[[SubtitlePackage alloc]initWithFile:subtitlePath];
+    //显示上方的barButton
+    UIBarButtonItem *doneButton=[[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(moveToCardView)];
+    UIBarButtonItem *backButton=[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backToFileView)];
     
-    
-    self.displayTimeLabel.text=@"";
+    [self.navigationItem setRightBarButtonItem:doneButton animated:NO];
+    [self.navigationItem setLeftBarButtonItem:backButton animated:NO];
     
     [super viewDidLoad];
     
@@ -374,15 +547,11 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [self setDisplayEngLabel:nil];
     [self setDisplayChiLabel:nil];
     [self setDisplayTimeLabel:nil];
-    [self setImageExtractionLayer:nil];
+    [self setDisplayRemainTime:nil];
+    
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillDisappear:(BOOL)animated{
-    [mPlayer pause];
-    [super viewWillDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -390,35 +559,13 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)setviewDisplayName{
-    /* Set the view title to the last component of the asset URL. */
-    self.title=[mURL lastPathComponent];
-    
-    /* Or if the item has a AVMetadataCommonKeyTitle metadata, use that instead. */
-    for (AVMetadataItem *item in ([[[mPlayer currentItem] asset] commonMetadata])){
-        NSString *commonKey=[item commonKey];
-        if ([commonKey isEqualToString:AVMetadataCommonKeyTitle]) {
-            self.title=[item stringValue];
-        }
-    }
-}
-
-
 @end
 
-
-
-
-
-
-
-
-
+#pragma mark - player
 
 @implementation XXXPlayViewController (Player)
 
 -(BOOL)isPlaying{
-    //toknow
     return mRestoreAfterScrubbingRate !=0.f || [mPlayer rate] !=0.f;
 }
 
@@ -438,24 +585,6 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 -(void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys{
-    //    for (NSString *thisKey in requestedKeys){
-    //        NSError *error=nil;
-    //        AVKeyValueStatus keyStatus=[asset statusOfValueForKey:thisKey error:&error];
-    //        if (keyStatus==AVKeyValueStatusFailed) {
-    //            [self assetFailedToPrepareForPlayback:error];
-    //            return;
-    //        }
-    //    }
-    
-    //    if (!asset.playable) {
-    //        NSString *localizedDescription=NSLocalizedString(@"Item cannot be played", @"Item cannot be played description");
-    //        NSString *localizedFailureReason=NSLocalizedString(@"The assets tracks were loaded, but could not be made playable.", @"Item cannot be played failure reason");
-    //        NSDictionary *errorDict=[NSDictionary dictionaryWithObjectsAndKeys:localizedDescription, NSLocalizedDescriptionKey, localizedFailureReason, NSLocalizedFailureReasonErrorKey, nil];
-    //        NSError *assetCannotBePlayedError=[NSError errorWithDomain:@"StitchedStreamPlayer" code:0 userInfo:errorDict];
-    //        [self assetFailedToPrepareForPlayback:assetCannotBePlayedError];
-    //        return;
-    //    }
-    
     if (self.mPlayerItem) {
         [self.mPlayerItem removeObserver:self forKeyPath:@"status"];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.mPlayerItem];
@@ -470,22 +599,23 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     if (![self mPlayer]) {
         [self setMPlayer:[AVPlayer playerWithPlayerItem:self.mPlayerItem]];
         [self.mPlayer addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:PlayViewControllerCurrentItemObservationContext];
-        
-        //[self.mPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:PlayViewControllerRateObservationContext];
     }
     
     if (self.mPlayer.currentItem != self.mPlayerItem) {
         [[self mPlayer] replaceCurrentItemWithPlayerItem:self.mPlayerItem];
         [self syncPlayPauseButtons];
     }
-    [mScrubber setValue:0.0];
+    
     [mPlayer play];
+    [mPlayer seekToTime:self.timeToStart];
     [self showStopButton];
+    
+    timer=[NSTimer scheduledTimerWithTimeInterval:kHideInterval target:self selector:@selector(hideDisplayItems) userInfo:nil repeats:NO];
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error{
+    
     [self removePlayerTimeObserver];
-    [self syncScrubber];
     [self disableScrubber];
     [self disablePlayerButtons];
     
@@ -494,10 +624,15 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 -(void)playerItemDidReachEnd:(NSNotification *)notification{
+    
+    [self.playerInfo replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:0]];
+    [self savePlayInfo];
+    [self showPlayButton];
     seekToZeroBeforePlay = YES;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
     if (context==PlayViewControllerStatusObservationContext) {
         [self syncPlayPauseButtons];
         AVPlayerStatus status=[[change objectForKey:NSKeyValueChangeNewKey] integerValue];
@@ -505,7 +640,6 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
             case AVPlayerStatusUnknown:
             {
                 [self removePlayerTimeObserver];
-                [self syncScrubber];
                 [self disableScrubber];
                 [self disablePlayerButtons];
             }
@@ -513,18 +647,16 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
                 
             case AVPlayerStatusReadyToPlay:
             {
-                [self initScrubberTimer];
-                [self initSubtitle];
+                [self initDisplayItems];
                 [self enablePlayerButtons];
                 [self enableScrubber];
-                [self initImageExtractionLayer];
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
             }
                 break;
                 
             case AVPlayerStatusFailed:
             {
                 AVPlayerItem *playerItem=(AVPlayerItem *)object;
-                //NSLog(@"rr");
                 [self assetFailedToPrepareForPlayback:playerItem.error];
             }
                 break;
@@ -548,19 +680,5 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @end

@@ -33,7 +33,7 @@
     
     [self extractImageWithCMTime:time];
     
-    NSString *imagePath=[path stringByAppendingPathExtension:@"jpeg"];
+    NSString *imagePath=[path stringByAppendingPathExtension:@"jpg"];
     
     NSData *imageData=[NSData dataWithData:UIImageJPEGRepresentation(self.image, 1)];
     [imageData writeToFile:imagePath atomically:YES];

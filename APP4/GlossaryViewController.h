@@ -2,32 +2,20 @@
 //  GlossaryViewController.h
 //  APP4
 //
-//  Created by user on 12-11-12.
+//  Created by apple on 12-12-26.
 //  Copyright (c) 2012年 FreeBox. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "XXXPlayViewController.h"
-#import "SettingViewController.h"
-
-
-//用来存放从文件中读取的每一组 字幕、音频和图片 的路径
-
-//@interface IndividualData : NSObject
-//
-//
-//@end
-
+#import "CardViewController.h"
 
 @interface GlossaryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableview;
+@property (strong, nonatomic) NSMutableArray *glossaryDefaults;
+@property (strong, nonatomic) NSMutableArray *glossaryCustom;
 
-@property (strong, nonatomic) UIView *showView;
-
-@property (strong, nonatomic) NSMutableArray *dataArray;
-
-@property (strong, nonatomic) AVAudioPlayer *audioPlayer;
-
+@property (weak, nonatomic) IBOutlet UITableView *mTableView;
 
 @end
+
+//section0显示自定义生词本，section1显示默认生词本

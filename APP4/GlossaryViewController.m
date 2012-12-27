@@ -2,134 +2,78 @@
 //  GlossaryViewController.m
 //  APP4
 //
-//  Created by user on 12-11-12.
+//  Created by apple on 12-12-26.
 //  Copyright (c) 2012年 FreeBox. All rights reserved.
 //
 
 #import "GlossaryViewController.h"
 
-#define showViewWidth 390
-#define showViewHeight 300
+#define KVGlossaryDefaults @"glossaryDefaults"
+#define KVGlossaryCustom @"glossaryCustom"
 
 @interface GlossaryViewController ()
 
 @end
 
 @implementation GlossaryViewController
-@synthesize tableview;
-@synthesize dataArray;
-@synthesize showView;
-//用来存放从文件中的字幕、音频和图片，每个打包为一组
+@synthesize mTableView;
+
+#pragma mark - tableView
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+
+    if (self.glossaryCustom.count) {
+        return 2;
+    }
+    return 1;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.dataArray.count;
+
+    if (section==0) {
+        return self.glossaryDefaults.count;
+    }if (section==1) {
+        return self.glossaryCustom.count;
+    }
+    return 1;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    if (section==0) {
+        return @"默认生词本";
+    }else if (section==1){
+        return @"自定义生词本";
+    }
+    return nil;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellID=@"cellid";
-    UITableViewCell *cell=[self.tableview dequeueReusableCellWithIdentifier:CellID];
+    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:CellID];
     if (cell==nil) {
-        cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellID];
+        cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellID];
     }
-    NSString *content=[self.dataArray objectAtIndex:indexPath.row];
-    [cell.textLabel setText:content];
-    [cell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
+    
+    if (indexPath.section==0) {
+        cell.textLabel.text=[[self.glossaryDefaults objectAtIndex:indexPath.row] lastPathComponent];
+    }else if (indexPath.section==1){
+        cell.textLabel.text=[[self.glossaryCustom objectAtIndex:indexPath.row]lastPathComponent];
+    }
     return cell;
 }
 
-#pragma mark - row selected
-
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    SettingViewController *settingViewController=[[SettingViewController alloc]initWithNibName:@"SettingViewController" bundle:nil];
-    settingViewController.fileName=[self.dataArray objectAtIndex:indexPath.row];
-    [self.navigationController pushViewController:settingViewController animated:YES];
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSInteger index=indexPath.row;
-    NSString *fileName=[self.dataArray objectAtIndex:index];
-    NSString *filePath=[savePath stringByAppendingString:fileName];
-    
-    if (self.showView) {
-        [self.showView removeFromSuperview];
+    CardViewController *cardVC=[[CardViewController alloc] initWithNibName:@"CardViewController" bundle:nil];
+    if (indexPath.section==0) {
+        cardVC.savePath=[self.glossaryDefaults objectAtIndex:indexPath.row];
+    }else if (indexPath.section==1){
+        cardVC.savePath=[self.glossaryCustom objectAtIndex:indexPath.row];
     }
-    //创建showView
-    self.showView=[[UIView alloc]initWithFrame:CGRectMake(self.view.bounds.size.width, self.view.bounds.origin.y, showViewWidth, showViewWidth)];
-
-    
-    //显示图片
-    UIImage *image=[UIImage imageWithContentsOfFile:[filePath stringByAppendingPathExtension:@"jpeg"]];
-    UIImageView *imageView=[[UIImageView alloc]initWithImage:image];
-    [imageView setFrame:self.showView.bounds];
-    [self.showView addSubview:imageView];
-    
-    //显示字幕，待解决：字幕显示不完全
-    UILabel *labelEng=[[UILabel alloc]initWithFrame:CGRectMake(20, 220, 350, 20)];
-    UILabel *labelChi=[[UILabel alloc]initWithFrame:CGRectMake(20, 240, 350, 20)];
-    
-    NSData *data=[[NSData alloc]initWithContentsOfFile:filePath];
-    NSKeyedUnarchiver *unarchiver=[[NSKeyedUnarchiver alloc]initForReadingWithData:data];
-    IndividualSubtitle *subtitle=[unarchiver decodeObjectForKey:@"subtitle"];
-    
-    labelEng.text=subtitle.EngSubtitle;
-    labelChi.text=subtitle.ChiSubtitle;
-    
-    [labelEng setBackgroundColor:[UIColor clearColor]];
-    [labelChi setBackgroundColor:[UIColor clearColor]];
-    
-    [labelEng setShadowColor:[UIColor whiteColor]];
-    [labelChi setShadowColor:[UIColor whiteColor]];
-    
-    [labelEng setTextAlignment:UITextAlignmentCenter];
-    [labelChi setTextAlignment:UITextAlignmentCenter];
-    
-//    [labelEng setNumberOfLines:2];
-//    [labelEng setAdjustsFontSizeToFitWidth:YES];
-//    [labelEng setMinimumFontSize:4];
-    
-    [self.showView addSubview:labelEng];
-    [self.showView addSubview:labelChi];
-    
-    
-    
-    
-    //播放音频
-    
-    NSURL *url=[[NSURL alloc]initFileURLWithPath:[filePath stringByAppendingPathExtension:@"m4a"]];
-    NSError *error;
-    
-    self.audioPlayer=[[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
-    //self.audioPlayer.delegate=self; (稍后决定是否需要delegate)
-    [self.audioPlayer prepareToPlay];
-    [self.audioPlayer play];
-    
-    if (error) {
-        NSLog(@"%@",[error localizedDescription]);
-    }
-    
-    
-
-    
-    
-    //显示view
-    [UIView beginAnimations:@"switch" context:nil];
-    [UIView setAnimationDuration:.5];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    
-    [self.showView setFrame:CGRectMake(self.view.bounds.size.width-showViewWidth, self.view.bounds.origin.y, showViewWidth, showViewHeight)];
-    
-    [self.view addSubview:self.showView];
-    
-    [UIView commitAnimations];
-    
-    
-    
-    
-    
+    [self.navigationController pushViewController:cardVC animated:YES];
+    [cardVC.navigationController setNavigationBarHidden:YES];
 }
 
-
-#pragma mark - view did load
+#pragma mark - defaults
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -145,27 +89,30 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self.tableview setDelegate:self];
-    [self.tableview setDataSource:self];
-    
-    
-    if (self.dataArray==nil) {
-        self.dataArray=[NSMutableArray arrayWithCapacity:0];
-        NSArray *contentArray=[[NSFileManager defaultManager]contentsOfDirectoryAtPath:savePath error:nil];
-        for (NSString *fileName in contentArray){
-            if ([[fileName pathExtension] isEqualToString:@"jpeg"]) {
-                [self.dataArray addObject:[fileName stringByDeletingPathExtension]];
-            }
-        }
-        
+    [self.navigationItem setTitle:@"生词本"];
+    [self.navigationItem setRightBarButtonItem:nil animated:YES];
 
+    [self.mTableView setDelegate:self];
+    [self.mTableView setDataSource:self];
+    
+    //初始化两种生词本
+    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+    if ([ud arrayForKey:KVGlossaryDefaults]) {
+        self.glossaryDefaults=[NSMutableArray arrayWithArray:[ud arrayForKey:KVGlossaryDefaults]];
+    }else{
+        self.glossaryDefaults=[NSMutableArray arrayWithCapacity:0];
+    }
+    if ([ud arrayForKey:KVGlossaryCustom]) {
+        self.glossaryCustom=[NSMutableArray arrayWithArray:[ud arrayForKey:KVGlossaryCustom]];
+    }else{
+        self.glossaryCustom=[NSMutableArray arrayWithCapacity:0];
     }
     
 }
 
 - (void)viewDidUnload
 {
-    [self setTableview:nil];
+    [self setMTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -173,8 +120,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
 
 @end

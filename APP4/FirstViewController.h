@@ -28,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UIView *menuView;
 
 - (IBAction)playPressed:(id)sender;
+- (IBAction)glossaryPressed:(id)sender;
 
 
 

@@ -14,7 +14,6 @@
 		180BE30F16799D8100BFBBF4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 180BE30E16799D8100BFBBF4 /* QuartzCore.framework */; };
 		181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A288B164F4485001D8F5E /* ImagesPackage.m */; };
 		181A2894164F6157001D8F5E /* AudiosPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A2893164F6157001D8F5E /* AudiosPackage.m */; };
-		181A2915165CAEE5001D8F5E /* Playback.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A2914165CAEE5001D8F5E /* Playback.m */; };
 		1872B53C16842E6E0079944A /* 2 Broke Girls.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51116842E6E0079944A /* 2 Broke Girls.jpg */; };
 		1872B53D16842E6E0079944A /* Bones.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51216842E6E0079944A /* Bones.jpg */; };
 		1872B53E16842E6E0079944A /* Boston Legal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51316842E6E0079944A /* Boston Legal.jpg */; };
@@ -55,6 +54,15 @@
 		1872B56416842E6E0079944A /* Weeds.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53A16842E6E0079944A /* Weeds.jpg */; };
 		1872B56516842E6E0079944A /* Will and Grace.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B53B16842E6E0079944A /* Will and Grace.jpg */; };
 		1872B56816842EFC0079944A /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 1872B56716842EFC0079944A /* MBProgressHUD.m */; };
+		1890ACC216880AEA000C0FC4 /* CardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890ACC016880AEA000C0FC4 /* CardViewController.m */; };
+		1890ACC316880AEA000C0FC4 /* CardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACC116880AEA000C0FC4 /* CardViewController.xib */; };
+		1890ACC716880B35000C0FC4 /* CardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890ACC616880B35000C0FC4 /* CardCell.m */; };
+		1890ACC916880B5E000C0FC4 /* CardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACC816880B5E000C0FC4 /* CardCell.xib */; };
+		1890ACE01689CCB5000C0FC4 /* microNormal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACDE1689CCB5000C0FC4 /* microNormal.jpg */; };
+		1890ACE11689CCB5000C0FC4 /* microPressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACDF1689CCB5000C0FC4 /* microPressed.jpg */; };
+		18E9D32C1689EEDE00283A7F /* earphone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 18E9D32B1689EEDE00283A7F /* earphone.jpg */; };
+		18E9D335168B162600283A7F /* GlossaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E9D333168B162600283A7F /* GlossaryViewController.m */; };
+		18E9D336168B162600283A7F /* GlossaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18E9D334168B162600283A7F /* GlossaryViewController.xib */; };
 		18FCC0E616800F050038ADBB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCC0E516800F050038ADBB /* GLKit.framework */; };
 		18FCC111168023AD0038ADBB /* Friends.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 18FCC110168023AD0038ADBB /* Friends.jpg */; };
 		18FCC14F1682B5480038ADBB /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FCC14D1682B5480038ADBB /* FirstViewController.m */; };
@@ -62,8 +70,6 @@
 		CE00ED0F1654895300CC4888 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE00ED0D1654895300CC4888 /* SettingViewController.m */; };
 		CE00ED101654895300CC4888 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE00ED0E1654895300CC4888 /* SettingViewController.xib */; };
 		CE012805163A61B6002C02B6 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE012804163A61B6002C02B6 /* CoreMedia.framework */; };
-		CE263EF61650E643002E2AF4 /* GlossaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE263EF41650E643002E2AF4 /* GlossaryViewController.m */; };
-		CE263EF71650E643002E2AF4 /* GlossaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE263EF51650E643002E2AF4 /* GlossaryViewController.xib */; };
 		CEDD6E7216390258000F3D6D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7116390258000F3D6D /* UIKit.framework */; };
 		CEDD6E7416390258000F3D6D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7316390258000F3D6D /* Foundation.framework */; };
 		CEDD6E7616390258000F3D6D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDD6E7516390258000F3D6D /* CoreGraphics.framework */; };
@@ -87,8 +93,6 @@
 		181A288B164F4485001D8F5E /* ImagesPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImagesPackage.m; path = APP4/ImagesPackage.m; sourceTree = "<group>"; };
 		181A2892164F6157001D8F5E /* AudiosPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudiosPackage.h; path = APP4/AudiosPackage.h; sourceTree = "<group>"; };
 		181A2893164F6157001D8F5E /* AudiosPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudiosPackage.m; path = APP4/AudiosPackage.m; sourceTree = "<group>"; };
-		181A2913165CAEE5001D8F5E /* Playback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playback.h; sourceTree = "<group>"; };
-		181A2914165CAEE5001D8F5E /* Playback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Playback.m; sourceTree = "<group>"; };
 		1872B51116842E6E0079944A /* 2 Broke Girls.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "2 Broke Girls.jpg"; sourceTree = "<group>"; };
 		1872B51216842E6E0079944A /* Bones.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Bones.jpg; sourceTree = "<group>"; };
 		1872B51316842E6E0079944A /* Boston Legal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Boston Legal.jpg"; sourceTree = "<group>"; };
@@ -130,6 +134,18 @@
 		1872B53B16842E6E0079944A /* Will and Grace.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Will and Grace.jpg"; sourceTree = "<group>"; };
 		1872B56616842EFC0079944A /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		1872B56716842EFC0079944A /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		1890ACBF16880AEA000C0FC4 /* CardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardViewController.h; sourceTree = "<group>"; };
+		1890ACC016880AEA000C0FC4 /* CardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardViewController.m; sourceTree = "<group>"; };
+		1890ACC116880AEA000C0FC4 /* CardViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardViewController.xib; sourceTree = "<group>"; };
+		1890ACC516880B35000C0FC4 /* CardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardCell.h; sourceTree = "<group>"; };
+		1890ACC616880B35000C0FC4 /* CardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardCell.m; sourceTree = "<group>"; };
+		1890ACC816880B5E000C0FC4 /* CardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardCell.xib; sourceTree = "<group>"; };
+		1890ACDE1689CCB5000C0FC4 /* microNormal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = microNormal.jpg; sourceTree = "<group>"; };
+		1890ACDF1689CCB5000C0FC4 /* microPressed.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = microPressed.jpg; sourceTree = "<group>"; };
+		18E9D32B1689EEDE00283A7F /* earphone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = earphone.jpg; sourceTree = "<group>"; };
+		18E9D332168B162600283A7F /* GlossaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryViewController.h; sourceTree = "<group>"; };
+		18E9D333168B162600283A7F /* GlossaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossaryViewController.m; sourceTree = "<group>"; };
+		18E9D334168B162600283A7F /* GlossaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GlossaryViewController.xib; sourceTree = "<group>"; };
 		18FCC0E516800F050038ADBB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		18FCC110168023AD0038ADBB /* Friends.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Friends.jpg; sourceTree = "<group>"; };
 		18FCC14C1682B5480038ADBB /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
@@ -139,9 +155,6 @@
 		CE00ED0D1654895300CC4888 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		CE00ED0E1654895300CC4888 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
 		CE012804163A61B6002C02B6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		CE263EF31650E643002E2AF4 /* GlossaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryViewController.h; sourceTree = "<group>"; };
-		CE263EF41650E643002E2AF4 /* GlossaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossaryViewController.m; sourceTree = "<group>"; };
-		CE263EF51650E643002E2AF4 /* GlossaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GlossaryViewController.xib; sourceTree = "<group>"; };
 		CEDD6E6D16390258000F3D6D /* APP4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APP4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDD6E7116390258000F3D6D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CEDD6E7316390258000F3D6D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -288,14 +301,18 @@
 				180BE2E916785E5500BFBBF4 /* XXXPlayViewController.h */,
 				180BE2EA16785E5500BFBBF4 /* XXXPlayViewController.m */,
 				180BE2EB16785E5500BFBBF4 /* XXXPlayViewController.xib */,
-				CE263EF31650E643002E2AF4 /* GlossaryViewController.h */,
-				CE263EF41650E643002E2AF4 /* GlossaryViewController.m */,
-				CE263EF51650E643002E2AF4 /* GlossaryViewController.xib */,
+				18E9D332168B162600283A7F /* GlossaryViewController.h */,
+				18E9D333168B162600283A7F /* GlossaryViewController.m */,
+				18E9D334168B162600283A7F /* GlossaryViewController.xib */,
+				1890ACBF16880AEA000C0FC4 /* CardViewController.h */,
+				1890ACC016880AEA000C0FC4 /* CardViewController.m */,
+				1890ACC116880AEA000C0FC4 /* CardViewController.xib */,
+				1890ACC516880B35000C0FC4 /* CardCell.h */,
+				1890ACC616880B35000C0FC4 /* CardCell.m */,
+				1890ACC816880B5E000C0FC4 /* CardCell.xib */,
 				CE00ED0C1654895300CC4888 /* SettingViewController.h */,
 				CE00ED0D1654895300CC4888 /* SettingViewController.m */,
 				CE00ED0E1654895300CC4888 /* SettingViewController.xib */,
-				181A2913165CAEE5001D8F5E /* Playback.h */,
-				181A2914165CAEE5001D8F5E /* Playback.m */,
 				CEDD6E7816390258000F3D6D /* Supporting Files */,
 			);
 			path = APP4;
@@ -304,6 +321,9 @@
 		CEDD6E7816390258000F3D6D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				18E9D32B1689EEDE00283A7F /* earphone.jpg */,
+				1890ACDE1689CCB5000C0FC4 /* microNormal.jpg */,
+				1890ACDF1689CCB5000C0FC4 /* microPressed.jpg */,
 				CEDD6E7916390258000F3D6D /* APP4-Info.plist */,
 				CEDD6E7A16390258000F3D6D /* InfoPlist.strings */,
 				CEDD6E7D16390258000F3D6D /* main.m */,
@@ -366,7 +386,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDD6E7C16390258000F3D6D /* InfoPlist.strings in Resources */,
-				CE263EF71650E643002E2AF4 /* GlossaryViewController.xib in Resources */,
 				CE00ED101654895300CC4888 /* SettingViewController.xib in Resources */,
 				180BE2C01678237E00BFBBF4 /* FileViewController.xib in Resources */,
 				180BE2ED16785E5500BFBBF4 /* XXXPlayViewController.xib in Resources */,
@@ -411,6 +430,12 @@
 				1872B56316842E6E0079944A /* Ugly Betty.jpg in Resources */,
 				1872B56416842E6E0079944A /* Weeds.jpg in Resources */,
 				1872B56516842E6E0079944A /* Will and Grace.jpg in Resources */,
+				1890ACC316880AEA000C0FC4 /* CardViewController.xib in Resources */,
+				1890ACC916880B5E000C0FC4 /* CardCell.xib in Resources */,
+				1890ACE01689CCB5000C0FC4 /* microNormal.jpg in Resources */,
+				1890ACE11689CCB5000C0FC4 /* microPressed.jpg in Resources */,
+				18E9D32C1689EEDE00283A7F /* earphone.jpg in Resources */,
+				18E9D336168B162600283A7F /* GlossaryViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,13 +452,14 @@
 				CEFB9256164CE8A700BFADEC /* SubtitlePackage.m in Sources */,
 				181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */,
 				181A2894164F6157001D8F5E /* AudiosPackage.m in Sources */,
-				CE263EF61650E643002E2AF4 /* GlossaryViewController.m in Sources */,
 				CE00ED0F1654895300CC4888 /* SettingViewController.m in Sources */,
-				181A2915165CAEE5001D8F5E /* Playback.m in Sources */,
 				180BE2BF1678237E00BFBBF4 /* FileViewController.m in Sources */,
 				180BE2EC16785E5500BFBBF4 /* XXXPlayViewController.m in Sources */,
 				18FCC14F1682B5480038ADBB /* FirstViewController.m in Sources */,
 				1872B56816842EFC0079944A /* MBProgressHUD.m in Sources */,
+				1890ACC216880AEA000C0FC4 /* CardViewController.m in Sources */,
+				1890ACC716880B35000C0FC4 /* CardCell.m in Sources */,
+				18E9D335168B162600283A7F /* GlossaryViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

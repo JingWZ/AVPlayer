@@ -7,59 +7,50 @@
 //
 
 #import "SettingViewController.h"
-#import "SubtitlePackage.h"
-#import "ImagesPackage.h"
-#import "AudiosPackage.h"
 
 //还需要做一个observer，如果音频的时间修改到下一段时间轴，那么要把图片也改到相应的时间轴的第一张图片
 
-#define intervalTime 0.5
+#define kTimescale 60.0
+
+static NSString *reasonStart=@"已经到达视频起点";
+static NSString *reasonEnd=@"已经到达视频终点";
 
 @interface SettingViewController ()
 
 @end
 
 @implementation SettingViewController
-@synthesize fileName;
-@synthesize currentTime, startTime, endTime, totalTime;
-@synthesize imageStepperValue, audioStartStepperValue, audioEndStepperValue, audioMergeStepperValue;
-@synthesize asset;
-@synthesize subtitlePackage;
+
+@synthesize mAsset;
+@synthesize mSubtitlePackage;
+
 @synthesize imageView;
-@synthesize labelEng, labelChi;
-@synthesize imageStepper;
+@synthesize textEng;
+@synthesize textChi;
+@synthesize imageStp;
+@synthesize startStp;
+@synthesize endStp;
+@synthesize mergeStp;
+
+
 
 
 #pragma mark - image
 
 - (IBAction)modifyImage:(UIStepper *)sender {
     
-    CMTime modifiedTime;
-    CMTime changedTime=CMTimeMakeWithSeconds(intervalTime, 10);
+    self.currentT=sender.value;
     
-    if (self.imageStepperValue<[sender value]) {
-        modifiedTime=CMTimeAdd(self.currentTime, changedTime);
-    }else{
-        modifiedTime=CMTimeSubtract(self.currentTime, changedTime);
-    }
-    
-    if (CMTIME_COMPARE_INLINE(modifiedTime, <=, kCMTimeZero)) {
-        modifiedTime=kCMTimeZero;
-        [self showAlertWhenInTheStartOfVideo];
-    }else if (CMTIME_COMPARE_INLINE(modifiedTime, >=, self.asset.duration)){
-        modifiedTime=self.asset.duration;
-        [self showAlertWhenInTheEndOfVideo];
+    if (self.currentT<0) {
+        self.currentT=0;
+        [self showAlertFor:reasonStart];
+    }else if (self.currentT>CMTimeGetSeconds([mAsset duration])){
+        self.currentT=CMTimeGetSeconds([mAsset duration]);
+        [self showAlertFor:reasonEnd];
     }
     
     //同步ImageView
-    
-    [self syncImageView:modifiedTime];
-
-    
-    //同步当前时间和stepper value
-    
-    self.currentTime=modifiedTime;
-    self.imageStepperValue=[sender value];
+    [self syncImageView:CMTimeMakeWithSeconds(self.currentT, kTimescale)];
     
 }
 
@@ -67,7 +58,7 @@
     
     //同步截图
     
-    ImagesPackage *imagePackage=[[ImagesPackage alloc]initWithAsset:self.asset];
+    ImagesPackage *imagePackage=[[ImagesPackage alloc]initWithAsset:mAsset];
     
     [imagePackage extractImageWithCMTime:time];
     
@@ -75,148 +66,127 @@
     
     //同步字幕
     
-    NSUInteger index=[self.subtitlePackage indexOfProperSubtitleWithGivenCMTime:time];
-    IndividualSubtitle *currentSubtitle=[self.subtitlePackage.subtitleItems objectAtIndex:index];
+    //NSUInteger index=[self.subtitlePackage indexOfProperSubtitleWithGivenCMTime:time];
+    //IndividualSubtitle *currentSubtitle=[self.subtitlePackage.subtitleItems objectAtIndex:index];
     
-    self.labelEng.text=currentSubtitle.EngSubtitle;
-    self.labelChi.text=currentSubtitle.ChiSubtitle;
+    //self.labelEng.text=currentSubtitle.EngSubtitle;
+    //self.labelChi.text=currentSubtitle.ChiSubtitle;
 
-    
 }
 
 #pragma mark - audio
 
 - (IBAction)modifyAudioStartTime:(UIStepper *)sender {
-
-    CMTime modifiedTime;
-    CMTime changedTime=CMTimeMakeWithSeconds(intervalTime, 10);
     
-    if (self.audioStartStepperValue<[sender value]) {
-        modifiedTime=CMTimeAdd(self.startTime, changedTime);
-    }else{
-        modifiedTime=CMTimeSubtract(self.startTime, changedTime);
+    self.startT=sender.value;
+    
+    if (self.startT<0) {
+        self.startT=0;
+        [self showAlertFor:reasonStart];
+    }else if (self.startT>CMTimeGetSeconds([mAsset duration])){
+        self.startT=CMTimeGetSeconds([mAsset duration]);
+        [self showAlertFor:reasonEnd];
+    }else if (self.startT>self.endT){
+        self.endT=self.startT;
+    }else if (self.startT>self.currentT){
+        self.currentT=self.startT;
     }
     
-    if (CMTIME_COMPARE_INLINE(modifiedTime, <=, kCMTimeZero)) {
-        modifiedTime=kCMTimeZero;
-        [self showAlertWhenInTheStartOfVideo];
-    }else if (CMTIME_COMPARE_INLINE(modifiedTime, >=, self.asset.duration)){
-        modifiedTime=self.asset.duration;
-        [self showAlertWhenInTheEndOfVideo];
-    }else if (CMTIME_COMPARE_INLINE(modifiedTime, >=, self.endTime)){
-        self.endTime=modifiedTime;
-    }
-    
-    self.audioStartStepperValue=[sender value];
-    self.startTime=modifiedTime;
-    
-    //同步currentTime
-    
-    if (CMTIME_COMPARE_INLINE(self.startTime, >=, self.currentTime)) {
-        if ([self.subtitlePackage indexOfProperSubtitleWithGivenCMTime:self.startTime] >
-            [self.subtitlePackage indexOfProperSubtitleWithGivenCMTime:self.currentTime]) {
-            self.currentTime=self.startTime;
-        }
-    }
-
 }
 
 - (IBAction)modifyAudioEndTime:(UIStepper *)sender {
     
-
-    CMTime modifiedTime;
-    CMTime changedTime=CMTimeMakeWithSeconds(intervalTime, 10);
+    self.endT=sender.value;
     
-    if (self.audioEndStepperValue<[sender value]) {
-        modifiedTime=CMTimeAdd(self.endTime, changedTime);
-    }else{
-        modifiedTime=CMTimeSubtract(self.endTime, changedTime);
+    if (self.endT<0) {
+        self.endT=0;
+        [self showAlertFor:reasonStart];
+    }else if (self.endT>CMTimeGetSeconds([mAsset duration])){
+        self.endT=CMTimeGetSeconds([mAsset duration]);
+        [self showAlertFor:reasonEnd];
+    }else if (self.endT<self.startT){
+        self.startT=self.endT;
     }
-    
-    if (CMTIME_COMPARE_INLINE(modifiedTime, <=, kCMTimeZero)) {
-        modifiedTime=kCMTimeZero;
-        [self showAlertWhenInTheStartOfVideo];
-    }else if (CMTIME_COMPARE_INLINE(modifiedTime, >=, self.asset.duration)){
-        modifiedTime=self.asset.duration;
-        [self showAlertWhenInTheEndOfVideo];
-    }else if (CMTIME_COMPARE_INLINE(modifiedTime, <=, self.startTime)){
-        self.startTime=modifiedTime;
-    }
-    
-    self.endTime=modifiedTime;
-    self.audioEndStepperValue=[(UIStepper *)sender value];
-
 }
 
 - (IBAction)mergeAudio:(UIStepper *)sender {
-
-    if (self.audioMergeStepperValue<[sender value]) {
-        
-        NSInteger index=[self.subtitlePackage indexOfProperSubtitleWithGivenCMTime:self.endTime];
-        
-        if (index==[self.subtitlePackage.subtitleItems count]) {
-            [self showAlertWhenInTheEndOfVideo];
-        }else{
-            self.endTime=[[self.subtitlePackage.subtitleItems objectAtIndex:(index+1)] endTime];
+    
+    //用户按加号就是向后合并一句，按减号就是向前合并一句
+    if (!mAsset) {
+        if (![self initVideoAndSubtitle]) {
+            return;
         }
+    }
+    CMTime end=CMTimeMakeWithSeconds(self.endT, kTimescale);
+    CMTime start=CMTimeMakeWithSeconds(self.startT, kTimescale);
+    
+    if ([sender value]>self.mergeStpValue) {
         
+        NSInteger index=[mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:end];
+        if (index==[mSubtitlePackage.subtitleItems count]) {
+            [self showAlertFor:reasonEnd];
+        }else{
+            self.endT=CMTimeGetSeconds([[mSubtitlePackage.subtitleItems objectAtIndex:(index+1)] endTime]);
+        }
+
     }else{
         
-        NSInteger index=[self.subtitlePackage indexOfProperSubtitleWithGivenCMTime:self.startTime];
-        
+        NSInteger index=[mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:start];
         if (index==0) {
-            [self showAlertWhenInTheStartOfVideo];
+            [self showAlertFor:reasonStart];
         }else{
-            self.startTime=[[self.subtitlePackage.subtitleItems objectAtIndex:(index-1)] startTime];
+            self.startT=CMTimeGetSeconds([[mSubtitlePackage.subtitleItems objectAtIndex:(index-1)] startTime]);
         }
     }
     
-    self.audioMergeStepperValue=[sender value];
+    self.mergeStpValue=sender.value;
+}
+
+- (IBAction)finishExitEng:(id)sender {
+}
+
+- (IBAction)finishExitChi:(id)sender {
 }
 
 #pragma mark - save & back
 
 - (IBAction)saveAndBack:(id)sender {
     
-    NSLog(@"---------------------");
-    CMTimeShow(self.asset.duration);
-    CMTimeShow(self.currentTime);
-    CMTimeShow(self.startTime);
-    CMTimeShow(self.endTime);
+    //储存图片和音频
     
-    Playback *new=[Playback alloc];
-    [new initAsset];
+    NSString *saveName=[self makeSaveName];
+    NSString *path=[self.savePath stringByAppendingPathComponent:saveName];
+    
+    CMTime current=CMTimeMakeWithSeconds(self.currentT, kTimescale);
+    CMTime start=CMTimeMakeWithSeconds(self.startT, kTimescale);
+    CMTime end=CMTimeMakeWithSeconds(self.endT, kTimescale);
+    CMTimeRange range=CMTimeRangeFromTimeToTime(start, end);
+    
+    //储存音频
+    AudiosPackage *audioPackage=[[AudiosPackage alloc]initWithAsset:mAsset];
+    [audioPackage saveAudioWithRange:range inPath:path];
 
-    /*
-    //getSaveName
-    [self makeSubtitleAndImageAndAudioSaveName:self.currentTime];
+    //储存字幕
+    IndividualSubtitle *subtitle=[[IndividualSubtitle alloc] initSubtitle];;
+    subtitle.EngSubtitle=self.textEng.text;
+    subtitle.ChiSubtitle=self.textChi.text;
+    [subtitle savesubtitleInPath:path];
     
-    //save
-    CMTimeRange range=CMTimeRangeFromTimeToTime(self.startTime, self.endTime);
-    AudiosPackage *audioPackage=[[AudiosPackage alloc]initWithAsset:self.asset];
-    //audioPackage saveAudioWithRange:range inPath:
+    //储存图片
+    ImagesPackage *imagePackage=[[ImagesPackage alloc]initWithAsset:mAsset];
+    [imagePackage saveImageWithTime:current inPath:path];
     
-    //back
+#warning doto 删除原来的
+    //删除原来的
+    
+    //返回上一页
     [self.navigationController popViewControllerAnimated:YES];
-    */
+    
 }
 
-- (void)showAlertWhenInTheStartOfVideo{
+- (NSString *)makeSaveName {
     
-    UIActionSheet *actionSheet=[[UIActionSheet alloc]initWithTitle:@"Already in the beginning of the vedio" delegate:self cancelButtonTitle:@"okay!" destructiveButtonTitle:nil otherButtonTitles: nil];
-    
-    [actionSheet showInView:self.view];
-}
-
-- (void)showAlertWhenInTheEndOfVideo{
-    
-    UIActionSheet *actionSheet=[[UIActionSheet alloc]initWithTitle:@"Already in the end of the vedio" delegate:self cancelButtonTitle:@"okay!" destructiveButtonTitle:nil otherButtonTitles: nil];
-    
-    [actionSheet showInView:self.view];
-}
-
-- (NSString *)makeSubtitleAndImageAndAudioSaveName:(CMTime)time {
-    float timeInSecond=CMTimeGetSeconds(time);
+    float timeInSecond=self.currentT;
     
     NSString *hour;
     if (timeInSecond/3600>0) {
@@ -254,9 +224,70 @@
     return saveName;
 }
 
-
-
 #pragma mark - init
+
+//如果用户只是修改字幕，则不需要启动此项
+- (BOOL)initVideoAndSubtitle{
+    
+    //初始化AVAsset
+    
+    //如果视频不存在，跳出警告窗
+    if (![[NSFileManager defaultManager] fileExistsAtPath:self.videoPath]) {
+        NSString *reason=@"视频不存在";
+        [self showAlertFor:reason];
+        return NO;
+    }
+
+    NSURL *url=[NSURL fileURLWithPath:self.videoPath];
+    mAsset=[AVURLAsset URLAssetWithURL:url options:nil];
+    
+    if (mAsset==nil) {
+        NSString *reason=@"无法打开视频";
+        [self showAlertFor:reason];
+        return NO;
+    }
+    
+    //初始化subtitle
+    mSubtitlePackage=[[SubtitlePackage alloc]initWithFile:self.subtitlePath];
+    
+    //初始化startTime和endTime
+    CMTime current=CMTimeMakeWithSeconds(self.currentT, kTimescale);
+    NSUInteger index=[mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:current];
+    IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:index];
+    
+    self.startT=CMTimeGetSeconds(currentSubtitle.startTime);
+    self.endT=CMTimeGetSeconds(currentSubtitle.endTime);
+    
+    //初始化3个Stepper的值
+    [self.imageStp setValue:self.currentT];
+    [self.startStp setValue:self.startT];
+    [self.endStp setValue:self.endT];
+    
+    return YES;
+
+}
+
+- (void)makeCMTimeWithFileName{
+    
+    NSArray *array=[self.fileName componentsSeparatedByString:@"-"];
+    
+    int hour=[[array objectAtIndex:0] intValue];
+    int min=[[array objectAtIndex:1] intValue];
+    int sec=[[array objectAtIndex:2] intValue];
+    int fra=[[array objectAtIndex:3] intValue];
+    
+    float seconds=hour*3600+min*60+sec+fra/100.0;
+    
+    self.currentT=seconds;
+}
+
+- (void)showAlertFor:(NSString *)reason{
+    UIActionSheet *actionSheet=[[UIActionSheet alloc]initWithTitle:reason delegate:self cancelButtonTitle:@"okay!" destructiveButtonTitle:nil otherButtonTitles: nil];
+    
+    [actionSheet showInView:self.view];
+}
+
+#pragma mark - defaults
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -272,85 +303,33 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-
-    NSString *filePath=[savePath stringByAppendingString:self.fileName];
+    NSString *filePath=[self.savePath stringByAppendingPathComponent:self.fileName];
     
-    //显示截图
-    UIImage *image=[UIImage imageWithContentsOfFile:[filePath stringByAppendingPathExtension:@"jpeg"]];
-    
-    self.imageView=[[UIImageView alloc]initWithImage:image];
-    [self.imageView setFrame:CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y, 340, 300)];
-    [self.view addSubview:self.imageView];
-    [self.view bringSubviewToFront:self.imageStepper];
+    //显示图片
+    UIImage *image=[UIImage imageWithContentsOfFile:[filePath stringByAppendingPathExtension:@"jpg"]];
+    [self.imageView setImage:image];
     
     //显示字幕
     NSData *data=[[NSData alloc]initWithContentsOfFile:filePath];
     NSKeyedUnarchiver *unarchiver=[[NSKeyedUnarchiver alloc]initForReadingWithData:data];
     IndividualSubtitle *subtitle=[unarchiver decodeObjectForKey:@"subtitle"];
-    self.labelEng.text=subtitle.EngSubtitle;
-    self.labelChi.text=subtitle.ChiSubtitle;
-    [self.view bringSubviewToFront:self.labelEng];
-    [self.view bringSubviewToFront:self.labelChi];
-    
+    self.textEng.text=subtitle.EngSubtitle;
+    self.textChi.text=subtitle.ChiSubtitle;
     
     //获得当前截图时间
     [self makeCMTimeWithFileName];
     
-    //初始化subtitle
-    
-    self.subtitlePackage=[[SubtitlePackage alloc]initWithFile:subtitlePath];
-    
-    
-    //初始化AVAsset
-    
-    NSURL *url=[NSURL URLWithString:videoPath];
-    self.asset=[AVURLAsset URLAssetWithURL:url options:nil];
-    if (self.asset==nil) {
-        NSLog(@"can't find asset file");
-        //跳出警告并退出，稍后写
-    }
-
-    //初始化startTime和endTime
-    
-    NSUInteger index=[self.subtitlePackage indexOfProperSubtitleWithGivenCMTime:self.currentTime];
-    IndividualSubtitle *currentSubtitle=[self.subtitlePackage.subtitleItems objectAtIndex:index];
-    
-    self.startTime=currentSubtitle.startTime;
-    self.endTime=currentSubtitle.endTime;
-    self.totalTime=[asset duration];
-    
-    //加入observer
-    [self addObserver:self forKeyPath:@"currentTime" options:NSKeyValueObservingOptionNew context:NULL];
-    
 }
-
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    [self syncImageView:self.currentTime];
-}
-
-
-- (void)makeCMTimeWithFileName{
-    NSArray *array=[self.fileName componentsSeparatedByString:@"-"];
-    
-    int hour=[[array objectAtIndex:0] intValue];
-    int min=[[array objectAtIndex:1] intValue];
-    int sec=[[array objectAtIndex:2] intValue];
-    int fra=[[array objectAtIndex:3] intValue];
-    
-    float seconds=hour*3600+min*60+sec+fra/100.0;
-    
-    self.currentTime=CMTimeMakeWithSeconds(seconds, 100);
-    
-}
-
 
 - (void)viewDidUnload
 {
     [self setImageView:nil];
-    [self setLabelEng:nil];
-    [self setLabelChi:nil];
-    [self setImageStepper:nil];
+    [self setTextEng:nil];
+    [self setTextChi:nil];
+    [self setImageStp:nil];
+    [self setStartStp:nil];
+    [self setEndStp:nil];
+    [self setMergeStp:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
