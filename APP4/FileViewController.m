@@ -7,16 +7,17 @@
 //
 
 #import "FileViewController.h"
-#import "XXXPlayViewController.h"
+#import "PlayViewController.h"
+#import "LabelView.h"
+
+#define kDefaultNumber 1111
+#define kTableViewHeaderHeight 40;
 
 @interface FileViewController ()
 
 @end
 
 @implementation FileViewController
-
-#define kDefaultNumber 1111
-
 @synthesize mTableVIew;
 @synthesize videoFiles, subtitleFiles;
 @synthesize selectedSubtitleNumber,selectedVideoNumber;
@@ -36,13 +37,36 @@
     return 2;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     if (section==0) {
-        return @"video";
-    } else if (section==1) {
-        return @"subtitle";
+        LabelView *titleView=[[LabelView alloc] init];
+        [titleView setFrame:CGRectMake(10, 50, 50, 50)];
+        [titleView setBackgroundColor:[UIColor clearColor]];
+        [titleView setText:@"Video"];
+        [titleView setFont:[UIFont boldSystemFontOfSize:20]];
+        [titleView setTextColor:[UIColor grayColor]];
+        [titleView setShadowColor:[UIColor whiteColor]];
+        [titleView setShadowOffset:CGSizeMake(0, 0)];
+        [titleView setShadowRadius:1];
+        return titleView;
+    }else if (section==1){
+        LabelView *titleView=[[LabelView alloc] init];
+        [titleView setFrame:CGRectMake(10, 50, 50, 50)];
+        [titleView setBackgroundColor:[UIColor clearColor]];
+        [titleView setText:@"Subtitle"];
+        [titleView setFont:[UIFont boldSystemFontOfSize:20]];
+        [titleView setTextColor:[UIColor grayColor]];
+        [titleView setShadowColor:[UIColor whiteColor]];
+        [titleView setShadowOffset:CGSizeMake(0, 0)];
+        [titleView setShadowRadius:1];
+        return titleView;
+        
     }
     return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return kTableViewHeaderHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -66,7 +90,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
         }
     }
-        
+    
     return cell;
 }
 
@@ -93,7 +117,8 @@
             self.selectedSubtitleNumber=indexPath.row;
         }
     }
-
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 #pragma mark - init
@@ -101,7 +126,7 @@
 - (void)initVideoFiles{
     
     self.videoFiles=[NSMutableArray arrayWithCapacity:0];
-
+    
     for (NSString *path in [self fileContent]) {
         if ([[path pathExtension] isEqualToString:@"mp4"]) {
             [self.videoFiles addObject:path];
@@ -116,12 +141,12 @@
     
     for (NSString *path in [self fileContent]) {
         [self.subtitleFiles addObject:path];
-
-//        if ([[path pathExtension] isEqualToString:@"srt"]) {
-//            [self.subtitleFiles addObject:path];
-//        }
+        
+        //        if ([[path pathExtension] isEqualToString:@"srt"]) {
+        //            [self.subtitleFiles addObject:path];
+        //        }
     }
-
+    
 }
 
 - (NSArray *)fileContent{
@@ -133,16 +158,66 @@
     return userPath;
 }
 
+- (void)showButtons{
+    
+    [self.navigationItem setRightBarButtonItem:nil animated:YES];
+    
+    UIBarButtonItem *backButton=[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(backToFirstView)];
+    [backButton setTintColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1]];
+    [self.navigationItem setLeftBarButtonItem:backButton];
+    
+    LabelView *titleView=[[LabelView alloc] init];
+    [titleView setCenter:CGPointMake(self.view.center.x, 30)];
+    [titleView setBounds:CGRectMake(0, 0, 70, 50)];
+    [titleView setBackgroundColor:[UIColor clearColor]];
+    [titleView setText:@"Files"];
+    [titleView setFont:[UIFont boldSystemFontOfSize:30]];
+    [titleView setTextColor:[UIColor grayColor]];
+    [titleView setShadowColor:[UIColor whiteColor]];
+    [titleView setShadowOffset:CGSizeMake(0, 0)];
+    [titleView setShadowRadius:3];
+    
+    
+    [self.navigationItem setTitleView: titleView];
+    
+    
+}
+
+#pragma mark - action
+
+- (void)moveToPlayView{
+    
+    NSString *videoName=[self.videoFiles objectAtIndex:self.selectedVideoNumber];
+    NSString *subtitleName=[self.subtitleFiles objectAtIndex:self.selectedSubtitleNumber];
+    
+    PlayViewController *playVC=[[PlayViewController alloc] initWithNibName:@"PlayViewController" bundle:nil];
+    
+    playVC.videoPath=[[self userPath] stringByAppendingPathComponent:videoName];
+    playVC.subtitlePath=[[self userPath] stringByAppendingPathComponent:subtitleName];
+    
+    [self.navigationController pushViewController:playVC animated:YES];
+    [playVC.navigationController setNavigationBarHidden:NO];
+    [playVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
+    
+    
+}
+
+- (void)backToFirstView{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-
+    
     if ((self.selectedVideoNumber!=kDefaultNumber) && (self.selectedSubtitleNumber!=kDefaultNumber) ) {
-
-        UIBarButtonItem *playButton=[[UIBarButtonItem alloc] initWithTitle:@"Play" style:UIBarButtonItemStylePlain target:self action:@selector(moveToPlayView)];
+        
+        UIBarButtonItem *playButton=[[UIBarButtonItem alloc] initWithTitle:@"Play" style:UIBarButtonItemStyleBordered target:self action:@selector(moveToPlayView)];
+        [playButton setTintColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1]];
         
         [self.navigationItem setRightBarButtonItem:playButton animated:NO];
-
+        
     }else {
         
         [self.navigationItem setRightBarButtonItem:nil animated:YES];
@@ -151,31 +226,12 @@
     
 }
 
-#pragma mark - action
-
-- (void)moveToPlayView{
-
-    NSString *videoName=[self.videoFiles objectAtIndex:self.selectedVideoNumber];
-    NSString *subtitleName=[self.subtitleFiles objectAtIndex:self.selectedSubtitleNumber];
-    
-    XXXPlayViewController *playVC=[[XXXPlayViewController alloc] initWithNibName:@"XXXPlayViewController" bundle:nil];
-    
-    playVC.videoPath=[[self userPath] stringByAppendingPathComponent:videoName];
-    playVC.subtitlePath=[[self userPath] stringByAppendingPathComponent:subtitleName];
-
-    [self.navigationController pushViewController:playVC animated:YES];
-    
-    [playVC.navigationController setNavigationBarHidden:NO];
-    [playVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
-
-}
-
 #pragma mark - defaults
 
 - (void)viewDidDisappear:(BOOL)animated{
     [self removeObserver:self forKeyPath:@"selectedVideoNumber"];
     [self removeObserver:self forKeyPath:@"selectedSubtitleNumber"];
-
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -183,7 +239,7 @@
     //监控check的情况
     [self addObserver:self forKeyPath:@"selectedVideoNumber" options:NSKeyValueObservingOptionNew context:nil];
     [self addObserver:self forKeyPath:@"selectedSubtitleNumber" options:NSKeyValueObservingOptionNew context:nil];
-
+    
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -200,9 +256,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self.navigationItem setTitle:@"文件"];
-    [self.navigationItem setRightBarButtonItem:nil animated:YES];
-    
+    [self showButtons];
     
     [self.mTableVIew setDelegate:self];
     [self.mTableVIew setDataSource:self];
@@ -230,7 +284,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 }
 
 @end

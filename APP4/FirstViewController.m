@@ -12,6 +12,9 @@
 
 #import "FirstViewController.h"
 
+#import "ButtonView.h"
+#import "LabelView.h"
+
 @interface FirstViewController ()
 
 @end
@@ -19,6 +22,8 @@
 @implementation FirstViewController
 
 #define kTimeInterval 1.0/60
+
+#define kBorderWidth 5
 
 #define kPosterWidth 96.0
 #define kPosterHeight 128.0
@@ -41,18 +46,19 @@ static NSString *posterPath=@"/Users/apple/Code/AVPlayer/APP4/posters";
 @synthesize currentTime;
 @synthesize timer;
 @synthesize menuView;
+@synthesize titleLbl;
+@synthesize videoBtn;
+@synthesize glossaryBtn;
 
-#pragma mark -action
+#pragma mark - action
 
-- (IBAction)playPressed:(id)sender {
+- (IBAction)videoPressed:(id)sender {
     
     FileViewController *fileVC=[[FileViewController alloc] initWithNibName:@"FileViewController" bundle:nil];
     
     [self.navigationController pushViewController:fileVC animated:YES];
     [fileVC.navigationController setNavigationBarHidden:NO];
-    [fileVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
-    
-
+    [fileVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
 }
 
 - (IBAction)glossaryPressed:(id)sender {
@@ -128,6 +134,8 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     int randomDegree=arc4random()%60-30;
     UIImage *image=[UIImage imageNamed:@"Friends.jpg"];
     UIImageView *imageView=[[UIImageView alloc] initWithImage:image];
+    [imageView.layer setBorderWidth:kBorderWidth];
+    [imageView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
     
     [imageView setCenter:self.view.center];
     [imageView setBounds:CGRectMake(0, 0, kMainPosterWidth, kMainPosterHeight)];
@@ -184,6 +192,9 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     
     UIImage *image=[UIImage imageNamed:name];
     UIImageView *imageView=[[UIImageView alloc] initWithImage:image];
+    [imageView.layer setBorderWidth:kBorderWidth];
+    [imageView.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+
     [imageView setCenter:point];
     [imageView setBounds:CGRectMake(0, 0, kPosterWidth, kPosterHeight)];
     [imageView setTransform:CGAffineTransformMakeRotation(GLKMathDegreesToRadians(degree))];
@@ -205,6 +216,49 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
         }
     }
     
+}
+
+#pragma mark - button
+
+- (void)showButtonsAndLabel{
+    
+    CGColorSpaceRef cs=CGColorSpaceCreateDeviceRGB();
+    CGColorRef color=CGColorCreate(cs, (CGFloat[]){244/255.0, 244/255.0, 244/255.0, 1});
+    
+    [self.videoBtn setCenter:CGPointMake(self.view.center.x, self.view.center.y-30)];
+    [self.videoBtn setBounds:CGRectMake(0, 0, 80, 40)];
+    [self.videoBtn setRadiusOfArcs:5];
+    [self.videoBtn setLineOffset:5];
+    [self.videoBtn setLineWidth:4];
+    [self.videoBtn setTextSize:20];
+    [self.videoBtn setTextPointX:10];
+    [self.videoBtn setTextPointY:12];
+    [self.videoBtn setFillColor:color];
+    [self.videoBtn setButtonText:@"Video"];
+    
+    [self.glossaryBtn setCenter:CGPointMake(self.view.center.x, self.view.center.y+30)];
+    [self.glossaryBtn setBounds:CGRectMake(0, 0, 110, 40)];
+    [self.glossaryBtn setRadiusOfArcs:5];
+    [self.glossaryBtn setLineOffset:5];
+    [self.glossaryBtn setLineWidth:4];
+    [self.glossaryBtn setTextSize:20];
+    [self.glossaryBtn setTextPointX:13];
+    [self.glossaryBtn setTextPointY:12];
+    [self.glossaryBtn setFillColor:color];
+    [self.glossaryBtn setButtonText:@"Glossary"];
+    
+    [self.titleLbl setCenter:CGPointMake(self.view.center.x, 90)];
+    [self.titleLbl setBounds:CGRectMake(0, 0, 280, 100)];
+    [self.titleLbl setText:@"看美剧学英语"];
+    [self.titleLbl setFont:[UIFont boldSystemFontOfSize:60]];
+    [self.titleLbl setTextColor:[UIColor grayColor]];    
+    [self.titleLbl setShadowColor:[UIColor whiteColor]];
+    [self.titleLbl setShadowOffset:CGSizeMake(0, 0)];
+    [self.titleLbl setShadowRadius:20];
+    
+    CGColorSpaceRelease(cs);
+    CGColorRelease(color);
+
 }
 
 #pragma mark - defaults
@@ -238,7 +292,10 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     
     
     [self.view addSubview:self.menuView];
+    [self showButtonsAndLabel];
     [self.menuView setAlpha:0];
+    
+    
     //初始化所有海报
     self.posters=[NSMutableArray arrayWithCapacity:0];
     self.postersCenterY=[NSMutableArray arrayWithCapacity:0];
@@ -259,6 +316,9 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     self.postersCenterY=nil;
 
     [self setMenuView:nil];
+    [self setVideoBtn:nil];
+    [self setGlossaryBtn:nil];
+    [self setTitleLbl:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;

@@ -13,6 +13,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class ButtonView;
+@class LabelView;
 
 @interface FirstViewController : UIViewController
 
@@ -26,8 +28,11 @@
 @property (strong) NSTimer *timer;
 
 @property (weak, nonatomic) IBOutlet UIView *menuView;
+@property (weak, nonatomic) IBOutlet LabelView *titleLbl;
+@property (weak, nonatomic) IBOutlet ButtonView *videoBtn;
+@property (weak, nonatomic) IBOutlet ButtonView *glossaryBtn;
 
-- (IBAction)playPressed:(id)sender;
+- (IBAction)videoPressed:(id)sender;
 - (IBAction)glossaryPressed:(id)sender;
 
 
