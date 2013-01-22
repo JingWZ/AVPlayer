@@ -12,6 +12,10 @@
 		180BE30F16799D8100BFBBF4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 180BE30E16799D8100BFBBF4 /* QuartzCore.framework */; };
 		181A288C164F4485001D8F5E /* ImagesPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A288B164F4485001D8F5E /* ImagesPackage.m */; };
 		181A2894164F6157001D8F5E /* AudiosPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = 181A2893164F6157001D8F5E /* AudiosPackage.m */; };
+		181CA43516A2F294000C29C3 /* CustomBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 181CA43416A2F294000C29C3 /* CustomBarView.m */; };
+		181CA43916A2F2BF000C29C3 /* MicrophoneButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 181CA43816A2F2BF000C29C3 /* MicrophoneButton.m */; };
+		181CA43C16A2F2CF000C29C3 /* SettingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 181CA43B16A2F2CF000C29C3 /* SettingButton.m */; };
+		181CA43F16A2F2EA000C29C3 /* AddButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 181CA43E16A2F2EA000C29C3 /* AddButton.m */; };
 		1872B53C16842E6E0079944A /* 2 Broke Girls.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51116842E6E0079944A /* 2 Broke Girls.jpg */; };
 		1872B53D16842E6E0079944A /* Bones.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51216842E6E0079944A /* Bones.jpg */; };
 		1872B53E16842E6E0079944A /* Boston Legal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51316842E6E0079944A /* Boston Legal.jpg */; };
@@ -59,6 +63,10 @@
 		1890ACE11689CCB5000C0FC4 /* microPressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACDF1689CCB5000C0FC4 /* microPressed.jpg */; };
 		18BECBA51694103900E82829 /* ButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BECBA41694103900E82829 /* ButtonView.m */; };
 		18BECBB0169426C900E82829 /* LabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BECBAF169426C900E82829 /* LabelView.m */; };
+		18CDAA4616AE2C6800A25DFC /* PopMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CDAA4516AE2C6800A25DFC /* PopMenu.m */; };
+		18CDAA7616AE6E0C00A25DFC /* GlossaryManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CDAA7516AE6E0C00A25DFC /* GlossaryManagement.m */; };
+		18D9DD64169BF11600351D51 /* CountLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D9DD63169BF11600351D51 /* CountLabel.m */; };
+		18D9DDAC169E697700351D51 /* CustomImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D9DDAB169E697700351D51 /* CustomImageView.m */; };
 		18E52A421696B3BA0067C957 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E52A401696B3BA0067C957 /* PlayViewController.m */; };
 		18E52A431696B3BA0067C957 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18E52A411696B3BA0067C957 /* PlayViewController.xib */; };
 		18E52A471696B6B50067C957 /* PlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E52A461696B6B50067C957 /* PlayView.m */; };
@@ -94,6 +102,14 @@
 		181A288B164F4485001D8F5E /* ImagesPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImagesPackage.m; path = APP4/ImagesPackage.m; sourceTree = "<group>"; };
 		181A2892164F6157001D8F5E /* AudiosPackage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudiosPackage.h; path = APP4/AudiosPackage.h; sourceTree = "<group>"; };
 		181A2893164F6157001D8F5E /* AudiosPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudiosPackage.m; path = APP4/AudiosPackage.m; sourceTree = "<group>"; };
+		181CA43316A2F294000C29C3 /* CustomBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBarView.h; sourceTree = "<group>"; };
+		181CA43416A2F294000C29C3 /* CustomBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBarView.m; sourceTree = "<group>"; };
+		181CA43716A2F2BF000C29C3 /* MicrophoneButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrophoneButton.h; sourceTree = "<group>"; };
+		181CA43816A2F2BF000C29C3 /* MicrophoneButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneButton.m; sourceTree = "<group>"; };
+		181CA43A16A2F2CF000C29C3 /* SettingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingButton.h; sourceTree = "<group>"; };
+		181CA43B16A2F2CF000C29C3 /* SettingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingButton.m; sourceTree = "<group>"; };
+		181CA43D16A2F2EA000C29C3 /* AddButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddButton.h; sourceTree = "<group>"; };
+		181CA43E16A2F2EA000C29C3 /* AddButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddButton.m; sourceTree = "<group>"; };
 		1872B51116842E6E0079944A /* 2 Broke Girls.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "2 Broke Girls.jpg"; sourceTree = "<group>"; };
 		1872B51216842E6E0079944A /* Bones.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Bones.jpg; sourceTree = "<group>"; };
 		1872B51316842E6E0079944A /* Boston Legal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Boston Legal.jpg"; sourceTree = "<group>"; };
@@ -146,6 +162,14 @@
 		18BECBA41694103900E82829 /* ButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonView.m; sourceTree = "<group>"; };
 		18BECBAE169426C900E82829 /* LabelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelView.h; sourceTree = "<group>"; };
 		18BECBAF169426C900E82829 /* LabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelView.m; sourceTree = "<group>"; };
+		18CDAA4416AE2C6800A25DFC /* PopMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopMenu.h; sourceTree = "<group>"; };
+		18CDAA4516AE2C6800A25DFC /* PopMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopMenu.m; sourceTree = "<group>"; };
+		18CDAA7416AE6E0C00A25DFC /* GlossaryManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryManagement.h; sourceTree = "<group>"; };
+		18CDAA7516AE6E0C00A25DFC /* GlossaryManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossaryManagement.m; sourceTree = "<group>"; };
+		18D9DD62169BF11600351D51 /* CountLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountLabel.h; sourceTree = "<group>"; };
+		18D9DD63169BF11600351D51 /* CountLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountLabel.m; sourceTree = "<group>"; };
+		18D9DDAA169E697700351D51 /* CustomImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomImageView.h; sourceTree = "<group>"; };
+		18D9DDAB169E697700351D51 /* CustomImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomImageView.m; sourceTree = "<group>"; };
 		18E52A3F1696B3BA0067C957 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
 		18E52A401696B3BA0067C957 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
 		18E52A411696B3BA0067C957 /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayViewController.xib; sourceTree = "<group>"; };
@@ -279,6 +303,20 @@
 				18E52A4E169869DB0067C957 /* ThumbImageView.m */,
 				18E52A79169AA90E0067C957 /* PlayButton.h */,
 				18E52A7A169AA90E0067C957 /* PlayButton.m */,
+				18D9DD62169BF11600351D51 /* CountLabel.h */,
+				18D9DD63169BF11600351D51 /* CountLabel.m */,
+				18D9DDAA169E697700351D51 /* CustomImageView.h */,
+				18D9DDAB169E697700351D51 /* CustomImageView.m */,
+				181CA43316A2F294000C29C3 /* CustomBarView.h */,
+				181CA43416A2F294000C29C3 /* CustomBarView.m */,
+				181CA43716A2F2BF000C29C3 /* MicrophoneButton.h */,
+				181CA43816A2F2BF000C29C3 /* MicrophoneButton.m */,
+				181CA43A16A2F2CF000C29C3 /* SettingButton.h */,
+				181CA43B16A2F2CF000C29C3 /* SettingButton.m */,
+				181CA43D16A2F2EA000C29C3 /* AddButton.h */,
+				181CA43E16A2F2EA000C29C3 /* AddButton.m */,
+				18CDAA4416AE2C6800A25DFC /* PopMenu.h */,
+				18CDAA4516AE2C6800A25DFC /* PopMenu.m */,
 			);
 			name = "Appearance Class";
 			sourceTree = "<group>";
@@ -325,6 +363,8 @@
 				18FCC14C1682B5480038ADBB /* FirstViewController.h */,
 				18FCC14D1682B5480038ADBB /* FirstViewController.m */,
 				18FCC14E1682B5480038ADBB /* FirstViewController.xib */,
+				18CDAA7416AE6E0C00A25DFC /* GlossaryManagement.h */,
+				18CDAA7516AE6E0C00A25DFC /* GlossaryManagement.m */,
 				180BE2BC1678237D00BFBBF4 /* FileViewController.h */,
 				180BE2BD1678237D00BFBBF4 /* FileViewController.m */,
 				180BE2BE1678237D00BFBBF4 /* FileViewController.xib */,
@@ -494,6 +534,14 @@
 				18E52A471696B6B50067C957 /* PlayView.m in Sources */,
 				18E52A4F169869DC0067C957 /* ThumbImageView.m in Sources */,
 				18E52A7B169AA90E0067C957 /* PlayButton.m in Sources */,
+				18D9DD64169BF11600351D51 /* CountLabel.m in Sources */,
+				18D9DDAC169E697700351D51 /* CustomImageView.m in Sources */,
+				181CA43516A2F294000C29C3 /* CustomBarView.m in Sources */,
+				181CA43916A2F2BF000C29C3 /* MicrophoneButton.m in Sources */,
+				181CA43C16A2F2CF000C29C3 /* SettingButton.m in Sources */,
+				181CA43F16A2F2EA000C29C3 /* AddButton.m in Sources */,
+				18CDAA4616AE2C6800A25DFC /* PopMenu.m in Sources */,
+				18CDAA7616AE6E0C00A25DFC /* GlossaryManagement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

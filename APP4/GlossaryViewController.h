@@ -6,10 +6,15 @@
 //  Copyright (c) 2012年 FreeBox. All rights reserved.
 //
 
-#warning TODO 在cell前放置图片，在cell后显示生词本中数量
+
 
 #import <UIKit/UIKit.h>
 #import "CardViewController.h"
+
+#define kGlossaryDefault @"glossaryDefaults"
+#define kGlossaryCustom @"glossaryCustom"
+#define kGlossaryPriority @"glossaryPriority"
+
 
 @interface GlossaryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 

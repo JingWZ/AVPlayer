@@ -67,7 +67,7 @@ static NSString *posterPath=@"/Users/apple/Code/AVPlayer/APP4/posters";
 
     [self.navigationController pushViewController:glossaryVC animated:YES];
     [glossaryVC.navigationController setNavigationBarHidden:NO];
-    [glossaryVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
+    [glossaryVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
     
 }
 
@@ -228,10 +228,10 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     [self.videoBtn setCenter:CGPointMake(self.view.center.x, self.view.center.y-30)];
     [self.videoBtn setBounds:CGRectMake(0, 0, 80, 40)];
     [self.videoBtn setRadiusOfArcs:5];
-    [self.videoBtn setLineOffset:5];
-    [self.videoBtn setLineWidth:4];
+    [self.videoBtn setLineOffset:3];
+    [self.videoBtn setLineWidth:3];
     [self.videoBtn setTextSize:20];
-    [self.videoBtn setTextPointX:10];
+    [self.videoBtn setTextPointX:12];
     [self.videoBtn setTextPointY:12];
     [self.videoBtn setFillColor:color];
     [self.videoBtn setButtonText:@"Video"];
@@ -239,8 +239,8 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     [self.glossaryBtn setCenter:CGPointMake(self.view.center.x, self.view.center.y+30)];
     [self.glossaryBtn setBounds:CGRectMake(0, 0, 110, 40)];
     [self.glossaryBtn setRadiusOfArcs:5];
-    [self.glossaryBtn setLineOffset:5];
-    [self.glossaryBtn setLineWidth:4];
+    [self.glossaryBtn setLineOffset:3];
+    [self.glossaryBtn setLineWidth:3];
     [self.glossaryBtn setTextSize:20];
     [self.glossaryBtn setTextPointX:13];
     [self.glossaryBtn setTextPointY:12];

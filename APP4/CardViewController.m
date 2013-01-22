@@ -8,6 +8,7 @@
 
 #import "CardViewController.h"
 #import "SubtitlePackage.h"
+#import "LabelView.h"
 
 @interface CardViewController ()
 
@@ -15,10 +16,14 @@
 
 @implementation CardViewController
 
-#define kTableViewHeight 300
+#define kTableViewHeight 400
+#define kTimeInterval 0.05
+
+#define kGlossaryCustom @"glossaryCustom"
 
 static NSString *recordBtnNormal=@"microNormal.jpg";
 static NSString *recordBtnPressed=@"microPressed.jpg";
+
 
 @synthesize audioPlayer;
 @synthesize audioRecorder;
@@ -26,8 +31,8 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 
 @synthesize mTableView;
 @synthesize mCardCell;
-@synthesize recordBtn;
-@synthesize earphoneBtn;
+
+@synthesize customBarView;
 @synthesize countLbl;
 
 #pragma mark - table view
@@ -50,8 +55,10 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
         
         NSString *path=[self.contentsData objectAtIndex:indexPath.row];
         //设置图片
-        [self.mCardCell.mImageView setImage:[self getImage:path]];
-        //设置字幕
+        [self.mCardCell.customImageView setBackgroundColor:[UIColor clearColor]];
+        [self.mCardCell.customImageView setborderWidth:10];
+        [self.mCardCell.customImageView setBorderOffset:5];
+        [self.mCardCell.imageView setImage:[self getImage:path]];
         self.mCardCell.subtitleEng.text=[[self getSubtitle:path] EngSubtitle];
         self.mCardCell.subtitleChi.text=[[self getSubtitle:path] ChiSubtitle];
         
@@ -143,11 +150,11 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 
 - (void)initAudioRecord{
     
-    AVAudioSession *audioSession=[AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
-    [audioSession setActive:YES error:nil];
-    
-    NSString *path=[[[self.contentsData objectAtIndex:self.currentPage] stringByAppendingString:@"record"] stringByAppendingPathExtension:@"m4a"];
+//    AVAudioSession *audioSession=[AVAudioSession sharedInstance];
+//    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+//    [audioSession setActive:YES error:nil];
+//    
+    NSString *path=[[self.contentsData objectAtIndex:self.currentPage] stringByAppendingString:@"record.m4a"];
     
     NSURL *url=[NSURL fileURLWithPath:path];
     NSDictionary *setting=[NSDictionary dictionaryWithObjectsAndKeys:
@@ -157,10 +164,9 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     
     audioRecorder=[[AVAudioRecorder alloc] initWithURL:url settings:setting error:nil];
     
-    //[audioRecorder setDelegate:self];
+    [audioRecorder setMeteringEnabled:YES];
     [audioRecorder prepareToRecord];
-    //[audioRecorder setMeteringEnabled:YES];
-    [audioRecorder record];
+
 }
 
 - (void)initAudioPlayer{
@@ -173,13 +179,13 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     
 }
 
-- (void)syncRecordBtn:(NSString *)imageName{
-    //初始化录音按钮
-    UIImage *recordBtnImage=[UIImage imageNamed:imageName];
-    [self.recordBtn setCenter:CGPointMake(self.view.center.x-50, 380)];
-    [self.recordBtn setBounds:CGRectMake(0, 0, 60, 100)];
-    [self.recordBtn setBackgroundImage:recordBtnImage forState:UIControlStateNormal];
-}
+//- (void)syncRecordBtn:(NSString *)imageName{
+//    //初始化录音按钮
+//    UIImage *recordBtnImage=[UIImage imageNamed:imageName];
+//    [self.recordBtn setCenter:CGPointMake(self.view.center.x-50, 380)];
+//    [self.recordBtn setBounds:CGRectMake(0, 0, 60, 100)];
+//    [self.recordBtn setBackgroundImage:recordBtnImage forState:UIControlStateNormal];
+//}
 
 - (void)syncCountLbl{
     NSInteger count=[[self.countOfRecord objectAtIndex:self.currentPage] integerValue];
@@ -198,23 +204,114 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     [self.view addSubview:self.mTableView];
 }
 
+#pragma mark - initBar&Buttons
+
+- (void)initBottomBarItems{
+    
+    CGFloat viewHeight=70;
+    self.customBarView=[[CustomBarView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-viewHeight-20, self.view.bounds.size.width, viewHeight)];
+    [self.customBarView setOffset:5];
+    [self.customBarView setBackgroundColor:[UIColor clearColor]];
+    [self.view addSubview:self.customBarView];
+    
+    self.addBtn=[[AddButton alloc] initWithFrame:CGRectMake(260, 15, 50, 50)];
+    [self.addBtn setBackgroundColor:[UIColor clearColor]];
+    [self.customBarView addSubview: self.addBtn];
+    [self.addBtn addTarget:self action:@selector(addBtnPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    self.settingBtn=[[SettingButton alloc] initWithFrame:CGRectMake(10, 15, 50, 50)];
+    [self.settingBtn setBackgroundColor: [UIColor clearColor]];
+    [self.customBarView addSubview:self.settingBtn];
+    
+    self.microphoneBtn=[[MicrophoneButton alloc] initWithFrame:CGRectMake(125, 0, 70, 70)];
+    [self.microphoneBtn setBackgroundColor:[UIColor clearColor]];
+    [self.microphoneBtn setMicrophoneLineColor:[UIColor whiteColor]];
+    [self.microphoneBtn setMicrophoneLineWidth:4];
+    [self.microphoneBtn setMovingPointColor:[UIColor orangeColor]];
+    [self.customBarView addSubview:self.microphoneBtn];
+    [self.microphoneBtn addTarget:self action:@selector(recordBtnPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.playBtn=[[PlayButton alloc] initWithFrame:CGRectMake(190, 15, 45, 45)];
+    [self.customBarView addSubview:self.playBtn];
+    [self.playBtn addTarget:self action:@selector(playBtnPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.playBtn setHidden:YES];
+
+
+}
+
+- (void)initTopBarItems{
+    
+    UIBarButtonItem *backButton=[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(backToGlossaryView)];
+    [backButton setTintColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1]];
+    [self.navigationItem setLeftBarButtonItem:backButton];
+    
+    /*
+    UIBarButtonItem *addButton=[[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStyleBordered target:self action:@selector(backToFirstView)];
+    [addButton setTintColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1]];
+    [self.navigationItem setRightBarButtonItem:addButton];
+    */
+    
+    LabelView *titleView=[[LabelView alloc] init];
+    [titleView setCenter:CGPointMake(self.view.center.x, 30)];
+    [titleView setBounds:CGRectMake(0, 0, 70, 50)];
+    [titleView setBackgroundColor:[UIColor clearColor]];
+    [titleView setText:@"Card"];
+    [titleView setFont:[UIFont boldSystemFontOfSize:24]];
+    [titleView setTextColor:[UIColor grayColor]];
+    [titleView setTextAlignment:UITextAlignmentCenter];
+    [titleView setShadowColor:[UIColor whiteColor]];
+    [titleView setShadowOffset:CGSizeMake(0, 0)];
+    [titleView setShadowRadius:3];
+    
+    [self.navigationItem setTitleView: titleView];
+}
+
+- (void)initPopMenu{
+    
+    NSMutableArray *glossaryCustom;
+    
+    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+    
+    if ([ud arrayForKey:kGlossaryCustom]) {
+        glossaryCustom=[NSMutableArray arrayWithArray:[ud arrayForKey:kGlossaryCustom]];
+    }else{
+        glossaryCustom=[NSMutableArray arrayWithCapacity:0];
+    }
+
+    self.popMenu=[[PopMenu alloc] initWithFrame:CGRectMake(0, 0, 320, -320) Contents:nil];
+    [self.view addSubview:self.popMenu];
+}
+
+
 
 #pragma mark - action
 
-- (IBAction)recordBtnPressed:(id)sender {
+- (void)recordBtnPressed{
     
     if (isRecording) {
         isRecording=NO;
-        [self syncRecordBtn:recordBtnNormal];
-        
         [audioRecorder stop];
+        
+        [self.playBtn setHidden:NO];
+        
+        [self.timer invalidate];
+        self.timer=nil;
+        
+        [self.microphoneBtn isMoving:NO];
+        [self.microphoneBtn setCurrentValueRate:0];
+        
     }else{
         isRecording=YES;
-        [self syncRecordBtn:recordBtnPressed];
-        
-        //开始录音
-        [self initAudioRecord];
         [audioRecorder record];
+        
+        [audioPlayer stop];
+        [self.playBtn setHidden:YES];
+        
+        self.timer=[NSTimer scheduledTimerWithTimeInterval:kTimeInterval target:self selector:@selector(updateValue) userInfo:nil repeats:YES];
+        [self.microphoneBtn isMoving:YES];
+        
+    
         
         //增加录音次数
         NSInteger lastCount=[[self.countOfRecord objectAtIndex:self.currentPage] integerValue];
@@ -230,17 +327,28 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     
 }
 
-- (IBAction)earphoneBtnPressed:(id)sender {
+- (void)updateValue{
+    [audioRecorder updateMeters];
+    float volume=[audioRecorder averagePowerForChannel:0];
+    float value=(volume+80)/80;
     
-    if (isRecording) {
-        [audioRecorder stop];
-        [self syncRecordBtn:recordBtnNormal];
-    }
-    audioPlayer=[[AVAudioPlayer alloc] initWithContentsOfURL:audioRecorder.url error:nil];
-    [audioPlayer play];
+    [self.microphoneBtn setCurrentValueRate:value];
 }
 
-- (IBAction)settingBtnPressed:(id)sender{
+- (void)addBtnPressed{
+    
+    [self.popMenu showPopMenuInView:self.view];
+    
+}
+
+- (void)playBtnPressed {
+    
+    audioPlayer=[[AVAudioPlayer alloc] initWithContentsOfURL:audioRecorder.url error:nil];
+    [audioPlayer play];
+    
+}
+
+- (void)settingBtnPressed {
     SettingViewController *settingVC=[[SettingViewController alloc] initWithNibName:@"SettingViewController" bundle:nil];
     settingVC.videoPath=self.videoPath;
     settingVC.subtitlePath=self.subtitlePath;
@@ -251,10 +359,9 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 
 }
 
-- (IBAction)backBtnPressed:(id)sender {
+- (void)backToGlossaryView{
     [self.navigationController popViewControllerAnimated:YES];
 }
-
 
 #pragma mark - KVO
 
@@ -277,6 +384,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 }
 
 - (void)viewDidAppear:(BOOL)animated{
+    [self initAudioRecord];
     [self initAudioPlayer];
 }
 
@@ -285,18 +393,23 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    self.savePath=@"/Users/apple/Library/Application Support/iPhone Simulator/5.1/Applications/4E945972-1056-4F02-AF91-02C1A9550D4B/Documents/Downton.Abbey.0306";
+    //self.savePath=@"/Users/apple/Library/Application Support/iPhone Simulator/5.1/Applications/4E945972-1056-4F02-AF91-02C1A9550D4B/Documents/Downton.Abbey.0306";
     //
     //
+    
     [self initDataSource];
     [self initTableView];
+    [self initBottomBarItems];
+    [self initTopBarItems];
     
     [self.mTableView setDataSource:self];
     [self.mTableView setDelegate:self];
     
     self.cellNib=[UINib nibWithNibName:@"CardCell" bundle:nil];
     
+    /*
     [self syncRecordBtn:recordBtnNormal];
+    
     
     //耳机按钮
     UIImage *earphoneImage=[UIImage imageNamed:@"earphone.jpg"];
@@ -310,16 +423,15 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     
     //observer
     [self addObserver:self forKeyPath:@"currentPage" options:NSKeyValueObservingOptionNew context:nil];
-
+*/
 }
 
 - (void)viewDidUnload
 {
     [self setMTableView:nil];
     [self setMCardCell:nil];
-    [self setRecordBtn:nil];
-    [self setEarphoneBtn:nil];
     [self setCountLbl:nil];
+    [self setCustomBarView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;

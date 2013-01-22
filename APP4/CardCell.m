@@ -9,13 +9,10 @@
 #import "CardCell.h"
 
 @implementation CardCell
-@synthesize mImageView;
+@synthesize customImageView;
 @synthesize subtitleEng;
 @synthesize subtitleChi;
-
-- (void)fillImage:(UIImage *)image{
-    
-}
+@synthesize imageView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

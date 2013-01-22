@@ -7,9 +7,9 @@
 //
 
 #import "GlossaryViewController.h"
+#import "LabelView.h"
 
-#define KVGlossaryDefaults @"glossaryDefaults"
-#define KVGlossaryCustom @"glossaryCustom"
+#define kTableViewHeaderHeight 40;
 
 @interface GlossaryViewController ()
 
@@ -38,13 +38,36 @@
     return 1;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     if (section==0) {
-        return @"默认生词本";
+        LabelView *titleView=[[LabelView alloc] init];
+        [titleView setFrame:CGRectMake(50, 50, 50, 50)];
+        [titleView setBackgroundColor:[UIColor clearColor]];
+        [titleView setText:@"  Default"];
+        [titleView setFont:[UIFont boldSystemFontOfSize:17]];
+        [titleView setTextColor:[UIColor grayColor]];
+        [titleView setShadowColor:[UIColor whiteColor]];
+        [titleView setShadowOffset:CGSizeMake(0, 0)];
+        [titleView setShadowRadius:1];
+        return titleView;
     }else if (section==1){
-        return @"自定义生词本";
+        LabelView *titleView=[[LabelView alloc] init];
+        [titleView setFrame:CGRectMake(50, 50, 50, 50)];
+        [titleView setBackgroundColor:[UIColor clearColor]];
+        [titleView setText:@"  Custom"];
+        [titleView setFont:[UIFont boldSystemFontOfSize:17]];
+        [titleView setTextColor:[UIColor grayColor]];
+        [titleView setShadowColor:[UIColor whiteColor]];
+        [titleView setShadowOffset:CGSizeMake(0, 0)];
+        [titleView setShadowRadius:1];
+        return titleView;
+        
     }
     return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return kTableViewHeaderHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -63,6 +86,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     CardViewController *cardVC=[[CardViewController alloc] initWithNibName:@"CardViewController" bundle:nil];
     if (indexPath.section==0) {
         cardVC.savePath=[self.glossaryDefaults objectAtIndex:indexPath.row];
@@ -70,8 +94,88 @@
         cardVC.savePath=[self.glossaryCustom objectAtIndex:indexPath.row];
     }
     [self.navigationController pushViewController:cardVC animated:YES];
-    [cardVC.navigationController setNavigationBarHidden:YES];
+    [cardVC.navigationController setNavigationBarHidden:NO];
+    [cardVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
+
 }
+
+- (void)initBarItems{
+
+    UIBarButtonItem *backButton=[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(backToFirstView)];
+    [backButton setTintColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1]];
+    [self.navigationItem setLeftBarButtonItem:backButton];
+    
+    UIBarButtonItem *addButton=[[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStyleBordered target:self action:@selector(backToFirstView)];
+    [addButton setTintColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1]];
+    [self.navigationItem setRightBarButtonItem:addButton];
+
+    
+    LabelView *titleView=[[LabelView alloc] init];
+    [titleView setCenter:CGPointMake(self.view.center.x, 30)];
+    [titleView setBounds:CGRectMake(0, 0, 70, 50)];
+    [titleView setBackgroundColor:[UIColor clearColor]];
+    [titleView setText:@"Gloss"];
+    [titleView setFont:[UIFont boldSystemFontOfSize:24]];
+    [titleView setTextColor:[UIColor grayColor]];
+    [titleView setTextAlignment:UITextAlignmentCenter];
+    [titleView setShadowColor:[UIColor whiteColor]];
+    [titleView setShadowOffset:CGSizeMake(0, 0)];
+    [titleView setShadowRadius:3];
+
+    [self.navigationItem setTitleView: titleView];
+}
+
+- (void)backToFirstView{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)initGlossaryData{
+    [self initGlossary:self.glossaryDefaults withKey:kGlossaryDefault];
+    [self initGlossary:self.glossaryCustom withKey:kGlossaryCustom];
+}
+
+/*
+ structure of the glossaries info in NSUserDefaults
+ 
+ NSUserDefaults---->(key)kGlossaryDefault-->(value)NSDictionary1
+               ---->(key)kGlossaryCustom-->(value)NSDictionary2
+ 
+ NSDictionary1---->(key)kGlossaryPriority-->(object)NSArrayPriority(the sequence the glossary names shown in the view)
+ NSDictionary1---->(key)glossary1,2,...,n-->(object)NSArrayGlossary(contain all the glossaries in Default of Custom)
+ NSArrayGlossary---->(index)0-->(NSString *)glossaryPath
+ NSArrayGlossary---->(index)1-->(NSString *)videoPath
+ NSArrayGlossary---->(index)2-->(NSString *)subtitlePath
+ NSArrayGlossary---->(index)3-->(NSDictionary *)allCards
+ allCards---->(key)card1,2,...,n-->(NSArray *)eachCard
+ eachCard---->(index)0-->(NSString)imagePath;
+ eachCard---->(index)1-->(NSNumber)recordCount;
+ 
+ */
+
+- (void)initGlossary:(NSMutableArray *)array withKey:(NSString *)key{
+
+    array=[NSMutableArray arrayWithCapacity:0];
+    
+    //get glossary data from NSUserDefaults if already had one
+    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+    
+    NSDictionary *allGlossaries=[ud dictionaryForKey:key];
+    if (allGlossaries) {
+        
+        NSArray *priority=[allGlossaries objectForKey:kGlossaryPriority];
+        NSInteger count=[priority count]; 
+        
+        if (priority) {
+            for (int i=0; i<count; i++) {
+                NSString *key=[priority objectAtIndex:i];
+                NSArray *glossary=[allGlossaries objectForKey:key];
+                NSString *glossaryPath=[glossary objectAtIndex:0];
+                [array addObject:glossaryPath];
+            }
+        }
+    }
+}
+
 
 #pragma mark - defaults
 
@@ -89,24 +193,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self.navigationItem setTitle:@"生词本"];
-    [self.navigationItem setRightBarButtonItem:nil animated:YES];
+    [self initBarItems];
 
     [self.mTableView setDelegate:self];
     [self.mTableView setDataSource:self];
     
-    //初始化两种生词本
-    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
-    if ([ud arrayForKey:KVGlossaryDefaults]) {
-        self.glossaryDefaults=[NSMutableArray arrayWithArray:[ud arrayForKey:KVGlossaryDefaults]];
-    }else{
-        self.glossaryDefaults=[NSMutableArray arrayWithCapacity:0];
-    }
-    if ([ud arrayForKey:KVGlossaryCustom]) {
-        self.glossaryCustom=[NSMutableArray arrayWithArray:[ud arrayForKey:KVGlossaryCustom]];
-    }else{
-        self.glossaryCustom=[NSMutableArray arrayWithCapacity:0];
-    }
+    [self initGlossaryData];
+    
     
 }
 

@@ -40,10 +40,10 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     if (section==0) {
         LabelView *titleView=[[LabelView alloc] init];
-        [titleView setFrame:CGRectMake(10, 50, 50, 50)];
+        [titleView setFrame:CGRectMake(50, 50, 50, 50)];
         [titleView setBackgroundColor:[UIColor clearColor]];
-        [titleView setText:@"Video"];
-        [titleView setFont:[UIFont boldSystemFontOfSize:20]];
+        [titleView setText:@"  Video"];
+        [titleView setFont:[UIFont boldSystemFontOfSize:17]];
         [titleView setTextColor:[UIColor grayColor]];
         [titleView setShadowColor:[UIColor whiteColor]];
         [titleView setShadowOffset:CGSizeMake(0, 0)];
@@ -51,10 +51,10 @@
         return titleView;
     }else if (section==1){
         LabelView *titleView=[[LabelView alloc] init];
-        [titleView setFrame:CGRectMake(10, 50, 50, 50)];
+        [titleView setFrame:CGRectMake(50, 50, 50, 50)];
         [titleView setBackgroundColor:[UIColor clearColor]];
-        [titleView setText:@"Subtitle"];
-        [titleView setFont:[UIFont boldSystemFontOfSize:20]];
+        [titleView setText:@"  Subtitle"];
+        [titleView setFont:[UIFont boldSystemFontOfSize:17]];
         [titleView setTextColor:[UIColor grayColor]];
         [titleView setShadowColor:[UIColor whiteColor]];
         [titleView setShadowOffset:CGSizeMake(0, 0)];
@@ -158,7 +158,7 @@
     return userPath;
 }
 
-- (void)showButtons{
+- (void)initBarItems{
     
     [self.navigationItem setRightBarButtonItem:nil animated:YES];
     
@@ -171,8 +171,9 @@
     [titleView setBounds:CGRectMake(0, 0, 70, 50)];
     [titleView setBackgroundColor:[UIColor clearColor]];
     [titleView setText:@"Files"];
-    [titleView setFont:[UIFont boldSystemFontOfSize:30]];
+    [titleView setFont:[UIFont boldSystemFontOfSize:24]];
     [titleView setTextColor:[UIColor grayColor]];
+    [titleView setTextAlignment:UITextAlignmentCenter];
     [titleView setShadowColor:[UIColor whiteColor]];
     [titleView setShadowOffset:CGSizeMake(0, 0)];
     [titleView setShadowRadius:3];
@@ -196,7 +197,7 @@
     playVC.subtitlePath=[[self userPath] stringByAppendingPathComponent:subtitleName];
     
     [self.navigationController pushViewController:playVC animated:YES];
-    [playVC.navigationController setNavigationBarHidden:NO];
+    [playVC.navigationController setNavigationBarHidden:YES];
     [playVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
     
     
@@ -256,7 +257,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self showButtons];
+    [self initBarItems];
     
     [self.mTableVIew setDelegate:self];
     [self.mTableVIew setDataSource:self];

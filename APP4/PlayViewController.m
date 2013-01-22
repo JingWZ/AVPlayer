@@ -14,10 +14,10 @@
 
 
 #define kTimeScale 60.0
+#define kTimeInterval 0.01
 #define kIntervalToHide 10.0
-#define kHeightToShowButtons 80.0
-#define kLastPlayInfoKey @"lastPlayInfo"
-#define kGlossaryCatalog @"glossaryCatalog"
+#define kHeightToShowButtons 49.0
+
 
 @interface PlayViewController ()
 
@@ -157,7 +157,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         [self.timer invalidate];
     }
     self.timer=[NSTimer scheduledTimerWithTimeInterval:kIntervalToHide target:self selector:@selector(hideBarItems) userInfo:nil repeats:NO];
-
+    
 }
 
 - (void)pausePressed{
@@ -194,12 +194,18 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 
 - (void)moveToCardView{
     
+    [mPlayer pause];
+    
     CardViewController *cardVC=[[CardViewController alloc] initWithNibName:@"CardViewController" bundle:nil];
+    
     cardVC.savePath=[self savePath];
     cardVC.videoPath=self.videoPath;
     cardVC.subtitlePath=self.subtitlePath;
+    
     [self.navigationController pushViewController:cardVC animated:YES];
-    [mPlayer pause];
+    [cardVC.navigationController setNavigationBarHidden:NO];
+    [cardVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
+    
 }
 
 
@@ -220,6 +226,8 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 #pragma mark - synchronize
 
 - (void)showBarItems{
+    [self.view removeGestureRecognizer:tapGesture];
+    
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self.barBottomView setFrame:CGRectMake(0, self.view.bounds.size.height-kHeightToShowButtons, self.view.bounds.size.width, kHeightToShowButtons)];
     [self.titleView setText:[self systemTime]];
@@ -227,6 +235,9 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 - (void)hideBarItems{
+    if (tapGesture) {
+        [self.view addGestureRecognizer:tapGesture];
+    }
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     [self.barBottomView setFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, kHeightToShowButtons)];
@@ -269,9 +280,59 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     return nowStr;
 }
 
+- (void)syncCountLabel{
+    if (self.count>9) {
+        [self.countLbl setTextPointX:8 pointY:9];
+    } else if (self.count>99){
+        [self.countLbl setTextSize:13];
+        [self.countLbl setTextPointX:5 pointY:10];
+    }
+    [self.countLbl setText:[NSString stringWithFormat:@"%d",self.count]];
+    [self.countLbl setHidden:NO];
+    
+    //避免在3秒内重复激发timer
+    if (!timeOffset) {
+        self.countTimer=[NSTimer scheduledTimerWithTimeInterval:kTimeInterval target:self selector:@selector(animateCountLabel) userInfo:nil repeats:YES];
+        self.countAnimationDuration=3;
+    }
+}
+
+- (void)animateCountLabel{
+    
+    timeOffset=timeOffset+kTimeInterval;
+    NSLog(@"offset:%f, duration:%f", timeOffset, self.countAnimationDuration);
+    if (timeOffset < self.countAnimationDuration) {
+        
+        CGFloat progress = [self tweenFuctionWithT:timeOffset B:0 C:1 D:3];
+        CGRect startRect = CGRectMake(440, 100, 30, 30);
+        CGRect endRect = CGRectMake(440, 20, 30, 30);
+        CGRect distance = CGRectMake(endRect.origin.x - startRect.origin.x, endRect.origin.y - startRect.origin.y, endRect.size.width - startRect.size.width, endRect.size.height - startRect.size.height);
+        CGRect tweenedRect = CGRectMake(startRect.origin.x + distance.origin.x * progress, startRect.origin.y + distance.origin.y * progress, startRect.size.width + distance.size.width * progress, startRect.size.height + distance.size.height * progress);
+        [self.countLbl setFrame:tweenedRect];
+        
+    }else{
+        [self.countTimer invalidate];
+        self.countTimer=nil;
+        timeOffset=0;
+        [self.countLbl setHidden:YES];
+    }
+}
+
+- (CGFloat)tweenFuctionWithT:(CGFloat)t B:(CGFloat)b C:(CGFloat)c D:(CGFloat)d{
+    CGFloat p = d*.3;
+    CGFloat s, a = 0.0;
+    if (t==0) return b;  if ((t/=d)==1) return b+c;
+    if (!a || a < ABS(c)) { a=c; s=p/4; }
+    else s = p/(2*M_PI) * asin (c/a);
+    return (a*pow(2,-10*t) * sin( (t*d-s)*(2*M_PI)/p ) + c + b);
+}
+
 #pragma mark - save
 
 - (void)extractImageAndAudio {
+    
+    self.count=self.count+1;
+    [self syncCountLabel];
     
     [self createSaveFile];
     
@@ -295,33 +356,64 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         CMTimeRange range=CMTimeRangeFromTimeToTime(currentSubtitle.startTime, currentSubtitle.endTime);
         [audioPackage saveAudioWithRange:range inPath:path];
         //show icon to show that successfully save the extracted things
-        
     }
 }
 
 - (void)createSaveFile{
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:[self savePath]]) {
-        //create a file, save images, audios and subtitles
-        [[NSFileManager defaultManager] createDirectoryAtPath:[self savePath] withIntermediateDirectories:NO attributes:nil error:nil];
-        //save this file path to userDefaults, to restore it in GlossaryView
-        NSMutableArray *glossaryCatalog;
-        NSUserDefaults *userDefaults=[NSUserDefaults standardUserDefaults];
-        if ([userDefaults arrayForKey:kGlossaryCatalog]) {
-            glossaryCatalog=[NSMutableArray arrayWithArray:[userDefaults arrayForKey:kGlossaryCatalog]];
-        }else{
-            glossaryCatalog=[NSMutableArray arrayWithCapacity:0];
+        
+        //create a file, where save images, audios and subtitles
+        if ([[NSFileManager defaultManager] createDirectoryAtPath:[self savePath] withIntermediateDirectories:NO attributes:nil error:nil]) {
+            
+            //save this file path to userDefaults, to restore it in GlossaryView
+            NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+            
+            //NSDictionary *allGlossaries=[ud dictionaryForKey:kGlossaryDefault];
+            if ([ud dictionaryForKey:kGlossaryDefault]) {
+                
+                //glossaryPath, videoPath, subtitlePath, cards(NSDictionary)
+                NSString *glossaryPath=[self savePath];
+                NSDictionary *cardsDic=[NSDictionary dictionary];
+                
+                //glossary and its key
+                NSMutableArray *priority=[NSMutableArray arrayWithArray:[[ud dictionaryForKey:kGlossaryDefault] objectForKey:kGlossaryPriority]];
+                NSInteger count=[priority count];
+                NSString *key=[NSString stringWithFormat:@"%@%d", kGlossaryKey, count];
+                [priority insertObject:key atIndex:0];
+                
+                NSArray *glossary=[NSArray arrayWithObjects:glossaryPath, self.videoPath, self.subtitlePath, cardsDic, nil];
+                
+                //all glossaries
+                NSMutableDictionary *allGlossaries=[NSMutableDictionary dictionaryWithDictionary:[ud dictionaryForKey:kGlossaryDefault]];
+                [allGlossaries setObject:priority forKey:kGlossaryDefault];
+                [allGlossaries setObject:glossary forKey:key];
+                
+                [ud setObject:allGlossaries forKey:kGlossaryDefault];
+                [ud synchronize];
+                
+            }else{
+                //first init the glossary in .plist
+                
+                //glossaryPath, videoPath, subtitlePath, cards(NSDictionary)
+                NSString *glossaryPath=[self savePath];
+                NSDictionary *cardsDic=[NSDictionary dictionary];
+                
+                //glossary and its key
+                NSArray *glossary=[NSArray arrayWithObjects:glossaryPath, self.videoPath, self.subtitlePath, cardsDic, nil];
+                NSString *key=[NSString stringWithFormat:@"%@%d", kGlossaryKey, 0];
+                
+                //priority
+                NSArray *priority=[NSArray arrayWithObject:key];
+                
+                //the whole glossary difault
+                NSDictionary *allGlossaries=[NSDictionary dictionaryWithObjectsAndKeys:priority, kGlossaryPriority, glossary, key, nil];
+                [ud setObject:allGlossaries forKey:kGlossaryDefault];
+                [ud synchronize];
+                
+            }
         }
-        [glossaryCatalog addObject:[self savePath]];
-        [userDefaults setObject:glossaryCatalog forKey:kGlossaryCatalog];
-        [userDefaults synchronize];
         
-        //save video&subtitle path in this file, to use it in SettingView
-        NSString *saveVideoPath=[[self savePath] stringByAppendingPathComponent:@"videoPath"];
-        NSString *saveSubtitlePath=[[self savePath] stringByAppendingPathComponent:@"subtitlePath"];
-        
-        [self.videoPath writeToFile:saveVideoPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-        [self.subtitlePath writeToFile:saveSubtitlePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     }
     
 }
@@ -381,51 +473,6 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 - (void)initButtonsInBottomBar{
-    
-    self.playBtn=[[PlayButton alloc] initWithFrame:CGRectMake(420, 20, 45, 45)];
-    [self.playBtn addTarget:self action:@selector(playPressed) forControlEvents:UIControlEventTouchDown];
-    [self.barBottomView addSubview:self.playBtn];
-    [self.playBtn setHidden:YES];
-    
-    self.pauseBtn=[[PauseButton alloc] initWithFrame:CGRectMake(420, 20, 45, 45)];
-    [self.barBottomView addSubview:self.pauseBtn];
-    [self.pauseBtn addTarget:self action:@selector(pausePressed) forControlEvents:UIControlEventTouchDown];
-}
-
-#pragma mark - defaults
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)viewDidAppear:(BOOL)animated{
-    //get last play info, to load last play time
-    [self obtainLastPlayInfo];
-    //init AVPlayer
-    [self initAVPlayer];
-    //init Subtitle
-    mSubtitlePackage=[[SubtitlePackage alloc] initWithFile:self.subtitlePath];
-    //init top bar and bottom bar
-    [self initButtonsInBottomBar];
-    [self.barBottomView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:.5]];
-    [self.view addSubview:self.barBottomView];
-    [self hideBarItems];
-    //add gestureRecognizer
-    UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actWhenTap:)];
-    [self.view addGestureRecognizer:tapGesture];
-    
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    //when load video, show progress in the view
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     //init top bar button
     UIColor *buttonColor=[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1];
     UIBarButtonItem *backButton=[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(backToFileView)];
@@ -446,6 +493,64 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [self.titleView setShadowOffset:CGSizeMake(0, 0)];
     [self.titleView setShadowRadius:1];
     [self.navigationItem setTitleView: self.titleView];
+    //init bottom bar button PLAY
+    self.playBtn=[[PlayButton alloc] initWithFrame:CGRectMake(425, 5, 45, 45)];
+    [self.playBtn addTarget:self action:@selector(playPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.barBottomView addSubview:self.playBtn];
+    [self.playBtn setHidden:YES];
+    //init bottom bar button PAUSE
+    self.pauseBtn=[[PauseButton alloc] initWithFrame:CGRectMake(425, 5, 45, 45)];
+    [self.barBottomView addSubview:self.pauseBtn];
+    [self.pauseBtn addTarget:self action:@selector(pausePressed) forControlEvents:UIControlEventTouchUpInside];
+    //init count label
+    self.countLbl=[[CountLabel alloc] initWithFrame:CGRectMake(440, 100, 30, 30)];
+    [self.countLbl setBackgroundColor:[UIColor clearColor]];
+    [self.countLbl setOffset:2];
+    [self.countLbl setLineWidth:2];
+    [self.countLbl setTextSize:15];
+    [self.countLbl setTextPointX:11];
+    [self.countLbl setTextPointY:10];
+    [self.countLbl setHidden:YES];
+    [self.mPlayView addSubview:self.countLbl];
+    
+}
+
+#pragma mark - defaults
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    
+    //get last play info, to load last play time
+    [self obtainLastPlayInfo];
+    //init AVPlayer
+    [self initAVPlayer];
+    //init Subtitle
+    mSubtitlePackage=[[SubtitlePackage alloc] initWithFile:self.subtitlePath];
+    //init top bar and bottom bar
+    [self initButtonsInBottomBar];
+    [self.barBottomView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:.5]];
+    [self.view addSubview:self.barBottomView];
+    [self hideBarItems];
+    //add gestureRecognizer
+    tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actWhenTap:)];
+    [self.view addGestureRecognizer:tapGesture];
+    
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    //when load video, show progress in the view
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     
 }
 

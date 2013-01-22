@@ -26,6 +26,13 @@
 #import "SettingViewController.h"
 #import "CardCell.h"
 
+#import "CustomBarView.h"
+#import "MicrophoneButton.h"
+#import "AddButton.h"
+#import "SettingButton.h"
+#import "PlayButton.h"
+#import "PopMenu.h"
+
 @interface CardViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate>
 
 @property (copy, nonatomic) NSString *savePath;
@@ -37,18 +44,20 @@
 @property (strong, nonatomic) NSMutableArray *countOfRecord;
 @property (strong, nonatomic) AVAudioPlayer *audioPlayer;
 @property (strong, nonatomic) AVAudioRecorder *audioRecorder;
+@property (strong, nonatomic) NSTimer *timer;
 @property (assign, nonatomic) BOOL isRecording;
 @property (assign, nonatomic) NSInteger currentPage;
+@property (strong, nonatomic) UITapGestureRecognizer *tapGesture;
+
+@property (strong, nonatomic) CustomBarView *customBarView;
+@property (strong, nonatomic) AddButton *addBtn;
+@property (strong, nonatomic) SettingButton *settingBtn;
+@property (strong, nonatomic) MicrophoneButton *microphoneBtn;
+@property (strong, nonatomic) PlayButton *playBtn;
+@property (strong, nonatomic) PopMenu *popMenu;
 
 @property (weak, nonatomic) IBOutlet UITableView *mTableView;
 @property (strong, nonatomic) IBOutlet CardCell *mCardCell;
-@property (weak, nonatomic) IBOutlet UIButton *recordBtn;
-@property (weak, nonatomic) IBOutlet UIButton *earphoneBtn;
 @property (weak, nonatomic) IBOutlet UILabel *countLbl;
-
-- (IBAction)recordBtnPressed:(id)sender;
-- (IBAction)earphoneBtnPressed:(id)sender;
-- (IBAction)settingBtnPressed:(id)sender;
-- (IBAction)backBtnPressed:(id)sender;
 
 @end

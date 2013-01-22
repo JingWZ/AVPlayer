@@ -12,7 +12,13 @@
 #import "PlayView.h"
 #import "SubtitlePackage.h"
 #import "LabelView.h"
+#import "CountLabel.h"
 #import "PlayButton.h"
+
+#define kLastPlayInfoKey @"lastPlayInfo"
+#define kGlossaryDefault @"glossaryDefaults"
+#define kGlossaryPriority @"glossaryPriority"
+#define kGlossaryKey @"glossary"
 
 @interface PlayViewController : UIViewController{
     AVPlayer *mPlayer;
@@ -23,6 +29,8 @@
     id mTimeObserver;
     BOOL seekToZeroBeforePlay;
     float mRestoreAfterScrubbingRate;
+    float timeOffset;
+    UITapGestureRecognizer *tapGesture;
     
 }
 
@@ -31,9 +39,13 @@
 @property (strong, nonatomic) NSMutableArray *lastPlayInfo;
 @property (assign, nonatomic) CMTime lastStartTime;
 @property (strong) NSTimer *timer;
+@property (strong) NSTimer *countTimer;
+@property (assign, nonatomic) NSInteger count;
+@property (assign, nonatomic) float countAnimationDuration;
 @property (strong, nonatomic) LabelView *titleView;
 @property (strong, nonatomic) PlayButton *playBtn;
 @property (strong, nonatomic) PauseButton *pauseBtn;
+@property (strong, nonatomic) CountLabel *countLbl;
 
 @property (weak, nonatomic) IBOutlet PlayView *mPlayView;
 @property (weak, nonatomic) IBOutlet UILabel *lblEng;

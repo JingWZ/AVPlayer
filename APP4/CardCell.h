@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CustomImageView.h"
 
 @interface CardCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *mImageView;
+
+@property (weak, nonatomic) IBOutlet CustomImageView *customImageView;
 @property (weak, nonatomic) IBOutlet UILabel *subtitleEng;
 @property (weak, nonatomic) IBOutlet UILabel *subtitleChi;
-
-- (void)fillImage:(UIImage *)image;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @end
