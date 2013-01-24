@@ -25,6 +25,7 @@
 
 #import "SettingViewController.h"
 #import "CardCell.h"
+#import "GlossaryManagement.h"
 
 #import "CustomBarView.h"
 #import "MicrophoneButton.h"

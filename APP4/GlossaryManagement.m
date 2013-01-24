@@ -10,26 +10,26 @@
 
 @implementation GlossaryManagement
 
-@synthesize glossaryDefault, glossaryCustom;
+static NSString *glossaryIndex=@"glossaryIndex";
+static NSString *glossaryPath=@"glossaryPath";
+static NSString *glossaryVideoPath=@"glossaryVideoPath";
+static NSString *glossarySubtitlePath=@"glossarySubtitlePath";
+static NSString *cardsKey=@"glossaryCards";
 
+static NSString *cardSavePath=@"cardSavePath";
+static NSString *cardRecordCount=@"cardRecordCount";
+static NSString *cardVideoPath=@"cardVideoPath";
+static NSString *cardSubtitlePath=@"cardSubtitlePath";
 
 #pragma mark - add glossary
 
-- (NSDictionary *)getGlossaryWithIndex:(NSInteger)index glossary:(NSString *)gPath video:(NSString *)vPath subtitle:(NSString *)sPath cards:(NSMutableArray *)cards{
+- (NSDictionary *)getGlossaryWithGlossaryPath:(NSString *)gPath videoPath:(NSString *)vPath subtitlePath:(NSString *)sPath cards:(NSMutableArray *)cards{
     
-    NSString *glossaryIndex=@"glossaryIndex";
-    NSString *glossaryPath=@"glossaryPath";
-    NSString *videoPath=@"glossaryVideoPath";
-    NSString *subtitlePath=@"glossarySubtitlePath";
-    NSString *cardsKey=@"glossaryCards";
-    
-    NSNumber *indexNum=[NSNumber numberWithInteger:index];
     NSDictionary *glossary=[NSDictionary dictionaryWithObjectsAndKeys:
-              indexNum, glossaryIndex,
-              gPath, glossaryPath,
-              vPath, videoPath,
-              sPath, subtitlePath,
-              cards, cardsKey, nil];
+                            gPath, glossaryPath,
+                            vPath, glossaryVideoPath,
+                            sPath, glossarySubtitlePath,
+                            cards, cardsKey, nil];
     
     return glossary;
 }
@@ -42,24 +42,134 @@
     [self addGlossary:glossary inKey:kGlossaryCustom];
 }
 
-- (void)addGlossary:(NSDictionary *)glossary inKey:(NSString *)key{
+- (void)updateGlossaryToZeroIndexWithGlossaryPath:(NSString *)path{
+        
     NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
     
-    if ([ud arrayForKey:key]) {
-        glossaryDefault=[NSMutableArray arrayWithArray:[ud arrayForKey:key]];
-    }else{
-        glossaryDefault=[NSMutableArray arrayWithCapacity:0];
+    NSMutableArray *allGlossaries=[NSMutableArray arrayWithArray:[ud arrayForKey:kGlossaryDefault]];
+    
+    NSInteger index=[allGlossaries indexOfObjectPassingTest:^BOOL(NSDictionary *glos, NSUInteger idx, BOOL *stop) {
+        NSString *glosPath=[glos objectForKey:glossaryPath];
+        if ([glosPath isEqualToString:path]) {
+            return YES;
+        }
+        return YES;
+    }];
+    if (index==NSNotFound) {
+        index=0;
     }
     
-    [glossaryDefault insertObject:glossaryDefault atIndex:0];
+    //sync all glossaries
+    NSDictionary *glossary=[NSDictionary dictionaryWithDictionary:[allGlossaries objectAtIndex:index]];
+    [allGlossaries removeObjectAtIndex:index];
+    [allGlossaries insertObject:glossary atIndex:0];
     
     //synchonize the data in userDefault
-    [ud setObject:glossaryDefault forKey:key];
+    [ud setObject:allGlossaries forKey:kGlossaryDefault];
+    [ud synchronize];
+    
+}
+
+- (void)addGlossary:(NSDictionary *)glossary inKey:(NSString *)key{
+    
+    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+    NSMutableArray *allGlossaries;
+    
+    if ([ud arrayForKey:key]) {
+        allGlossaries=[NSMutableArray arrayWithArray:[ud arrayForKey:key]];
+    }else{
+        allGlossaries=[NSMutableArray arrayWithCapacity:0];
+    }
+    
+    [allGlossaries insertObject:glossary atIndex:0];
+    
+    //synchonize the data in userDefault
+    [ud setObject:allGlossaries forKey:key];
     [ud synchronize];
 }
 
 #pragma mark - add card
 
+- (void)addCardInDefaultWithSavePath:(NSString *)path recordCount:(NSInteger)count video:(NSString *)vPath subtitle:(NSString *)sPath{
+    
+    NSLog(@"yyy");
+    //update eachCard
+    NSNumber *recordCount=[NSNumber numberWithInteger:count];
+    NSDictionary *eachCard=[NSDictionary dictionaryWithObjectsAndKeys:
+                            path, cardSavePath,
+                            recordCount, cardRecordCount,
+                            vPath, cardVideoPath,
+                            sPath, cardSubtitlePath, nil];
+    
+    //all glossaries
+    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+    NSMutableArray *allGlossaries=[NSMutableArray arrayWithArray:[ud arrayForKey:kGlossaryDefault]];
+    //glossary
+    NSMutableDictionary *glossary=[NSMutableDictionary dictionaryWithDictionary:[allGlossaries objectAtIndex:0]];
+    
+    //update cards
+    NSMutableArray *cards=[NSMutableArray arrayWithArray:[glossary objectForKey:cardsKey]];
+    [cards addObject:eachCard];
+    
+    //update glossary
+    [glossary setObject:cards forKey:cardsKey];
+    
+    //update all glossaries
+    [allGlossaries removeObjectAtIndex:0];
+    [allGlossaries insertObject:glossary atIndex:0];
+    
+    //update userDefault
+    [ud setObject:allGlossaries forKey:kGlossaryDefault];
+    
+}
 
+#pragma mark - get glossary path
+
+- (NSMutableArray *)getDefaultGlossariesPath{
+    
+    return [self getGlossariesPathIn:kGlossaryDefault];
+
+}
+
+- (NSMutableArray *)getCustomGlossariesPath{
+    
+    return [self getGlossariesPathIn:kGlossaryCustom];
+    
+}
+
+- (NSMutableArray *)getGlossariesPathIn:(NSString *)key{
+    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+    NSArray *allGlossaries=[ud arrayForKey:key];
+    NSMutableArray *glossariesPath=[NSMutableArray arrayWithCapacity:0];
+    for (int i=0; i<[allGlossaries count]; i++) {
+        NSDictionary *glos=[allGlossaries objectAtIndex:i];
+        NSString *path=[glos objectForKey:glossaryPath];
+        [glossariesPath addObject:path];
+    }
+    return glossariesPath;
+}
+
+#pragma mark - get glossary name
+
+- (NSMutableArray *)getDefaultGlossariesName{
+    return [self getGlossariesNameIn:kGlossaryDefault];
+}
+
+- (NSMutableArray *)getCustomGlossariesName{
+    return [self getGlossariesNameIn:kGlossaryCustom];
+}
+
+- (NSMutableArray *)getGlossariesNameIn:(NSString *)key{
+    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+    NSArray *allGlossaries=[ud arrayForKey:key];
+    NSMutableArray *glossariesName=[NSMutableArray arrayWithCapacity:0];
+    for (int i=0; i<[allGlossaries count]; i++) {
+        NSDictionary *glos=[allGlossaries objectAtIndex:i];
+        NSString *path=[glos objectForKey:glossaryPath];
+        NSString *name=[path lastPathComponent];
+        [glossariesName addObject:name];
+    }
+    return glossariesName;
+}
 
 @end

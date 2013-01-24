@@ -11,9 +11,7 @@
 #import <UIKit/UIKit.h>
 #import "CardViewController.h"
 
-#define kGlossaryDefault @"glossaryDefaults"
-#define kGlossaryCustom @"glossaryCustom"
-#define kGlossaryPriority @"glossaryPriority"
+#import "GlossaryManagement.h"
 
 
 @interface GlossaryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>

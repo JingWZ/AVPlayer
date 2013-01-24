@@ -14,19 +14,36 @@
 @interface GlossaryManagement : NSObject
 
 
-@property (strong, nonatomic) NSMutableArray *glossaryDefault;
-@property (strong, nonatomic) NSMutableArray *glossaryCustom;
-
-
-- (NSDictionary *)getGlossaryWithIndex:(NSInteger)index
-                     glossary:(NSString *)gPath
-                        video:(NSString *)vPath
-                     subtitle:(NSString *)sPath
-                        cards:(NSMutableArray *) cards;
-
+//update glossary
+- (NSDictionary *)getGlossaryWithGlossaryPath:(NSString *)gPath
+                                    videoPath:(NSString *)vPath
+                                 subtitlePath:(NSString *)sPath
+                                        cards:(NSMutableArray *)cards;
 - (void)addGlossaryInDefault:(NSDictionary *)glossary;
 - (void)addGlossaryInCustom:(NSDictionary *)glossary;
 
-- (void)addCardWithImagePath:(NSString *)iPath recordCount
+- (void)updateGlossaryToZeroIndexWithGlossaryPath:(NSString *)path;
+
+//update cards
+- (void)addCardInDefaultWithSavePath:(NSString *)iPath
+                         recordCount:(NSInteger)count
+                               video:(NSString *)vPath
+                            subtitle:(NSString *)sPath;
+//
+- (void)addCardInCustom:(NSDictionary *)glossary
+          WithImagePath:(NSString *)iPath
+            recordCount:(NSInteger)count
+                  video:(NSString *)vPath
+               subtitle:(NSString *)sPath;
+
+//modify eachCard
+
+//get glossary path
+- (NSMutableArray *)getDefaultGlossariesPath;
+- (NSMutableArray *)getCustomGlossariesPath;
+
+//get glossary name
+- (NSMutableArray *)getDefaultGlossariesName;
+- (NSMutableArray *)getCustomGlossariesName;
 
 @end

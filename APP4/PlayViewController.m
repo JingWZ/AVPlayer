@@ -15,7 +15,7 @@
 
 #define kTimeScale 60.0
 #define kTimeInterval 0.01
-#define kIntervalToHide 10.0
+#define kIntervalToHide 2.0
 #define kHeightToShowButtons 49.0
 
 
@@ -300,7 +300,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 - (void)animateCountLabel{
     
     timeOffset=timeOffset+kTimeInterval;
-    NSLog(@"offset:%f, duration:%f", timeOffset, self.countAnimationDuration);
+    //NSLog(@"offset:%f, duration:%f", timeOffset, self.countAnimationDuration);
     if (timeOffset < self.countAnimationDuration) {
         
         CGFloat progress = [self tweenFuctionWithT:timeOffset B:0 C:1 D:3];
@@ -357,9 +357,21 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         [audioPackage saveAudioWithRange:range inPath:path];
         //show icon to show that successfully save the extracted things
     }
+    
+    
+    //sync in userDefault
+    GlossaryManagement *gm=[[GlossaryManagement alloc] init];
+    [gm addCardInDefaultWithSavePath:path
+                         recordCount:0
+                               video:self.videoPath
+                            subtitle:self.subtitlePath];
+    
 }
 
 - (void)createSaveFile{
+    
+    
+    GlossaryManagement *gm=[[GlossaryManagement alloc] init];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:[self savePath]]) {
         
@@ -367,52 +379,17 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         if ([[NSFileManager defaultManager] createDirectoryAtPath:[self savePath] withIntermediateDirectories:NO attributes:nil error:nil]) {
             
             //save this file path to userDefaults, to restore it in GlossaryView
-            NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+            NSMutableArray *cards=[NSMutableArray arrayWithCapacity:0];
+            NSDictionary *glossary=[gm getGlossaryWithGlossaryPath:[self savePath]
+                                                         videoPath:self.videoPath
+                                                      subtitlePath:self.subtitlePath
+                                                             cards:cards];
+            [gm addGlossaryInDefault:glossary];
             
-            //NSDictionary *allGlossaries=[ud dictionaryForKey:kGlossaryDefault];
-            if ([ud dictionaryForKey:kGlossaryDefault]) {
-                
-                //glossaryPath, videoPath, subtitlePath, cards(NSDictionary)
-                NSString *glossaryPath=[self savePath];
-                NSDictionary *cardsDic=[NSDictionary dictionary];
-                
-                //glossary and its key
-                NSMutableArray *priority=[NSMutableArray arrayWithArray:[[ud dictionaryForKey:kGlossaryDefault] objectForKey:kGlossaryPriority]];
-                NSInteger count=[priority count];
-                NSString *key=[NSString stringWithFormat:@"%@%d", kGlossaryKey, count];
-                [priority insertObject:key atIndex:0];
-                
-                NSArray *glossary=[NSArray arrayWithObjects:glossaryPath, self.videoPath, self.subtitlePath, cardsDic, nil];
-                
-                //all glossaries
-                NSMutableDictionary *allGlossaries=[NSMutableDictionary dictionaryWithDictionary:[ud dictionaryForKey:kGlossaryDefault]];
-                [allGlossaries setObject:priority forKey:kGlossaryDefault];
-                [allGlossaries setObject:glossary forKey:key];
-                
-                [ud setObject:allGlossaries forKey:kGlossaryDefault];
-                [ud synchronize];
-                
-            }else{
-                //first init the glossary in .plist
-                
-                //glossaryPath, videoPath, subtitlePath, cards(NSDictionary)
-                NSString *glossaryPath=[self savePath];
-                NSDictionary *cardsDic=[NSDictionary dictionary];
-                
-                //glossary and its key
-                NSArray *glossary=[NSArray arrayWithObjects:glossaryPath, self.videoPath, self.subtitlePath, cardsDic, nil];
-                NSString *key=[NSString stringWithFormat:@"%@%d", kGlossaryKey, 0];
-                
-                //priority
-                NSArray *priority=[NSArray arrayWithObject:key];
-                
-                //the whole glossary difault
-                NSDictionary *allGlossaries=[NSDictionary dictionaryWithObjectsAndKeys:priority, kGlossaryPriority, glossary, key, nil];
-                [ud setObject:allGlossaries forKey:kGlossaryDefault];
-                [ud synchronize];
-                
-            }
         }
+    }else{
+        
+        [gm updateGlossaryToZeroIndexWithGlossaryPath:[self savePath]];
         
     }
     

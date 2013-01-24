@@ -15,10 +15,11 @@
 #import "CountLabel.h"
 #import "PlayButton.h"
 
+#import "GlossaryManagement.h"
+
 #define kLastPlayInfoKey @"lastPlayInfo"
-#define kGlossaryDefault @"glossaryDefaults"
-#define kGlossaryPriority @"glossaryPriority"
-#define kGlossaryKey @"glossary"
+
+
 
 @interface PlayViewController : UIViewController{
     AVPlayer *mPlayer;
@@ -42,6 +43,7 @@
 @property (strong) NSTimer *countTimer;
 @property (assign, nonatomic) NSInteger count;
 @property (assign, nonatomic) float countAnimationDuration;
+@property (assign, nonatomic) NSInteger glossaryIndex;
 @property (strong, nonatomic) LabelView *titleView;
 @property (strong, nonatomic) PlayButton *playBtn;
 @property (strong, nonatomic) PauseButton *pauseBtn;

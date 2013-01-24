@@ -269,17 +269,10 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 
 - (void)initPopMenu{
     
-    NSMutableArray *glossaryCustom;
-    
-    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
-    
-    if ([ud arrayForKey:kGlossaryCustom]) {
-        glossaryCustom=[NSMutableArray arrayWithArray:[ud arrayForKey:kGlossaryCustom]];
-    }else{
-        glossaryCustom=[NSMutableArray arrayWithCapacity:0];
-    }
-
-    self.popMenu=[[PopMenu alloc] initWithFrame:CGRectMake(0, 0, 320, -320) Contents:nil];
+    GlossaryManagement *gm=[[GlossaryManagement alloc] init];
+    NSMutableArray *glossariesCustom=[gm getCustomGlossariesName];
+        
+    self.popMenu=[[PopMenu alloc] initWithFrame:CGRectMake(0, 0, 320, -320) Contents:glossariesCustom];
     [self.view addSubview:self.popMenu];
 }
 
@@ -386,6 +379,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 - (void)viewDidAppear:(BOOL)animated{
     [self initAudioRecord];
     [self initAudioPlayer];
+    [self initPopMenu];
 }
 
 - (void)viewDidLoad

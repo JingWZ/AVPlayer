@@ -78,9 +78,9 @@
     }
     
     if (indexPath.section==0) {
-        cell.textLabel.text=[[self.glossaryDefaults objectAtIndex:indexPath.row] lastPathComponent];
+        cell.textLabel.text=[self.glossaryDefaults objectAtIndex:indexPath.row];
     }else if (indexPath.section==1){
-        cell.textLabel.text=[[self.glossaryCustom objectAtIndex:indexPath.row]lastPathComponent];
+        cell.textLabel.text=[self.glossaryCustom objectAtIndex:indexPath.row];
     }
     return cell;
 }
@@ -88,10 +88,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     CardViewController *cardVC=[[CardViewController alloc] initWithNibName:@"CardViewController" bundle:nil];
+    
+    GlossaryManagement *gm=[[GlossaryManagement alloc] init];
+    
     if (indexPath.section==0) {
-        cardVC.savePath=[self.glossaryDefaults objectAtIndex:indexPath.row];
+        NSMutableArray *glosDefault=[gm getDefaultGlossariesPath];
+        cardVC.savePath=[glosDefault objectAtIndex:indexPath.row];
     }else if (indexPath.section==1){
-        cardVC.savePath=[self.glossaryCustom objectAtIndex:indexPath.row];
+        NSMutableArray *glosCustom=[gm getCustomGlossariesPath];
+        cardVC.savePath=[glosCustom objectAtIndex:indexPath.row];
     }
     [self.navigationController pushViewController:cardVC animated:YES];
     [cardVC.navigationController setNavigationBarHidden:NO];
@@ -130,50 +135,13 @@
 }
 
 - (void)initGlossaryData{
-    [self initGlossary:self.glossaryDefaults withKey:kGlossaryDefault];
-    [self initGlossary:self.glossaryCustom withKey:kGlossaryCustom];
-}
-
-/*
- structure of the glossaries info in NSUserDefaults
- 
- NSUserDefaults---->(key)kGlossaryDefault-->(value)NSDictionary1
-               ---->(key)kGlossaryCustom-->(value)NSDictionary2
- 
- NSDictionary1---->(key)kGlossaryPriority-->(object)NSArrayPriority(the sequence the glossary names shown in the view)
- NSDictionary1---->(key)glossary1,2,...,n-->(object)NSArrayGlossary(contain all the glossaries in Default of Custom)
- NSArrayGlossary---->(index)0-->(NSString *)glossaryPath
- NSArrayGlossary---->(index)1-->(NSString *)videoPath
- NSArrayGlossary---->(index)2-->(NSString *)subtitlePath
- NSArrayGlossary---->(index)3-->(NSDictionary *)allCards
- allCards---->(key)card1,2,...,n-->(NSArray *)eachCard
- eachCard---->(index)0-->(NSString)imagePath;
- eachCard---->(index)1-->(NSNumber)recordCount;
- 
- */
-
-- (void)initGlossary:(NSMutableArray *)array withKey:(NSString *)key{
-
-    array=[NSMutableArray arrayWithCapacity:0];
     
-    //get glossary data from NSUserDefaults if already had one
-    NSUserDefaults *ud=[NSUserDefaults standardUserDefaults];
+    GlossaryManagement *gm=[[GlossaryManagement alloc] init];
+
+    self.glossaryDefaults=[gm getDefaultGlossariesName];
+    self.glossaryCustom=[gm getCustomGlossariesName];
     
-    NSDictionary *allGlossaries=[ud dictionaryForKey:key];
-    if (allGlossaries) {
-        
-        NSArray *priority=[allGlossaries objectForKey:kGlossaryPriority];
-        NSInteger count=[priority count]; 
-        
-        if (priority) {
-            for (int i=0; i<count; i++) {
-                NSString *key=[priority objectAtIndex:i];
-                NSArray *glossary=[allGlossaries objectForKey:key];
-                NSString *glossaryPath=[glossary objectAtIndex:0];
-                [array addObject:glossaryPath];
-            }
-        }
-    }
+    
 }
 
 
