@@ -20,6 +20,7 @@
 
 @property (strong, nonatomic) UITapGestureRecognizer *tapGesture;
 
+@property (copy, nonatomic) NSString *posterPath;
 @property (strong, nonatomic) NSMutableArray *postersName;
 @property (strong, nonatomic) NSMutableArray *posters;
 @property (strong, nonatomic) NSMutableArray *postersCenterY;

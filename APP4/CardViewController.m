@@ -155,10 +155,11 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 //    [audioSession setActive:YES error:nil];
 //    
     NSString *path=[[self.contentsData objectAtIndex:self.currentPage] stringByAppendingString:@"record.m4a"];
+    NSLog(@"%@",path);
     
     NSURL *url=[NSURL fileURLWithPath:path];
     NSDictionary *setting=[NSDictionary dictionaryWithObjectsAndKeys:
-                           [NSNumber numberWithInt:kAudioFormatMPEG4AAC],AVFormatIDKey,
+                           [NSNumber numberWithInt:kAudioFormatAppleIMA4],AVFormatIDKey,
                            [NSNumber numberWithFloat:44100.0],AVSampleRateKey,
                            [NSNumber numberWithInt:1],AVNumberOfChannelsKey, nil];
     
@@ -295,6 +296,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
         [self.microphoneBtn setCurrentValueRate:0];
         
     }else{
+        
         isRecording=YES;
         [audioRecorder record];
         
@@ -312,7 +314,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
         self.countLbl.text=[NSString stringWithFormat:@"%d",(lastCount+1)];
         
         NSString *keyStr=[[self.savePath lastPathComponent] stringByAppendingString:[[[self.contentsData objectAtIndex:self.currentPage] lastPathComponent] stringByDeletingPathExtension]];
-        NSLog(@"%@,%d",keyStr,lastCount+1);
+        //NSLog(@"%@,%d",keyStr,lastCount+1);
         [[NSUserDefaults standardUserDefaults] setInteger:(lastCount+1) forKey:keyStr];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
@@ -335,8 +337,11 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 }
 
 - (void)playBtnPressed {
-    
-    audioPlayer=[[AVAudioPlayer alloc] initWithContentsOfURL:audioRecorder.url error:nil];
+    NSString *path=[[self.contentsData objectAtIndex:self.currentPage] stringByAppendingString:@"record.m4a"];
+    NSURL *url=[NSURL fileURLWithPath:path];
+
+    audioPlayer=[[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+    NSLog(@"%@", [url path]);
     [audioPlayer play];
     
 }

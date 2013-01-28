@@ -39,7 +39,7 @@
 #define kEndValue 440
 #define animationDuration 1.5
 
-static NSString *posterPath=@"/Users/apple/Code/AVPlayer/APP4/posters";
+
 //uiview在左上角，quartz在左下角
 
 @synthesize tapGesture;
@@ -207,7 +207,12 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
 //获得所有海报的名字
 - (void)getPostersName{
     
-    NSArray *allContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:posterPath error:nil];
+    NSString *resourcePath=[[NSBundle mainBundle] resourcePath];
+    NSString *poster=@"posters";
+    self.posterPath=[resourcePath stringByAppendingPathComponent:poster];
+    //NSLog(@"%@",self.posterPath);
+    
+    NSArray *allContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.posterPath error:nil];
     self.postersName=[NSMutableArray arrayWithCapacity:0];
     
     for (NSString *content in allContents) {

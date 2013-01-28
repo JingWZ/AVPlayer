@@ -64,7 +64,7 @@
     CGContextAddPath(context, path);
     //CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
     //CGContextStrokePath(context);
-    CGContextSetFillColorWithColor(context, [[UIColor blackColor] CGColor]);
+    CGContextSetFillColorWithColor(context, [[UIColor grayColor] CGColor]);
     CGContextFillPath(context);
 }
 

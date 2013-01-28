@@ -59,8 +59,6 @@
 		1890ACC316880AEA000C0FC4 /* CardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACC116880AEA000C0FC4 /* CardViewController.xib */; };
 		1890ACC716880B35000C0FC4 /* CardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890ACC616880B35000C0FC4 /* CardCell.m */; };
 		1890ACC916880B5E000C0FC4 /* CardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACC816880B5E000C0FC4 /* CardCell.xib */; };
-		1890ACE01689CCB5000C0FC4 /* microNormal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACDE1689CCB5000C0FC4 /* microNormal.jpg */; };
-		1890ACE11689CCB5000C0FC4 /* microPressed.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACDF1689CCB5000C0FC4 /* microPressed.jpg */; };
 		18BECBA51694103900E82829 /* ButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BECBA41694103900E82829 /* ButtonView.m */; };
 		18BECBB0169426C900E82829 /* LabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BECBAF169426C900E82829 /* LabelView.m */; };
 		18CDAA4616AE2C6800A25DFC /* PopMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CDAA4516AE2C6800A25DFC /* PopMenu.m */; };
@@ -72,7 +70,6 @@
 		18E52A471696B6B50067C957 /* PlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E52A461696B6B50067C957 /* PlayView.m */; };
 		18E52A4F169869DC0067C957 /* ThumbImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E52A4E169869DB0067C957 /* ThumbImageView.m */; };
 		18E52A7B169AA90E0067C957 /* PlayButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E52A7A169AA90E0067C957 /* PlayButton.m */; };
-		18E9D32C1689EEDE00283A7F /* earphone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 18E9D32B1689EEDE00283A7F /* earphone.jpg */; };
 		18E9D335168B162600283A7F /* GlossaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E9D333168B162600283A7F /* GlossaryViewController.m */; };
 		18E9D336168B162600283A7F /* GlossaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18E9D334168B162600283A7F /* GlossaryViewController.xib */; };
 		18FCC0E616800F050038ADBB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18FCC0E516800F050038ADBB /* GLKit.framework */; };
@@ -156,8 +153,6 @@
 		1890ACC516880B35000C0FC4 /* CardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardCell.h; sourceTree = "<group>"; };
 		1890ACC616880B35000C0FC4 /* CardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardCell.m; sourceTree = "<group>"; };
 		1890ACC816880B5E000C0FC4 /* CardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardCell.xib; sourceTree = "<group>"; };
-		1890ACDE1689CCB5000C0FC4 /* microNormal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = microNormal.jpg; sourceTree = "<group>"; };
-		1890ACDF1689CCB5000C0FC4 /* microPressed.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = microPressed.jpg; sourceTree = "<group>"; };
 		18BECBA31694103900E82829 /* ButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonView.h; sourceTree = "<group>"; };
 		18BECBA41694103900E82829 /* ButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonView.m; sourceTree = "<group>"; };
 		18BECBAE169426C900E82829 /* LabelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelView.h; sourceTree = "<group>"; };
@@ -179,7 +174,6 @@
 		18E52A4E169869DB0067C957 /* ThumbImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbImageView.m; sourceTree = "<group>"; };
 		18E52A79169AA90E0067C957 /* PlayButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayButton.h; sourceTree = "<group>"; };
 		18E52A7A169AA90E0067C957 /* PlayButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayButton.m; sourceTree = "<group>"; };
-		18E9D32B1689EEDE00283A7F /* earphone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = earphone.jpg; sourceTree = "<group>"; };
 		18E9D332168B162600283A7F /* GlossaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryViewController.h; sourceTree = "<group>"; };
 		18E9D333168B162600283A7F /* GlossaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossaryViewController.m; sourceTree = "<group>"; };
 		18E9D334168B162600283A7F /* GlossaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GlossaryViewController.xib; sourceTree = "<group>"; };
@@ -391,9 +385,6 @@
 		CEDD6E7816390258000F3D6D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				18E9D32B1689EEDE00283A7F /* earphone.jpg */,
-				1890ACDE1689CCB5000C0FC4 /* microNormal.jpg */,
-				1890ACDF1689CCB5000C0FC4 /* microPressed.jpg */,
 				CEDD6E7916390258000F3D6D /* APP4-Info.plist */,
 				CEDD6E7A16390258000F3D6D /* InfoPlist.strings */,
 				CEDD6E7D16390258000F3D6D /* main.m */,
@@ -500,9 +491,6 @@
 				1872B56516842E6E0079944A /* Will and Grace.jpg in Resources */,
 				1890ACC316880AEA000C0FC4 /* CardViewController.xib in Resources */,
 				1890ACC916880B5E000C0FC4 /* CardCell.xib in Resources */,
-				1890ACE01689CCB5000C0FC4 /* microNormal.jpg in Resources */,
-				1890ACE11689CCB5000C0FC4 /* microPressed.jpg in Resources */,
-				18E9D32C1689EEDE00283A7F /* earphone.jpg in Resources */,
 				18E9D336168B162600283A7F /* GlossaryViewController.xib in Resources */,
 				18E52A431696B3BA0067C957 /* PlayViewController.xib in Resources */,
 			);
