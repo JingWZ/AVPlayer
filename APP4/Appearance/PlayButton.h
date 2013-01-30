@@ -13,9 +13,3 @@
 }
 
 @end
-
-@interface PauseButton : UIButton{
-    CGFloat offset;
-}
-
-@end

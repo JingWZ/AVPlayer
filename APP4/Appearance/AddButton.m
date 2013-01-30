@@ -16,7 +16,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:nil];
+
         offset=12;
         lineWidth=7;
     }
@@ -24,6 +24,9 @@
 }
 
 - (void)drawRect:(CGRect)rect{
+    
+    [self addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:nil];
+    
     CGFloat viewWidth=self.bounds.size.width;
     CGFloat viewHeight=self.bounds.size.height;
     
@@ -61,10 +64,10 @@
         CGColorRef endColor=CGColorCreate(colorSpace, (CGFloat[]){0.53, 0.53, 0.53, 0.26});
         CFArrayRef colorArray=CFArrayCreate(kCFAllocatorDefault, (const void*[]){startColor,endColor}, 2, nil);
         CGGradientRef gradient=CGGradientCreateWithColors(colorSpace, colorArray, NULL);
-        CGPoint center=CGPointMake(viewWidth/2, viewHeight/2);
+        CGPoint center=CGPointMake(viewWidth/2.0, viewHeight/2.0);
         
         CGContextRestoreGState(context);
-        CGContextDrawRadialGradient(context, gradient, center, viewWidth/10, center, viewWidth/2, kCGGradientDrawsBeforeStartLocation);
+        CGContextDrawRadialGradient(context, gradient, center, viewHeight/4.0, center, viewWidth/2, kCGGradientDrawsBeforeStartLocation);
     }
     
     

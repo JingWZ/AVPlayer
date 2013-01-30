@@ -69,6 +69,7 @@
 #pragma mark - choose proper subtitle by given CMTime
 
 - (NSUInteger)indexOfProperSubtitleWithGivenCMTime:(CMTime)time{
+    
     __block double timeInSeconds=CMTimeGetSeconds(time);
     NSUInteger theIndex=[self.subtitleItems indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         if (timeInSeconds>=CMTimeGetSeconds([obj startTime]) && timeInSeconds<=CMTimeGetSeconds([obj endTime])) {
@@ -84,6 +85,33 @@
     }
     
 }
+
+
+- (NSInteger)indexOfBackForWard:(CMTime)time{
+    
+    double timeInSeconds=CMTimeGetSeconds(time);
+    NSInteger currentIndex=[self indexOfProperSubtitleWithGivenCMTime:time];
+    NSInteger indexToMove=currentIndex;
+    
+    if (!currentIndex) {
+        if (timeInSeconds<CMTimeGetSeconds([[self.subtitleItems objectAtIndex:1] startTime])) {
+            indexToMove=1;
+        }else if (timeInSeconds>CMTimeGetSeconds([[self.subtitleItems lastObject] endTime])) {
+            indexToMove=[self.subtitleItems count];
+        }else{
+            for (int i=1; i<self.subtitleItems.count-1; i++) {
+                double lastEnd=CMTimeGetSeconds([[self.subtitleItems objectAtIndex:i] endTime]);
+                double nextStart=CMTimeGetSeconds([[self.subtitleItems objectAtIndex:i+1] startTime]);            
+                if (lastEnd < timeInSeconds && timeInSeconds < nextStart) {
+                    indexToMove=i+1;
+                }
+            }
+        }
+    }
+
+    return indexToMove;
+}
+
 
 #pragma mark - save
 

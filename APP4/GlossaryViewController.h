@@ -10,6 +10,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CardViewController.h"
+#import "GlossaryCell.h"
 
 #import "GlossaryManagement.h"
 
@@ -19,7 +20,11 @@
 @property (strong, nonatomic) NSMutableArray *glossaryDefaults;
 @property (strong, nonatomic) NSMutableArray *glossaryCustom;
 
+@property (strong, nonatomic) UINib *cellNib;
+
+
 @property (weak, nonatomic) IBOutlet UITableView *mTableView;
+@property (strong, nonatomic) IBOutlet GlossaryCell *mGlossaryCell;
 
 @end
 

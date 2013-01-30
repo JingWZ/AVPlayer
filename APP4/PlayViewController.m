@@ -15,8 +15,8 @@
 
 #define kTimeScale 60.0
 #define kTimeInterval 0.01
-#define kIntervalToHide 2.0
-#define kHeightToShowButtons 49.0
+//#define kIntervalToHide 5.0
+#define kCountLblAnimationDuration 3.0
 
 
 @interface PlayViewController ()
@@ -27,148 +27,90 @@ static void *PlayViewControllerStatusObservationContext = &PlayViewControllerSta
 static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControllerCurrentItemObservationContext;
 
 @implementation PlayViewController
+{
+    NSInteger subtitleIndex;
+    BOOL isShowingBars;
+}
 @synthesize mPlayView;
-@synthesize lblEng;
-@synthesize lblChi;
-@synthesize lblCurrentTime;
-@synthesize lblRemainTime;
+@synthesize lblEng, lblChi;
+@synthesize lblCurrentTime, lblRemainTime;
 @synthesize barBottomView;
 @synthesize mScrubber;
-@synthesize timer;
-
-#pragma mark - scrubber
-
--(void)syncScrubber{
-    
-    CMTime playerDuration=[self playerItemDuration];
-    if (CMTIME_IS_INVALID(playerDuration)) {
-        mScrubber.minimumValue=0.0;
-        return;
-    }
-    double duration=CMTimeGetSeconds(playerDuration);
-    if (isfinite(duration)) {
-        float minValue=[mScrubber minimumValue];
-        float maxValue=[mScrubber maximumValue];
-        double time=CMTimeGetSeconds([mPlayer currentTime]);
-        [mScrubber setValue:(maxValue-minValue)*time/duration+minValue];
-    }
-}
-
-- (IBAction)scrub:(id)sender {
-    
-    if ([sender isKindOfClass:[UISlider class]]) {
-        UISlider *slider=sender;
-        CMTime playerDuration=[self playerItemDuration];
-        if (CMTIME_IS_INVALID(playerDuration)) {
-            return;
-        }
-        double duration=CMTimeGetSeconds(playerDuration);
-        if (isfinite(duration)) {
-            float minValue=[slider minimumValue];
-            float maxValue=[slider maximumValue];
-            float value=[slider value];
-            double time=duration * (value-minValue)/(maxValue-minValue);
-            [mPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
-            [self syncTimeLabel];
-            [self syncSubtitle];
-        }
-    }
-}
-
-- (IBAction)beginScrubbing:(id)sender {
-    
-    mRestoreAfterScrubbingRate=[mPlayer rate];
-    [mPlayer setRate:0.f];
-    [self removeTimeObserver];
-    
-    [self.timer invalidate];
-    
-}
-
-- (IBAction)endScrubbing:(id)sender {
-    
-    if (!mTimeObserver) {
-        CMTime playerDuration=[self playerItemDuration];
-        if (CMTIME_IS_INVALID(playerDuration)) {
-            return;
-        }
-        double duration=CMTimeGetSeconds(playerDuration);
-        if (isfinite(duration)) {
-            [self syncDisplayItems];
-        }
-    }
-    
-    if (mRestoreAfterScrubbingRate) {
-        [mPlayer setRate:mRestoreAfterScrubbingRate];
-        mRestoreAfterScrubbingRate=0.f;
-    }
-    
-    self.timer=[NSTimer scheduledTimerWithTimeInterval:kIntervalToHide target:self selector:@selector(hideBarItems) userInfo:nil repeats:NO];
-    
-}
-
-#pragma mark - time label
-
-- (void)syncTimeLabel{
-    
-    CMTime playerDuration=[self playerItemDuration];
-    CMTime currentTime=[mPlayer currentTime];
-    CMTime remainTime=CMTimeSubtract(playerDuration, currentTime);
-    
-    self.lblCurrentTime.text=[NSString stringWithFormat:@"%@",[self getTimeStr:currentTime]];
-    self.lblRemainTime.text=[NSString stringWithFormat:@"%@",[self getTimeStr:remainTime]];
-    
-}
-
-- (NSString *)getTimeStr:(CMTime)time{
-    int timeInSecond=(int)CMTimeGetSeconds(time);
-    
-    NSString *hour;
-    if (timeInSecond/3600>0)
-        hour=[NSString stringWithFormat:@"%d:",timeInSecond/3600];
-    else
-        hour=@" ";
-    
-    NSString *min=[NSString stringWithFormat:@"%d:",timeInSecond%3600/60];
-    
-    NSString *sec;
-    if (timeInSecond%3600%60<10)
-        sec=[NSString stringWithFormat:@"0%d",timeInSecond%3600%60];
-    else
-        sec=[NSString stringWithFormat:@"%d",timeInSecond%3600%60];
-    
-    NSString *timeStr=[[hour stringByAppendingString:min] stringByAppendingString:sec];
-    return timeStr;
-}
-
 
 #pragma mark - action
 
+//when user tap the screen, pause the video, show the bars
+- (void)actWhenTap:(UITapGestureRecognizer *)gesture{
+    
+    if (isShowingBars) {
+        
+        CGPoint point=[gesture locationInView:self.view];
+        
+        //when touch the middle of the screen, play the video
+        if (self.navigationController.navigationBar.bounds.size.height<point.y &&
+            point.y<self.view.frame.size.height-self.barBottomView.frame.size.height) {
+            [self playPressed];
+            [self hideBarItems];
+            isShowingBars=NO;
+        }
+        
+    }else{
+        [self pausePressed];
+        [self showBarItems];
+        isShowingBars=YES;
+    }
+}
+
 - (void)playPressed{
+    
     if (YES==seekToZeroBeforePlay) {
         seekToZeroBeforePlay=NO;
         [mPlayer seekToTime:kCMTimeZero];
     }
     [mPlayer play];
+    
     [self.pauseBtn setHidden:NO];
     [self.playBtn setHidden:YES];
-    
-    if ([self.timer isValid]) {
-        [self.timer invalidate];
-    }
-    self.timer=[NSTimer scheduledTimerWithTimeInterval:kIntervalToHide target:self selector:@selector(hideBarItems) userInfo:nil repeats:NO];
-    
 }
 
 - (void)pausePressed{
+    
     [mPlayer pause];
+    
     [self.playBtn setHidden:NO];
     [self.pauseBtn setHidden:YES];
     
-    if ([self.timer isValid]) {
-        [self.timer invalidate];
-        self.timer=nil;
+    //get current index
+    CMTime currentTime=[mPlayer currentTime];
+    subtitleIndex=[mSubtitlePackage indexOfBackForWard:currentTime];
+}
+
+- (void)backwardPressed{
+    NSLog(@"origin:%d",subtitleIndex);
+
+    if (subtitleIndex>1) {
+        subtitleIndex-=1;
     }
+    
+    IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:subtitleIndex];
+    [mPlayer seekToTime:[currentSubtitle startTime]];
+    NSLog(@"changed:%d",subtitleIndex);
+}
+
+- (void)forwardPressed{
+    NSLog(@"origin:%d",subtitleIndex);
+    if (subtitleIndex<mSubtitlePackage.subtitleItems.count) {
+        subtitleIndex+=1;
+    }
+    
+    IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:subtitleIndex];
+    [mPlayer seekToTime:[currentSubtitle startTime]];
+    
+    NSLog(@"changed:%d",subtitleIndex);
+}
+
+- (void)addPressed{
+    [self extractImageAndAudio];
 }
 
 - (void)backToFileView{
@@ -209,46 +151,34 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 
+- (void)showBarItems{
+    
+    //navigation bar
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.titleView setText:[self systemTime]];
+    
+    //bottom bar
+    [self.barBottomView setHidden:NO];
+    
+    //get current index
+    CMTime currentTime=[mPlayer currentTime];
+    subtitleIndex=[mSubtitlePackage indexOfBackForWard:currentTime];
+}
 
-- (void)actWhenTap:(UITapGestureRecognizer *)gesture{
+- (void)hideBarItems{
     
-    CGPoint point=[gesture locationInView:self.view];
+    //navigation bar
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     
-    //if tap on the top or bottom of the view, show the buttons. otherwise extract the image
-    if (point.y<kHeightToShowButtons || point.y>=(self.view.bounds.size.height-kHeightToShowButtons)) {
-        [self showBarItems];
-    }else{
-        [self extractImageAndAudio];
-    }
-    
+    //bottom bar
+    [self.barBottomView setHidden:YES];
 }
 
 #pragma mark - synchronize
 
-- (void)showBarItems{
-    [self.view removeGestureRecognizer:tapGesture];
-    
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-    [self.barBottomView setFrame:CGRectMake(0, self.view.bounds.size.height-kHeightToShowButtons, self.view.bounds.size.width, kHeightToShowButtons)];
-    [self.titleView setText:[self systemTime]];
-    self.timer=[NSTimer scheduledTimerWithTimeInterval:kIntervalToHide target:self selector:@selector(hideBarItems) userInfo:nil repeats:NO];
-}
-
-- (void)hideBarItems{
-    if (tapGesture) {
-        [self.view addGestureRecognizer:tapGesture];
-    }
-    
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
-    [self.barBottomView setFrame:CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, kHeightToShowButtons)];
-    
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer=nil;
-    }
-}
 
 - (void)syncDisplayItems{
+    
     __block typeof(self) bself = self;
     mTimeObserver=[mPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1, kTimeScale) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         [bself syncSubtitle];
@@ -270,15 +200,18 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
 }
 
-- (NSString *)systemTime{
+
+- (void)syncTimeLabel{
     
-    NSDate *now=[NSDate date];
-    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
-    [dateFormatter setDateFormat:@"HH:mm"];
-    NSString *nowStr=[dateFormatter stringFromDate:now];
+    CMTime playerDuration=[self playerItemDuration];
+    CMTime currentTime=[mPlayer currentTime];
+    CMTime remainTime=CMTimeSubtract(playerDuration, currentTime);
     
-    return nowStr;
+    self.lblCurrentTime.text=[NSString stringWithFormat:@"%@",[self getTimeStr:currentTime]];
+    self.lblRemainTime.text=[NSString stringWithFormat:@"%@",[self getTimeStr:remainTime]];
+    
 }
+
 
 - (void)syncCountLabel{
     if (self.count>9) {
@@ -293,15 +226,14 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     //避免在3秒内重复激发timer
     if (!timeOffset) {
         self.countTimer=[NSTimer scheduledTimerWithTimeInterval:kTimeInterval target:self selector:@selector(animateCountLabel) userInfo:nil repeats:YES];
-        self.countAnimationDuration=3;
     }
 }
 
 - (void)animateCountLabel{
     
     timeOffset=timeOffset+kTimeInterval;
-    //NSLog(@"offset:%f, duration:%f", timeOffset, self.countAnimationDuration);
-    if (timeOffset < self.countAnimationDuration) {
+    
+    if (timeOffset < kCountLblAnimationDuration) {
         
         CGFloat progress = [self tweenFuctionWithT:timeOffset B:0 C:1 D:3];
         CGRect startRect = CGRectMake(440, 100, 30, 30);
@@ -327,12 +259,43 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     return (a*pow(2,-10*t) * sin( (t*d-s)*(2*M_PI)/p ) + c + b);
 }
 
+- (NSString *)getTimeStr:(CMTime)time{
+    int timeInSecond=(int)CMTimeGetSeconds(time);
+    
+    NSString *hour;
+    if (timeInSecond/3600>0)
+        hour=[NSString stringWithFormat:@"%d:",timeInSecond/3600];
+    else
+        hour=@" ";
+    
+    NSString *min=[NSString stringWithFormat:@"%d:",timeInSecond%3600/60];
+    
+    NSString *sec;
+    if (timeInSecond%3600%60<10)
+        sec=[NSString stringWithFormat:@"0%d",timeInSecond%3600%60];
+    else
+        sec=[NSString stringWithFormat:@"%d",timeInSecond%3600%60];
+    
+    NSString *timeStr=[[hour stringByAppendingString:min] stringByAppendingString:sec];
+    return timeStr;
+}
+
+
+- (NSString *)systemTime{
+    
+    NSDate *now=[NSDate date];
+    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"HH:mm"];
+    NSString *nowStr=[dateFormatter stringFromDate:now];
+    
+    return nowStr;
+}
+
 #pragma mark - save
 
 - (void)extractImageAndAudio {
     
-    self.count=self.count+1;
-    [self syncCountLabel];
+    
     
     [self createSaveFile];
     
@@ -345,18 +308,24 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
     //if there is no English subtitle, do not extract the image
     if (index && (![currentSubtitle.EngSubtitle isEqualToString:@" "])) {
+        
+        //show count label if successfully extract image&audio
+        self.count=self.count+1;
+        [self syncCountLabel];
+        
         //extract subtitle
         [mSubtitlePackage saveSubtitleWithTime:currentTime inPath:path];
+        
         //extract image
         ImagesPackage *imagePackage=[[ImagesPackage alloc]initWithAsset:mAsset];
         [imagePackage saveImageWithTime:currentTime inPath:path];
+        
         //extract audio
         AudiosPackage *audioPackage=[[AudiosPackage alloc]initWithAsset:mAsset];
         IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:index];
         CMTimeRange range=CMTimeRangeFromTimeToTime(currentSubtitle.startTime, currentSubtitle.endTime);
         [audioPackage saveAudioWithRange:range inPath:path];
-        //show icon to show that successfully save the extracted things
-    }
+     }
     
     
     //sync in userDefault
@@ -410,6 +379,82 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [lastPlayInfo synchronize];
 }
 
+
+#pragma mark - scrubber
+
+-(void)syncScrubber{
+    
+    CMTime playerDuration=[self playerItemDuration];
+    if (CMTIME_IS_INVALID(playerDuration)) {
+        mScrubber.minimumValue=0.0;
+        return;
+    }
+    double duration=CMTimeGetSeconds(playerDuration);
+    if (isfinite(duration)) {
+        float minValue=[mScrubber minimumValue];
+        float maxValue=[mScrubber maximumValue];
+        double time=CMTimeGetSeconds([mPlayer currentTime]);
+        [mScrubber setValue:(maxValue-minValue)*time/duration+minValue];
+    }
+}
+
+- (IBAction)scrub:(id)sender {
+    
+    if ([sender isKindOfClass:[UISlider class]]) {
+        UISlider *slider=sender;
+        CMTime playerDuration=[self playerItemDuration];
+        if (CMTIME_IS_INVALID(playerDuration)) {
+            return;
+        }
+        double duration=CMTimeGetSeconds(playerDuration);
+        if (isfinite(duration)) {
+            float minValue=[slider minimumValue];
+            float maxValue=[slider maximumValue];
+            float value=[slider value];
+            double time=duration * (value-minValue)/(maxValue-minValue);
+            [mPlayer seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+            [self syncTimeLabel];
+            [self syncSubtitle];
+        }
+    }
+}
+
+- (IBAction)beginScrubbing:(id)sender {
+    
+    mRestoreAfterScrubbingRate=[mPlayer rate];
+    [mPlayer setRate:0.f];
+    [self removeTimeObserver];
+    
+    //[self.timer invalidate];
+    
+}
+
+- (IBAction)endScrubbing:(id)sender {
+    
+    if (!mTimeObserver) {
+        CMTime playerDuration=[self playerItemDuration];
+        if (CMTIME_IS_INVALID(playerDuration)) {
+            return;
+        }
+        double duration=CMTimeGetSeconds(playerDuration);
+        if (isfinite(duration)) {
+            [self syncDisplayItems];
+        }
+    }
+    
+    if (mRestoreAfterScrubbingRate) {
+        [mPlayer setRate:mRestoreAfterScrubbingRate];
+        mRestoreAfterScrubbingRate=0.f;
+    }
+    
+    //get current index
+    CMTime currentTime=[mPlayer currentTime];
+    subtitleIndex=[mSubtitlePackage indexOfBackForWard:currentTime];
+}
+
+
+
+
 #pragma mark - init
 
 - (void)obtainLastPlayInfo{
@@ -458,6 +503,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [cardButton setTintColor:buttonColor];
     [self.navigationItem setLeftBarButtonItem:backButton];
     [self.navigationItem setRightBarButtonItem:cardButton];
+    
     //init top bar title
     self.titleView=[[LabelView alloc] init];
     [self.titleView setCenter:CGPointMake(self.view.center.x, 30)];
@@ -470,15 +516,30 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [self.titleView setShadowOffset:CGSizeMake(0, 0)];
     [self.titleView setShadowRadius:1];
     [self.navigationItem setTitleView: self.titleView];
-    //init bottom bar button PLAY
-    self.playBtn=[[PlayButton alloc] initWithFrame:CGRectMake(425, 5, 45, 45)];
+    
+    //init bottom bar
+    [self.barBottomView setFrame:CGRectMake(0, self.view.bounds.size.height-self.barBottomView.bounds.size.height, self.view.bounds.size.width, self.barBottomView.bounds.size.height)];
+    [self.barBottomView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:.5]];
+    [self.mPlayView addSubview:self.barBottomView];
+    
+    //init play button
     [self.playBtn addTarget:self action:@selector(playPressed) forControlEvents:UIControlEventTouchUpInside];
-    [self.barBottomView addSubview:self.playBtn];
     [self.playBtn setHidden:YES];
-    //init bottom bar button PAUSE
-    self.pauseBtn=[[PauseButton alloc] initWithFrame:CGRectMake(425, 5, 45, 45)];
-    [self.barBottomView addSubview:self.pauseBtn];
+    
+    //init pause button
     [self.pauseBtn addTarget:self action:@selector(pausePressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    //init forward button
+    [self.backwardBtn addTarget:self action:@selector(backwardPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    //init backward button
+    [self.forwardBtn addTarget:self action:@selector(forwardPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    //init add button
+    [self.addBtn addTarget:self action:@selector(addPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.addBtn setOffset:12];
+    [self.addBtn setLineWidth:6];
+    
     //init count label
     self.countLbl=[[CountLabel alloc] initWithFrame:CGRectMake(440, 100, 30, 30)];
     [self.countLbl setBackgroundColor:[UIColor clearColor]];
@@ -507,15 +568,17 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
     //get last play info, to load last play time
     [self obtainLastPlayInfo];
+    
     //init AVPlayer
     [self initAVPlayer];
+    
     //init Subtitle
     mSubtitlePackage=[[SubtitlePackage alloc] initWithFile:self.subtitlePath];
+    
     //init top bar and bottom bar
     [self initButtonsInBottomBar];
-    [self.barBottomView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:.5]];
-    [self.view addSubview:self.barBottomView];
     [self hideBarItems];
+    
     //add gestureRecognizer
     tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actWhenTap:)];
     [self.view addGestureRecognizer:tapGesture];
@@ -540,6 +603,9 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [self setMScrubber:nil];
     [self setLblCurrentTime:nil];
     [self setLblRemainTime:nil];
+    [self setBackwardBtn:nil];
+    [self setForwardBtn:nil];
+    [self setAddBtn:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -593,9 +659,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 -(void)assetFailedToPrepareForPlayback:(NSError *)error{
     
     [self removeTimeObserver];
-    //    [self disableScrubber];
-    //    [self disablePlayerButtons];
-    
+
     UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:[error localizedDescription] message:[error localizedFailureReason] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alertView show];
 }

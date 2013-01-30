@@ -21,7 +21,7 @@
 #pragma mark - tableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-
+    
     if (self.glossaryCustom.count) {
         return 2;
     }
@@ -29,7 +29,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-
+    
     if (section==0) {
         return self.glossaryDefaults.count;
     }if (section==1) {
@@ -74,10 +74,18 @@
     static NSString *CellID=@"cellid";
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:CellID];
     if (cell==nil) {
-        cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellID];
+        [self.cellNib instantiateWithOwner:self options:nil];
+        
+        cell=self.mGlossaryCell;
+        //[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        
+        
     }
     
     if (indexPath.section==0) {
+        
+        
+        
         cell.textLabel.text=[self.glossaryDefaults objectAtIndex:indexPath.row];
     }else if (indexPath.section==1){
         cell.textLabel.text=[self.glossaryCustom objectAtIndex:indexPath.row];
@@ -101,11 +109,11 @@
     [self.navigationController pushViewController:cardVC animated:YES];
     [cardVC.navigationController setNavigationBarHidden:NO];
     [cardVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
-
+    
 }
 
 - (void)initBarItems{
-
+    
     UIBarButtonItem *backButton=[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(backToFirstView)];
     [backButton setTintColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1]];
     [self.navigationItem setLeftBarButtonItem:backButton];
@@ -113,7 +121,7 @@
     UIBarButtonItem *addButton=[[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStyleBordered target:self action:@selector(backToFirstView)];
     [addButton setTintColor:[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1]];
     [self.navigationItem setRightBarButtonItem:addButton];
-
+    
     
     LabelView *titleView=[[LabelView alloc] init];
     [titleView setCenter:CGPointMake(self.view.center.x, 30)];
@@ -126,7 +134,7 @@
     [titleView setShadowColor:[UIColor whiteColor]];
     [titleView setShadowOffset:CGSizeMake(0, 0)];
     [titleView setShadowRadius:3];
-
+    
     [self.navigationItem setTitleView: titleView];
 }
 
@@ -137,7 +145,7 @@
 - (void)initGlossaryData{
     
     GlossaryManagement *gm=[[GlossaryManagement alloc] init];
-
+    
     self.glossaryDefaults=[gm getDefaultGlossariesName];
     self.glossaryCustom=[gm getCustomGlossariesName];
     
@@ -162,11 +170,13 @@
     // Do any additional setup after loading the view from its nib.
     
     [self initBarItems];
-
+    
     [self.mTableView setDelegate:self];
     [self.mTableView setDataSource:self];
     
     [self initGlossaryData];
+    
+    self.cellNib=[UINib nibWithNibName:@"CardCell" bundle:nil];
     
     
 }
@@ -174,6 +184,7 @@
 - (void)viewDidUnload
 {
     [self setMTableView:nil];
+    [self setMGlossaryCell:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;

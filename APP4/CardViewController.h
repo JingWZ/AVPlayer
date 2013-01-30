@@ -17,9 +17,6 @@
  7. 在tableView的delegate中，对UINib使用instantiateWithOwner，然后让cell=self.mCardCell;
 */
 
-#warning TODO 做成两边露一点的样子
-#warning TODO 增加到自定义，做成想做画出一条，在这一条中左右滑动所有自定义生词本
-
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 

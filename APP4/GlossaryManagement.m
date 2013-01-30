@@ -92,7 +92,6 @@ static NSString *cardSubtitlePath=@"cardSubtitlePath";
 
 - (void)addCardInDefaultWithSavePath:(NSString *)path recordCount:(NSInteger)count video:(NSString *)vPath subtitle:(NSString *)sPath{
     
-    NSLog(@"yyy");
     //update eachCard
     NSNumber *recordCount=[NSNumber numberWithInteger:count];
     NSDictionary *eachCard=[NSDictionary dictionaryWithObjectsAndKeys:

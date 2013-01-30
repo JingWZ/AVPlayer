@@ -22,9 +22,14 @@
 
 
 @interface SubtitlePackage : NSObject <NSCoding>
+
 @property (retain) NSMutableArray *subtitleItems;
+
 - (SubtitlePackage *)initWithFile:(NSString *)filePath;
+
 - (NSUInteger)indexOfProperSubtitleWithGivenCMTime:(CMTime)time;
+- (NSInteger)indexOfBackForWard:(CMTime)time;
+
 - (NSString *)makeSaveName:(CMTime)time;
 - (void)saveSubtitleWithTime:(CMTime)time inPath:(NSString *)path;
 
