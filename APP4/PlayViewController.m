@@ -16,6 +16,7 @@
 #define kTimeScale 60.0
 #define kTimeInterval 0.01
 //#define kIntervalToHide 5.0
+#define kBottomBarHeight 95
 #define kCountLblAnimationDuration 3.0
 
 
@@ -30,6 +31,9 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 {
     NSInteger subtitleIndex;
     BOOL isShowingBars;
+    
+    CGFloat viewWidth;
+    CGFloat viewHeight;
 }
 @synthesize mPlayView;
 @synthesize lblEng, lblChi;
@@ -86,7 +90,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 - (void)backwardPressed{
-    NSLog(@"origin:%d",subtitleIndex);
+    //NSLog(@"origin:%d",subtitleIndex);
 
     if (subtitleIndex>1) {
         subtitleIndex-=1;
@@ -94,11 +98,11 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
     IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:subtitleIndex];
     [mPlayer seekToTime:[currentSubtitle startTime]];
-    NSLog(@"changed:%d",subtitleIndex);
+    //NSLog(@"changed:%d",subtitleIndex);
 }
 
 - (void)forwardPressed{
-    NSLog(@"origin:%d",subtitleIndex);
+    //NSLog(@"origin:%d",subtitleIndex);
     if (subtitleIndex<mSubtitlePackage.subtitleItems.count) {
         subtitleIndex+=1;
     }
@@ -106,7 +110,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:subtitleIndex];
     [mPlayer seekToTime:[currentSubtitle startTime]];
     
-    NSLog(@"changed:%d",subtitleIndex);
+    //NSLog(@"changed:%d",subtitleIndex);
 }
 
 - (void)addPressed{
@@ -214,6 +218,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 
 
 - (void)syncCountLabel{
+        
     if (self.count>9) {
         [self.countLbl setTextPointX:8 pointY:9];
     } else if (self.count>99){
@@ -237,7 +242,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         
         CGFloat progress = [self tweenFuctionWithT:timeOffset B:0 C:1 D:3];
         CGRect startRect = CGRectMake(440, 100, 30, 30);
-        CGRect endRect = CGRectMake(440, 20, 30, 30);
+        CGRect endRect = CGRectMake(440, 40, 30, 30);
         CGRect distance = CGRectMake(endRect.origin.x - startRect.origin.x, endRect.origin.y - startRect.origin.y, endRect.size.width - startRect.size.width, endRect.size.height - startRect.size.height);
         CGRect tweenedRect = CGRectMake(startRect.origin.x + distance.origin.x * progress, startRect.origin.y + distance.origin.y * progress, startRect.size.width + distance.size.width * progress, startRect.size.height + distance.size.height * progress);
         [self.countLbl setFrame:tweenedRect];
@@ -294,8 +299,6 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 #pragma mark - save
 
 - (void)extractImageAndAudio {
-    
-    
     
     [self createSaveFile];
     
@@ -511,14 +514,14 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [self.titleView setBackgroundColor:[UIColor clearColor]];
     [self.titleView setText:[self systemTime]];
     [self.titleView setFont:[UIFont boldSystemFontOfSize:20]];
-    [self.titleView setTextColor:[UIColor grayColor]];
+    [self.titleView setTextColor:[UIColor whiteColor]];
     [self.titleView setShadowColor:[UIColor whiteColor]];
     [self.titleView setShadowOffset:CGSizeMake(0, 0)];
     [self.titleView setShadowRadius:1];
     [self.navigationItem setTitleView: self.titleView];
     
     //init bottom bar
-    [self.barBottomView setFrame:CGRectMake(0, self.view.bounds.size.height-self.barBottomView.bounds.size.height, self.view.bounds.size.width, self.barBottomView.bounds.size.height)];
+    [self.barBottomView setFrame:CGRectMake(0, self.view.bounds.size.height-self.barBottomView.bounds.size.height, self.view.bounds.size.width, kBottomBarHeight)];
     [self.barBottomView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:.5]];
     [self.mPlayView addSubview:self.barBottomView];
     
@@ -531,9 +534,11 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
     //init forward button
     [self.backwardBtn addTarget:self action:@selector(backwardPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.backwardBtn setOffset:10];
     
     //init backward button
     [self.forwardBtn addTarget:self action:@selector(forwardPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.forwardBtn setOffset:10];
     
     //init add button
     [self.addBtn addTarget:self action:@selector(addPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -554,6 +559,10 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 }
 
 #pragma mark - defaults
+
+- (NSUInteger)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskLandscape;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -589,7 +598,13 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 {
     [super viewDidLoad];
     //when load video, show progress in the view
+    
+    viewWidth=[[UIScreen mainScreen] bounds].size.width;
+    viewHeight=[[UIScreen mainScreen] bounds].size.height;
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    
     
     
 }
@@ -611,9 +626,21 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     // e.g. self.myOutlet = nil;
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+    if (toInterfaceOrientation==UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation==UIInterfaceOrientationLandscapeRight) {
+        
+        [self.barBottomView setFrame:CGRectMake(0, viewWidth-self.barBottomView.bounds.size.height, viewHeight, kBottomBarHeight)];
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft );
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    return UIInterfaceOrientationLandscapeLeft;
 }
 
 #pragma mark - player

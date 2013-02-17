@@ -128,6 +128,7 @@
     self.videoFiles=[NSMutableArray arrayWithCapacity:0];
     
     for (NSString *path in [self fileContent]) {
+        
         if ([[path pathExtension] isEqualToString:@"mp4"]) {
             [self.videoFiles addObject:path];
         }
@@ -140,11 +141,14 @@
     self.subtitleFiles=[NSMutableArray arrayWithCapacity:0];
     
     for (NSString *path in [self fileContent]) {
-        [self.subtitleFiles addObject:path];
         
-        //        if ([[path pathExtension] isEqualToString:@"srt"]) {
-        //            [self.subtitleFiles addObject:path];
-        //        }
+        //[self.subtitleFiles addObject:path];
+        
+        
+        if ([[path pathExtension] isEqualToString:@"srt"]) {
+            [self.subtitleFiles addObject:path];
+        }
+         
     }
     
 }
@@ -172,7 +176,7 @@
     [titleView setBackgroundColor:[UIColor clearColor]];
     [titleView setText:@"Files"];
     [titleView setFont:[UIFont boldSystemFontOfSize:24]];
-    [titleView setTextColor:[UIColor grayColor]];
+    [titleView setTextColor:[UIColor whiteColor]];
     [titleView setTextAlignment:UITextAlignmentCenter];
     [titleView setShadowColor:[UIColor whiteColor]];
     [titleView setShadowOffset:CGSizeMake(0, 0)];

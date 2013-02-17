@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ForwardButton : UIButton{
-    CGFloat offset;
-}
+@interface ForwardButton : UIButton
+
+@property (assign, nonatomic) CGFloat offset;
 
 @end

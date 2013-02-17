@@ -138,7 +138,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 
 - (void)playAudio:(NSString *)path{
     
-    NSURL *url=[[NSURL alloc] initFileURLWithPath:[path stringByAppendingPathExtension:@"m4a"]];
+    NSURL *url=[[NSURL alloc] initFileURLWithPath:[path stringByAppendingPathExtension:@"aac"]];
     
     audioPlayer=[[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
     [audioPlayer prepareToPlay];
@@ -154,16 +154,21 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 //    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
 //    [audioSession setActive:YES error:nil];
 //    
-    NSString *path=[[self.contentsData objectAtIndex:self.currentPage] stringByAppendingString:@"record.m4a"];
-    NSLog(@"%@",path);
+    NSString *path=[[self.contentsData objectAtIndex:self.currentPage] stringByAppendingString:@"record.aac"];
+    
+    NSError *error;
     
     NSURL *url=[NSURL fileURLWithPath:path];
     NSDictionary *setting=[NSDictionary dictionaryWithObjectsAndKeys:
-                           [NSNumber numberWithInt:kAudioFormatAppleIMA4],AVFormatIDKey,
-                           [NSNumber numberWithFloat:44100.0],AVSampleRateKey,
+                           [NSNumber numberWithInt:kAudioFormatMPEG4AAC],AVFormatIDKey,
+                           [NSNumber numberWithFloat:22050.0],AVSampleRateKey,
                            [NSNumber numberWithInt:1],AVNumberOfChannelsKey, nil];
     
-    audioRecorder=[[AVAudioRecorder alloc] initWithURL:url settings:setting error:nil];
+    audioRecorder=[[AVAudioRecorder alloc] initWithURL:url settings:setting error:&error];
+    
+    if (error) {
+        NSLog(@"%@",[error description]);
+    }
     
     [audioRecorder setMeteringEnabled:YES];
     [audioRecorder prepareToRecord];
@@ -174,7 +179,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     
     //初始化AVAudioPlayer
     NSString *path=[self.contentsData objectAtIndex:0];
-    NSURL *url=[[NSURL alloc] initFileURLWithPath:[path stringByAppendingPathExtension:@"m4a"]];
+    NSURL *url=[[NSURL alloc] initFileURLWithPath:[path stringByAppendingPathExtension:@"aac"]];
     audioPlayer=[[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
     [audioPlayer prepareToPlay];
     
@@ -209,23 +214,24 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 
 - (void)initBottomBarItems{
     
-    CGFloat viewHeight=70;
+    CGFloat viewHeight=80;
     self.customBarView=[[CustomBarView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-viewHeight-20, self.view.bounds.size.width, viewHeight)];
     [self.customBarView setOffset:5];
     [self.customBarView setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:self.customBarView];
     
-    self.addBtn=[[AddButton alloc] initWithFrame:CGRectMake(260, 15, 50, 50)];
+    self.addBtn=[[AddButton alloc] initWithFrame:CGRectMake(260, 20, 50, 50)];
     [self.addBtn setBackgroundColor:[UIColor clearColor]];
     [self.customBarView addSubview: self.addBtn];
     [self.addBtn addTarget:self action:@selector(addBtnPressed) forControlEvents:UIControlEventTouchUpInside];
     
     
-    self.settingBtn=[[SettingButton alloc] initWithFrame:CGRectMake(10, 15, 50, 50)];
+    self.settingBtn=[[SettingButton alloc] initWithFrame:CGRectMake(10, 20, 50, 50)];
     [self.settingBtn setBackgroundColor: [UIColor clearColor]];
+    [self.settingBtn addTarget:self action:@selector(settingBtnPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.customBarView addSubview:self.settingBtn];
     
-    self.microphoneBtn=[[MicrophoneButton alloc] initWithFrame:CGRectMake(125, 0, 70, 70)];
+    self.microphoneBtn=[[MicrophoneButton alloc] initWithFrame:CGRectMake(125, 5, 70, 70)];
     [self.microphoneBtn setBackgroundColor:[UIColor clearColor]];
     [self.microphoneBtn setMicrophoneLineColor:[UIColor whiteColor]];
     [self.microphoneBtn setMicrophoneLineWidth:4];
@@ -233,7 +239,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     [self.customBarView addSubview:self.microphoneBtn];
     [self.microphoneBtn addTarget:self action:@selector(recordBtnPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    self.playBtn=[[PlayButton alloc] initWithFrame:CGRectMake(190, 15, 45, 45)];
+    self.playBtn=[[PlayButton alloc] initWithFrame:CGRectMake(190, 20, 45, 45)];
     [self.customBarView addSubview:self.playBtn];
     [self.playBtn addTarget:self action:@selector(playBtnPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.playBtn setHidden:YES];
@@ -259,7 +265,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     [titleView setBackgroundColor:[UIColor clearColor]];
     [titleView setText:@"Card"];
     [titleView setFont:[UIFont boldSystemFontOfSize:24]];
-    [titleView setTextColor:[UIColor grayColor]];
+    [titleView setTextColor:[UIColor whiteColor]];
     [titleView setTextAlignment:UITextAlignmentCenter];
     [titleView setShadowColor:[UIColor whiteColor]];
     [titleView setShadowOffset:CGSizeMake(0, 0)];
@@ -277,9 +283,23 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     [self.view addSubview:self.popMenu];
 }
 
+- (void)initSettingPopSlider{
+    
+    self.popSlider=[[MultipleTrackSlider alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height-155, self.view.bounds.size.width, 100) minValue:0 maxValue:5];
+    [self.popSlider setBackgroundColor:[UIColor clearColor]];
+    [self.popSlider addTarget:self action:@selector(settingSliderValueChanged) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:self.popSlider];
+    [self.popSlider setHidden:YES];
+    
+}
+
 
 
 #pragma mark - action
+
+- (void)settingSliderValueChanged{
+    
+}
 
 - (void)recordBtnPressed{
     
@@ -298,6 +318,10 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     }else{
         
         isRecording=YES;
+        
+        //recorder
+        [self initAudioRecord];
+        
         [audioRecorder record];
         
         [audioPlayer stop];
@@ -324,29 +348,36 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
 
 - (void)updateValue{
     [audioRecorder updateMeters];
+    
     float volume=[audioRecorder averagePowerForChannel:0];
-    float value=(volume+80)/80;
+    //NSLog(@"%f",volume);
+    
+    float value=(volume+60)/60;
     
     [self.microphoneBtn setCurrentValueRate:value];
 }
 
 - (void)addBtnPressed{
     
-    [self.popMenu showPopMenuInView:self.view];
+    //[self.popMenu showPopMenuInView:self.view];
     
 }
 
 - (void)playBtnPressed {
-    NSString *path=[[self.contentsData objectAtIndex:self.currentPage] stringByAppendingString:@"record.m4a"];
+    NSString *path=[[self.contentsData objectAtIndex:self.currentPage] stringByAppendingString:@"record.aac"];
     NSURL *url=[NSURL fileURLWithPath:path];
 
     audioPlayer=[[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
-    NSLog(@"%@", [url path]);
+    //NSLog(@"%@", [url path]);
     [audioPlayer play];
     
 }
 
 - (void)settingBtnPressed {
+    
+    //[self.popSlider setHidden:NO];
+    
+    /*
     SettingViewController *settingVC=[[SettingViewController alloc] initWithNibName:@"SettingViewController" bundle:nil];
     settingVC.videoPath=self.videoPath;
     settingVC.subtitlePath=self.subtitlePath;
@@ -354,12 +385,13 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     settingVC.fileName=[self.contentsData objectAtIndex:self.currentPage];
     
     [self.navigationController pushViewController:settingVC animated:YES];
-
+*/
 }
 
 - (void)backToGlossaryView{
     [self.navigationController popViewControllerAnimated:YES];
 }
+
 
 #pragma mark - KVO
 
@@ -370,6 +402,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     }
 }
 
+ 
 #pragma mark - defaults
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -385,6 +418,12 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     [self initAudioRecord];
     [self initAudioPlayer];
     [self initPopMenu];
+    [self initSettingPopSlider];
+    [self addObserver:self forKeyPath:@"currentPage" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [self removeObserver:self forKeyPath:@"currentPage" context:nil];
 }
 
 - (void)viewDidLoad
@@ -405,6 +444,7 @@ static NSString *recordBtnPressed=@"microPressed.jpg";
     [self.mTableView setDelegate:self];
     
     self.cellNib=[UINib nibWithNibName:@"CardCell" bundle:nil];
+    
     
     /*
     [self syncRecordBtn:recordBtnNormal];

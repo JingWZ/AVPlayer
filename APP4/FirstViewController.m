@@ -207,9 +207,13 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
 //获得所有海报的名字
 - (void)getPostersName{
     
-    NSString *resourcePath=[[NSBundle mainBundle] resourcePath];
+    /*
+
+    NSString *userPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
+    //NSString *resourcePath=@"/Users/apple/Code/AVPlayer/APP4";
     NSString *poster=@"posters";
-    self.posterPath=[resourcePath stringByAppendingPathComponent:poster];
+    self.posterPath=[userPath stringByAppendingPathComponent:poster];
     //NSLog(@"%@",self.posterPath);
     
     NSArray *allContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.posterPath error:nil];
@@ -220,6 +224,49 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
             [self.postersName addObject:content];
         }
     }
+     
+     */
+    
+    NSArray *array=[NSArray arrayWithObjects:@"2 Broke Girls.jpg",
+                    @"Bones.jpg",
+                    @"Boston Legal.jpg",
+                    @"Brothers and Sisters.jpg",
+                    @"Cold Case.jpg",
+                    @"Criminal Minds.jpg",
+                    @"CSI.jpg",
+                    @"Desperate Housewives.jpg",
+                    @"Dexter.jpg",
+                    @"Downton Abbey.jpg",
+                    @"Friends2.jpg",
+                    @"Fringe.jpg",
+                    @"Gossip Girl.jpg",
+                    @"Grey's Anatomy.jpg",
+                    @"Heroes.jpg",
+                    @"House.jpg",
+                    @"How I Met Your Mother.jpg",
+                    @"Legend of The Seeker.jpg",
+                    @"Nikita.jpg",
+                    @"Nip Tuck.jpg",
+                    @"Prison Break.jpg",
+                    @"Revenge.jpg",
+                    @"Rome.jpg",
+                    @"Sherlock.jpg",
+                    @"Skins.jpg",
+                    @"The 4400.jpg",
+                    @"The Big Bang Theory.jpg",
+                    @"The Big Bang Theory2.jpg",
+                    @"The Closer.jpg",
+                    @"The Good Wife.jpg",
+                    @"The Killing.jpg",
+                    @"The Office.jpg",
+                    @"The Pretender.jpg",
+                    @"The Prisoner.jpg",
+                    @"True Blood.jpg",
+                    @"Ugly Betty.jpg",
+                    @"Weeds.jpg",
+                    @"Will and Grace.jpg"
+                    , nil];
+    self.postersName=[NSMutableArray arrayWithArray:array];
     
 }
 
@@ -256,7 +303,7 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     [self.titleLbl setBounds:CGRectMake(0, 0, 280, 100)];
     [self.titleLbl setText:@"看美剧学英语"];
     [self.titleLbl setFont:[UIFont boldSystemFontOfSize:60]];
-    [self.titleLbl setTextColor:[UIColor grayColor]];    
+    [self.titleLbl setTextColor:[UIColor whiteColor]];
     [self.titleLbl setShadowColor:[UIColor whiteColor]];
     [self.titleLbl setShadowOffset:CGSizeMake(0, 0)];
     [self.titleLbl setShadowRadius:20];
@@ -291,6 +338,8 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    [self.navigationController setDelegate:self];
+    
     //手势识别
     tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     [self.view addGestureRecognizer:tapGesture];
@@ -319,6 +368,7 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     self.postersName=nil;
     self.posters=nil;
     self.postersCenterY=nil;
+    
 
     [self setMenuView:nil];
     [self setVideoBtn:nil];
@@ -329,11 +379,5 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     // e.g. self.myOutlet = nil;
 
 }
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
 
 @end

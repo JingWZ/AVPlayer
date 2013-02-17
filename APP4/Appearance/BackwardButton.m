@@ -10,11 +10,15 @@
 
 @implementation BackwardButton
 
+@synthesize offset;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        offset=12;
+
     }
     return self;
 }
@@ -23,8 +27,7 @@
     
     [self addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew context:nil];
     
-    offset=12;
-    
+        
     CGFloat viewWidth=self.bounds.size.width;
     CGFloat viewHeight=self.bounds.size.height;
     

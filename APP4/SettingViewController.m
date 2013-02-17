@@ -176,7 +176,7 @@ static NSString *reasonEnd=@"已经到达视频终点";
     ImagesPackage *imagePackage=[[ImagesPackage alloc]initWithAsset:mAsset];
     [imagePackage saveImageWithTime:current inPath:path];
     
-#warning doto 删除原来的
+
     //删除原来的
     
     //返回上一页

@@ -28,6 +28,11 @@
     return 1;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return 100;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if (section==0) {
@@ -45,7 +50,7 @@
         [titleView setBackgroundColor:[UIColor clearColor]];
         [titleView setText:@"  Default"];
         [titleView setFont:[UIFont boldSystemFontOfSize:17]];
-        [titleView setTextColor:[UIColor grayColor]];
+        [titleView setTextColor:[UIColor whiteColor]];
         [titleView setShadowColor:[UIColor whiteColor]];
         [titleView setShadowOffset:CGSizeMake(0, 0)];
         [titleView setShadowRadius:1];
@@ -56,7 +61,7 @@
         [titleView setBackgroundColor:[UIColor clearColor]];
         [titleView setText:@"  Custom"];
         [titleView setFont:[UIFont boldSystemFontOfSize:17]];
-        [titleView setTextColor:[UIColor grayColor]];
+        [titleView setTextColor:[UIColor whiteColor]];
         [titleView setShadowColor:[UIColor whiteColor]];
         [titleView setShadowOffset:CGSizeMake(0, 0)];
         [titleView setShadowRadius:1];
@@ -73,8 +78,19 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellID=@"cellid";
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:CellID];
+    
     if (cell==nil) {
+        
         [self.cellNib instantiateWithOwner:self options:nil];
+        
+        NSString *glossaryName;
+        if (indexPath.section==0) {
+            glossaryName=[self.glossaryDefaults objectAtIndex:indexPath.row];
+        }else if (indexPath.section==1){
+            glossaryName=[self.glossaryCustom objectAtIndex:indexPath.row];
+        }
+        self.mGlossaryCell.glossaryNameLbl.text=glossaryName;
+
         
         cell=self.mGlossaryCell;
         //[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -82,14 +98,6 @@
         
     }
     
-    if (indexPath.section==0) {
-        
-        
-        
-        cell.textLabel.text=[self.glossaryDefaults objectAtIndex:indexPath.row];
-    }else if (indexPath.section==1){
-        cell.textLabel.text=[self.glossaryCustom objectAtIndex:indexPath.row];
-    }
     return cell;
 }
 
@@ -129,7 +137,7 @@
     [titleView setBackgroundColor:[UIColor clearColor]];
     [titleView setText:@"Gloss"];
     [titleView setFont:[UIFont boldSystemFontOfSize:24]];
-    [titleView setTextColor:[UIColor grayColor]];
+    [titleView setTextColor:[UIColor whiteColor]];
     [titleView setTextAlignment:UITextAlignmentCenter];
     [titleView setShadowColor:[UIColor whiteColor]];
     [titleView setShadowOffset:CGSizeMake(0, 0)];
@@ -176,7 +184,7 @@
     
     [self initGlossaryData];
     
-    self.cellNib=[UINib nibWithNibName:@"CardCell" bundle:nil];
+    self.cellNib=[UINib nibWithNibName:@"GlossaryCell" bundle:nil];
     
     
 }

@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface XXXAppDelegate : UIResponder <UIApplicationDelegate>
+@interface XXXAppDelegate : UIResponder <UIApplicationDelegate, UINavigationControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+
+@property (assign, nonatomic) BOOL isLandscapeSupported;
 
 @property (strong, nonatomic) UINavigationController *navigationController;
 

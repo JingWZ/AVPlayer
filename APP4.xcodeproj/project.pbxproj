@@ -10,6 +10,7 @@
 		180BE2BF1678237E00BFBBF4 /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 180BE2BD1678237D00BFBBF4 /* FileViewController.m */; };
 		180BE2C01678237E00BFBBF4 /* FileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 180BE2BE1678237D00BFBBF4 /* FileViewController.xib */; };
 		180BE30F16799D8100BFBBF4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 180BE30E16799D8100BFBBF4 /* QuartzCore.framework */; };
+		1845287116D7387400869581 /* DowntonAbbey.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1845287016D7387400869581 /* DowntonAbbey.jpg */; };
 		1872B53C16842E6E0079944A /* 2 Broke Girls.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51116842E6E0079944A /* 2 Broke Girls.jpg */; };
 		1872B53D16842E6E0079944A /* Bones.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51216842E6E0079944A /* Bones.jpg */; };
 		1872B53E16842E6E0079944A /* Boston Legal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1872B51316842E6E0079944A /* Boston Legal.jpg */; };
@@ -68,11 +69,11 @@
 		1890ACC316880AEA000C0FC4 /* CardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACC116880AEA000C0FC4 /* CardViewController.xib */; };
 		1890ACC716880B35000C0FC4 /* CardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890ACC616880B35000C0FC4 /* CardCell.m */; };
 		1890ACC916880B5E000C0FC4 /* CardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1890ACC816880B5E000C0FC4 /* CardCell.xib */; };
+		18C623E816BE4C0F0035E7CB /* MultipleTrackSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C623E716BE4C0F0035E7CB /* MultipleTrackSlider.m */; };
 		18CDAA7616AE6E0C00A25DFC /* GlossaryManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CDAA7516AE6E0C00A25DFC /* GlossaryManagement.m */; };
 		18DFE3D916B7707D004AE8FA /* PauseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DFE3D816B7707D004AE8FA /* PauseButton.m */; };
 		18DFE41116B785E2004AE8FA /* BackwardButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DFE41016B785E2004AE8FA /* BackwardButton.m */; };
 		18DFE41716B78CDC004AE8FA /* ForwardButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DFE41616B78CDC004AE8FA /* ForwardButton.m */; };
-		18DFE41D16B7B967004AE8FA /* File in Resources */ = {isa = PBXBuildFile; fileRef = 18DFE41C16B7B967004AE8FA /* File */; };
 		18DFE42416B8C099004AE8FA /* GlossaryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DFE42316B8C099004AE8FA /* GlossaryCell.m */; };
 		18DFE42816B8C0F4004AE8FA /* GlossaryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DFE42716B8C0F4004AE8FA /* GlossaryCell.xib */; };
 		18E52A421696B3BA0067C957 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E52A401696B3BA0067C957 /* PlayViewController.m */; };
@@ -100,6 +101,7 @@
 		180BE2BD1678237D00BFBBF4 /* FileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileViewController.m; sourceTree = "<group>"; };
 		180BE2BE1678237D00BFBBF4 /* FileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileViewController.xib; sourceTree = "<group>"; };
 		180BE30E16799D8100BFBBF4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		1845287016D7387400869581 /* DowntonAbbey.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = DowntonAbbey.jpg; sourceTree = "<group>"; };
 		1872B51116842E6E0079944A /* 2 Broke Girls.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "2 Broke Girls.jpg"; sourceTree = "<group>"; };
 		1872B51216842E6E0079944A /* Bones.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Bones.jpg; sourceTree = "<group>"; };
 		1872B51316842E6E0079944A /* Boston Legal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Boston Legal.jpg"; sourceTree = "<group>"; };
@@ -176,6 +178,8 @@
 		1890ACC516880B35000C0FC4 /* CardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardCell.h; sourceTree = "<group>"; };
 		1890ACC616880B35000C0FC4 /* CardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardCell.m; sourceTree = "<group>"; };
 		1890ACC816880B5E000C0FC4 /* CardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CardCell.xib; sourceTree = "<group>"; };
+		18C623E616BE4C0F0035E7CB /* MultipleTrackSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultipleTrackSlider.h; sourceTree = "<group>"; };
+		18C623E716BE4C0F0035E7CB /* MultipleTrackSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultipleTrackSlider.m; sourceTree = "<group>"; };
 		18CDAA7416AE6E0C00A25DFC /* GlossaryManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryManagement.h; sourceTree = "<group>"; };
 		18CDAA7516AE6E0C00A25DFC /* GlossaryManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossaryManagement.m; sourceTree = "<group>"; };
 		18DFE3D716B7707D004AE8FA /* PauseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseButton.h; sourceTree = "<group>"; };
@@ -184,7 +188,6 @@
 		18DFE41016B785E2004AE8FA /* BackwardButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackwardButton.m; sourceTree = "<group>"; };
 		18DFE41516B78CDC004AE8FA /* ForwardButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForwardButton.h; sourceTree = "<group>"; };
 		18DFE41616B78CDC004AE8FA /* ForwardButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForwardButton.m; sourceTree = "<group>"; };
-		18DFE41C16B7B967004AE8FA /* File */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = File; sourceTree = "<group>"; };
 		18DFE42216B8C098004AE8FA /* GlossaryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlossaryCell.h; sourceTree = "<group>"; };
 		18DFE42316B8C099004AE8FA /* GlossaryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlossaryCell.m; sourceTree = "<group>"; };
 		18DFE42716B8C0F4004AE8FA /* GlossaryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GlossaryCell.xib; sourceTree = "<group>"; };
@@ -329,7 +332,8 @@
 				187786F716B66EDB00A17057 /* PlayView.m */,
 				187786F816B66EDB00A17057 /* SubtitlePackage.h */,
 				187786F916B66EDB00A17057 /* SubtitlePackage.m */,
-				18DFE41C16B7B967004AE8FA /* File */,
+				18C623E616BE4C0F0035E7CB /* MultipleTrackSlider.h */,
+				18C623E716BE4C0F0035E7CB /* MultipleTrackSlider.m */,
 			);
 			name = Class;
 			path = APP4/Class;
@@ -338,10 +342,10 @@
 		CEDD6E6216390258000F3D6D = {
 			isa = PBXGroup;
 			children = (
+				CEDD6E7716390258000F3D6D /* APP4 */,
 				187786EF16B66EDB00A17057 /* Class */,
 				187786CD16B66DFC00A17057 /* Appearance */,
 				1872B51016842E6E0079944A /* posters */,
-				CEDD6E7716390258000F3D6D /* APP4 */,
 				CEDD6E7016390258000F3D6D /* Frameworks */,
 				CEDD6E6E16390258000F3D6D /* Products */,
 			);
@@ -408,6 +412,7 @@
 		CEDD6E7816390258000F3D6D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1845287016D7387400869581 /* DowntonAbbey.jpg */,
 				CEDD6E7916390258000F3D6D /* APP4-Info.plist */,
 				CEDD6E7A16390258000F3D6D /* InfoPlist.strings */,
 				CEDD6E7D16390258000F3D6D /* main.m */,
@@ -516,8 +521,8 @@
 				1890ACC916880B5E000C0FC4 /* CardCell.xib in Resources */,
 				18E9D336168B162600283A7F /* GlossaryViewController.xib in Resources */,
 				18E52A431696B3BA0067C957 /* PlayViewController.xib in Resources */,
-				18DFE41D16B7B967004AE8FA /* File in Resources */,
 				18DFE42816B8C0F4004AE8FA /* GlossaryCell.xib in Resources */,
+				1845287116D7387400869581 /* DowntonAbbey.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -558,6 +563,7 @@
 				18DFE41116B785E2004AE8FA /* BackwardButton.m in Sources */,
 				18DFE41716B78CDC004AE8FA /* ForwardButton.m in Sources */,
 				18DFE42416B8C099004AE8FA /* GlossaryCell.m in Sources */,
+				18C623E816BE4C0F0035E7CB /* MultipleTrackSlider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

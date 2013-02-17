@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BackwardButton : UIButton{
-    CGFloat offset;
-}
+@interface BackwardButton : UIButton
+
+@property (assign, nonatomic) CGFloat offset;
 
 @end

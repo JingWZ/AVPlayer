@@ -17,6 +17,8 @@
  7. 在tableView的delegate中，对UINib使用instantiateWithOwner，然后让cell=self.mCardCell;
 */
 
+#warning 图标的KVO在导航时可能造成内存泄露，需修改
+
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
@@ -30,6 +32,7 @@
 #import "SettingButton.h"
 #import "PlayButton.h"
 #import "PopMenu.h"
+#import "MultipleTrackSlider.h"
 
 @interface CardViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate>
 
@@ -53,6 +56,7 @@
 @property (strong, nonatomic) MicrophoneButton *microphoneBtn;
 @property (strong, nonatomic) PlayButton *playBtn;
 @property (strong, nonatomic) PopMenu *popMenu;
+@property (strong, nonatomic) MultipleTrackSlider *popSlider;
 
 @property (weak, nonatomic) IBOutlet UITableView *mTableView;
 @property (strong, nonatomic) IBOutlet CardCell *mCardCell;

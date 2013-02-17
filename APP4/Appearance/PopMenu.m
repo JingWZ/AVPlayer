@@ -157,7 +157,7 @@
 }
 
 - (void)itemBtnsPressed:(ItemButton *)sender{
-    NSLog(@"%d",sender.buttonIndex);
+    //NSLog(@"%d",sender.buttonIndex);
     //加入生词本
     //要获得当前的生词卡的信息
     
