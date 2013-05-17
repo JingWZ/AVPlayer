@@ -12,8 +12,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (assign, nonatomic) BOOL isLandscapeSupported;
-
 @property (strong, nonatomic) UINavigationController *navigationController;
 
 @end

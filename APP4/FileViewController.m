@@ -80,44 +80,61 @@
     [cell setAccessoryType:UITableViewCellAccessoryNone];
     
     if (indexPath.section==0) {
+        
         cell.textLabel.text=[self.videoFiles objectAtIndex:indexPath.row];
-        if (self.selectedVideoNumber!=kDefaultNumber) {
+        
+        if (self.selectedVideoNumber==indexPath.row) {
             [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
         }
+        
     } else if (indexPath.section==1) {
+        
         cell.textLabel.text=[self.subtitleFiles objectAtIndex:indexPath.row];
-        if (self.selectedSubtitleNumber!=kDefaultNumber) {
+        
+        if (self.selectedSubtitleNumber==indexPath.row) {
             [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
         }
     }
     
     return cell;
 }
+//鱼香茄子、盐焗鸡饭
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+
     if (indexPath.section==0) {
+        
         if (indexPath.row==self.selectedVideoNumber) {
             [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryNone];
             self.selectedVideoNumber=kDefaultNumber;
+            
         }else {
-            NSIndexPath *lastIndex=[[NSIndexPath indexPathWithIndex:0] indexPathByAddingIndex:self.selectedVideoNumber];
+            
+            NSIndexPath *lastIndex=[NSIndexPath indexPathForRow:self.selectedVideoNumber inSection:0];
+            
             [[tableView cellForRowAtIndexPath:lastIndex] setAccessoryType:UITableViewCellAccessoryNone];
             [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryCheckmark];
             self.selectedVideoNumber=indexPath.row;
         }
+        
     }else if (indexPath.section==1) {
+        
         if (indexPath.row==self.selectedSubtitleNumber) {
             [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryNone];
             self.selectedSubtitleNumber=kDefaultNumber;
+            
         }else {
-            NSIndexPath *lastIndex=[[NSIndexPath indexPathWithIndex:1] indexPathByAddingIndex:self.selectedSubtitleNumber];
+            
+            NSIndexPath *lastIndex=[NSIndexPath indexPathForRow:self.selectedSubtitleNumber inSection:1];
+            
             [[tableView cellForRowAtIndexPath:lastIndex] setAccessoryType:UITableViewCellAccessoryNone];
             [[tableView cellForRowAtIndexPath:indexPath] setAccessoryType:UITableViewCellAccessoryCheckmark];
             self.selectedSubtitleNumber=indexPath.row;
         }
     }
+  
     
+    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:NO];
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
@@ -289,7 +306,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end

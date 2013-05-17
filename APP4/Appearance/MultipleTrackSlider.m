@@ -18,11 +18,15 @@
     BOOL latchLeft;
     BOOL latchRight;
     BOOL latchMiddle;
+    
+    CGRect sideRect;
+    CGRect middleRect;
+    
+    
 }
 
 
 @synthesize barRect;
-@synthesize forBackWardScale;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -33,47 +37,87 @@
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame minValue:(CGFloat)min maxValue:(CGFloat)max{
+- (id)initWithFrame:(CGRect)frame leftValue:(CGFloat)left rightValue:(CGFloat)right middleValue:(CGFloat)middle scale:(CGFloat)scale{
     
     self = [super initWithFrame:frame];
     if (self) {
         
-        barRect=CGRectMake(20, frame.size.height-70, frame.size.width-40, 15);
-        forBackWardScale=0.1;
+        barRect=CGRectMake(0, 70, frame.size.width, 20);
         
-        [self setMinValue:min maxValue:max];
+        sideRect=CGRectMake(0, 40, 70, 20);
+        middleRect=CGRectMake(0, 20, 70, 20);
+        
+        self.scale=scale;
+                
+        self.leftValue=left;
+        self.rightValue=right;
+        self.middleValue=middle;
+        
+        [self initValuesByLeft:left right:right];
+        
         [self initTracks];
-        [self initForBackBtns];
+        [self initLabels];
         
-        self.pinGesture=[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinGestureTouched:)];
-        [self addGestureRecognizer:self.pinGesture];
-        
-        
-    }
+        }
     return self;
 }
 
 - (void)initTracks{
-    //init left track
-    self.leftTrackView=[[UIView alloc] initWithFrame:CGRectMake(20, barRect.origin.y, barRect.size.height, barRect.size.height)];
-    [self.leftTrackView setBackgroundColor:[UIColor blackColor]];
-    [self.leftTrackView setUserInteractionEnabled:NO];
-    [self addSubview:self.leftTrackView];
     
-    //init right track
-    self.rightTrackView=[[UIView alloc] initWithFrame:CGRectMake(200, barRect.origin.y, barRect.size.height, barRect.size.height)];
-    [self.rightTrackView setBackgroundColor:[UIColor blackColor]];
-    [self.rightTrackView setUserInteractionEnabled:NO];
-    [self addSubview:self.rightTrackView];
+    if (!self.leftTrackView) {
+        self.leftTrackView=[[UIView alloc] initWithFrame:CGRectMake(20, barRect.origin.y, barRect.size.height, barRect.size.height)];
+        [self.leftTrackView setBackgroundColor:[UIColor blackColor]];
+        [self.leftTrackView setUserInteractionEnabled:NO];
+        [self addSubview:self.leftTrackView];
+    }
     
-    //init middle track
-    self.middleTrackView=[[UIView alloc] initWithFrame:CGRectMake(80, barRect.origin.y, barRect.size.height, barRect.size.height)];
-    [self.middleTrackView setBackgroundColor:[UIColor redColor]];
-    [self.middleTrackView setUserInteractionEnabled:NO];
-    [self addSubview:self.middleTrackView];
+    if (!self.rightTrackView) {
+        //init right track
+        self.rightTrackView=[[UIView alloc] initWithFrame:CGRectMake(200, barRect.origin.y, barRect.size.height, barRect.size.height)];
+        [self.rightTrackView setBackgroundColor:[UIColor blackColor]];
+        [self.rightTrackView setUserInteractionEnabled:NO];
+        [self addSubview:self.rightTrackView];
+    }
     
+    if (!self.middleTrackView) {
+        //init middle track
+        self.middleTrackView=[[UIView alloc] initWithFrame:CGRectMake(80, barRect.origin.y, barRect.size.height, barRect.size.height)];
+        [self.middleTrackView setBackgroundColor:[UIColor redColor]];
+        [self.middleTrackView setUserInteractionEnabled:NO];
+        [self addSubview:self.middleTrackView];
+    }
+    
+    [self updateTracksPosition];
 }
 
+- (void)initLabels{
+    
+    if (!self.leftLbl) {
+        self.leftLbl=[[UILabel alloc] initWithFrame:sideRect];
+        [self.leftLbl setBackgroundColor:[UIColor clearColor]];
+        [self addSubview:self.leftLbl];
+    }
+    
+    if (!self.rightLbl) {
+        self.rightLbl=[[UILabel alloc] initWithFrame:sideRect];
+        [self.rightLbl setBackgroundColor:[UIColor clearColor]];
+        [self addSubview:self.rightLbl];
+
+    }
+    
+    if (!self.middleLbl) {
+        self.middleLbl=[[UILabel alloc] initWithFrame:middleRect];
+        [self.middleLbl setTextColor:[UIColor redColor]];
+        [self.middleLbl setBackgroundColor:[UIColor clearColor]];
+        [self addSubview:self.middleLbl];
+
+    }
+    
+    [self updateLabelsPosition];
+}
+
+
+/*
 - (void)initForBackBtns{
     
     //init forward button
@@ -91,22 +135,46 @@
     [self.backwardBtn setHidden:YES];
     
 }
+ 
+ */
 
-- (void)setMinValue:(CGFloat)min maxValue:(CGFloat)max{
-    minValue = min>max ? max : min ;
-    maxValue = min>max ? min : max ;
-    totalValue=maxValue-minValue;
+- (void)initValuesByLeft:(CGFloat)left right:(CGFloat)right{
+
+    totalValue=(right-left)*self.scale;
+    CGFloat offset=(totalValue-(right-left))/2.0;
+    
+    minValue=left-offset;
+    maxValue=right+offset;
+    
+    minValue = minValue>0 ? minValue : 0 ;
 }
 
+- (void)updateScale:(NSInteger)scale{
+    
+    self.scale=scale;
+    [self initValuesByLeft:self.leftValue right:self.rightValue];
+    [self initTracks];
+    [self initLabels];
+    
+    [self setNeedsDisplay];
+}
 
 #pragma mark - touch
 
 -(BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event{
     
+    if (latchLeft || latchRight || latchMiddle) {
+        
+        [self.leftTrackView setBackgroundColor:[UIColor blackColor]];
+        [self.middleTrackView setBackgroundColor:[UIColor redColor]];
+        [self.rightTrackView setBackgroundColor:[UIColor blackColor]];
+    }
+    
     //clear last touch info
     latchLeft=NO;
     latchRight=NO;
     latchMiddle=NO;
+    
     
     CGPoint touchPoint = [touch locationInView:self];
     
@@ -120,10 +188,7 @@
         latchMiddle=YES;
     }
     
-    
-    [self.backwardBtn setHidden:YES];
-    [self.forwardBtn setHidden:YES];
-    //[self updateTrackView];
+    [self updateTrackView];
     
     return YES;
 }
@@ -213,6 +278,7 @@
     
     [self setNeedsDisplay];
     [self updateValues];
+    [self updateLabelsPosition];
     [self sendActionsForControlEvents:UIControlEventValueChanged];
     
 	//redraw
@@ -223,29 +289,12 @@
 -(void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
     
-    if (latchLeft || latchMiddle || latchRight) {
-        
-        CGFloat forBackWardCenterPoint=0.0;
-        
-        if (latchLeft) forBackWardCenterPoint=self.leftTrackView.center.x;
-        if (latchRight) forBackWardCenterPoint=self.rightTrackView.center.x;
-        if (latchMiddle) forBackWardCenterPoint=self.middleTrackView.center.x;
-        
-        //跳出微进按钮
-        [self.backwardBtn setFrame:CGRectMake(forBackWardCenterPoint-kForBackBtnWidth*1.5, kForBackBtnWidth+barRect.origin.y, kForBackBtnWidth, kForBackBtnWidth)];
-        [self.forwardBtn setFrame:CGRectMake(forBackWardCenterPoint+kForBackBtnWidth*0.5, kForBackBtnWidth+barRect.origin.y, kForBackBtnWidth, kForBackBtnWidth)];
-        
-        [self.backwardBtn setHidden:NO];
-        [self.forwardBtn setHidden:NO];
-        
-        //[self updateHandleImages];
-    }
-    
     
 }
 
 #pragma mark - action
 
+/*
 - (void)forwardBtnPressed{
     
     if (latchLeft) {
@@ -304,10 +353,10 @@
     [self setNeedsDisplay];
     
 }
+ 
+ */
 
-- (void)pinGestureTouched:(UIPinchGestureRecognizer *)gesture{
-    
-}
+
 
 #pragma mark - update values
 
@@ -326,10 +375,22 @@
     self.leftTrackView.center=CGPointMake((self.leftValue-minValue)/totalValue*barRect.size.width+barRect.origin.x, self.leftTrackView.center.y);
     self.rightTrackView.center=CGPointMake((self.rightValue-minValue)/totalValue*barRect.size.width+barRect.origin.x, self.rightTrackView.center.y);
     self.middleTrackView.center=CGPointMake((self.middleValue-minValue)/totalValue*barRect.size.width+barRect.origin.x, self.middleTrackView.center.y);
-    
-    
 }
 
+- (void)updateLabelsPosition{
+    
+    NSString *leftText=[NSString stringWithFormat:@"%.2f", self.leftValue];
+    NSString *rightText=[NSString stringWithFormat:@"%.2f", self.rightValue];
+    NSString *middleText=[NSString stringWithFormat:@"%.2f", self.middleValue];
+    
+    [self.leftLbl setText:leftText];
+    [self.rightLbl setText:rightText];
+    [self.middleLbl setText:middleText];
+    
+    self.leftLbl.center=CGPointMake(self.leftTrackView.center.x-self.leftLbl.bounds.size.width/2.0, sideRect.origin.y);
+    self.rightLbl.center=CGPointMake(self.rightTrackView.center.x+self.rightLbl.bounds.size.width/2.0, sideRect.origin.y);
+    self.middleLbl.center=CGPointMake(self.middleTrackView.center.x, middleRect.origin.y);
+}
 
 
 
@@ -338,9 +399,13 @@
 - (void)updateTrackView{
     if (latchLeft) {
         [self.leftTrackView setBackgroundColor:[UIColor greenColor]];
-    }
-    if (latchRight) {
+        
+    }else if (latchRight) {
         [self.rightTrackView setBackgroundColor:[UIColor greenColor]];
+        
+    }else if (latchMiddle){
+        [self.middleTrackView setBackgroundColor:[UIColor greenColor]];
+        
     }
 }
 

@@ -8,25 +8,18 @@
 
 #import "GlossaryViewController.h"
 #import "LabelView.h"
+#import "ASIFormDataRequest.h"
 
 #define kTableViewHeaderHeight 40;
 
-@interface GlossaryViewController ()
-
-@end
-
 @implementation GlossaryViewController
+
 @synthesize mTableView;
 
-#pragma mark - tableView
+static NSString *_WebAdressOfFreeboxWS_LOGIN_2_0 = @"http://freeboxgame.com/feiheApp/php/call_ajax.php?LOGIN=";
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    
-    if (self.glossaryCustom.count) {
-        return 2;
-    }
-    return 1;
-}
+
+#pragma mark - tableView
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -35,44 +28,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    if (section==0) {
-        return self.glossaryDefaults.count;
-    }if (section==1) {
-        return self.glossaryCustom.count;
-    }
-    return 1;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    if (section==0) {
-        LabelView *titleView=[[LabelView alloc] init];
-        [titleView setFrame:CGRectMake(50, 50, 50, 50)];
-        [titleView setBackgroundColor:[UIColor clearColor]];
-        [titleView setText:@"  Default"];
-        [titleView setFont:[UIFont boldSystemFontOfSize:17]];
-        [titleView setTextColor:[UIColor whiteColor]];
-        [titleView setShadowColor:[UIColor whiteColor]];
-        [titleView setShadowOffset:CGSizeMake(0, 0)];
-        [titleView setShadowRadius:1];
-        return titleView;
-    }else if (section==1){
-        LabelView *titleView=[[LabelView alloc] init];
-        [titleView setFrame:CGRectMake(50, 50, 50, 50)];
-        [titleView setBackgroundColor:[UIColor clearColor]];
-        [titleView setText:@"  Custom"];
-        [titleView setFont:[UIFont boldSystemFontOfSize:17]];
-        [titleView setTextColor:[UIColor whiteColor]];
-        [titleView setShadowColor:[UIColor whiteColor]];
-        [titleView setShadowOffset:CGSizeMake(0, 0)];
-        [titleView setShadowRadius:1];
-        return titleView;
-        
-    }
-    return nil;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return kTableViewHeaderHeight;
+    LETGlossaryManagement *gm=[LETGlossaryManagement sharedInstance];
+    
+    NSInteger number=[[gm allGlossaries] count];
+    
+    return number;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -83,19 +43,15 @@
         
         [self.cellNib instantiateWithOwner:self options:nil];
         
-        NSString *glossaryName;
-        if (indexPath.section==0) {
-            glossaryName=[self.glossaryDefaults objectAtIndex:indexPath.row];
-        }else if (indexPath.section==1){
-            glossaryName=[self.glossaryCustom objectAtIndex:indexPath.row];
-        }
-        self.mGlossaryCell.glossaryNameLbl.text=glossaryName;
-
+        LETGlossaryManagement *gm=[LETGlossaryManagement sharedInstance];
+        LETGlossary *glossary=[gm glossaryAtIndex:indexPath.row];
+        
+        [self.mGlossaryCell.glossaryNameLbl setText:glossary.glossaryName];
         
         cell=self.mGlossaryCell;
+        [cell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
         //[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        
-        
+                
     }
     
     return cell;
@@ -105,20 +61,118 @@
     
     CardViewController *cardVC=[[CardViewController alloc] initWithNibName:@"CardViewController" bundle:nil];
     
-    GlossaryManagement *gm=[[GlossaryManagement alloc] init];
+    cardVC.glossaryIndex=indexPath.row;
     
-    if (indexPath.section==0) {
-        NSMutableArray *glosDefault=[gm getDefaultGlossariesPath];
-        cardVC.savePath=[glosDefault objectAtIndex:indexPath.row];
-    }else if (indexPath.section==1){
-        NSMutableArray *glosCustom=[gm getCustomGlossariesPath];
-        cardVC.savePath=[glosCustom objectAtIndex:indexPath.row];
-    }
     [self.navigationController pushViewController:cardVC animated:YES];
     [cardVC.navigationController setNavigationBarHidden:NO];
     [cardVC.navigationController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
     
 }
+
+#pragma mark - 上传
+
+/*
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    
+    //上传代码
+    //每次上传前，要登陆服务器
+    LETGlossaryManagement *gm=[LETGlossaryManagement sharedInstance];
+    NSString *userID=[gm userID];
+    NSString *userPassword=[gm userPassword];
+    
+    
+    // —— 用户名或密码都不应为空
+    
+    
+    // 多线程异步处理
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        // ### ===== Do something... ===== ### //
+        // #=============================
+        NSString *userInput = [NSString stringWithFormat:@"%@@-%@",userID,userPassword];
+        NSString *loginresult = [NSString stringWithFormat:@"%@%@",_WebAdressOfFreeboxWS_LOGIN_2_0,userInput];
+        NSURL *url = [NSURL URLWithString:loginresult];
+        [self setARequest:[ASIHTTPRequest requestWithURL:url]];
+        //Customise our user agent, for no real reason
+        [self.aRequest addRequestHeader:@"User-Agent" value:@"ASIHTTPRequest"];
+        // 设定委托，委托自己实现异步请求方法
+        [self.aRequest setDelegate : self ];
+        // 开始异步请求
+        [self.aRequest startAsynchronous];
+        // ### ===== Do something End ===== ### //
+        
+        
+        [self uploadGlossaryAtIndex:indexPath.row];
+        
+    });
+    
+}
+ */
+
+- (void)uploadGlossaryAtIndex:(NSInteger)index{
+    
+    //必须提供memberID, title, quantity
+    
+    LETGlossaryManagement *gm=[LETGlossaryManagement sharedInstance];
+    LETGlossary *glossary=[gm glossaryAtIndex:index];
+    
+    NSString *title=glossary.glossaryName;
+    NSInteger count=[glossary.glossaryCards count];
+    NSString *quantity=[NSString stringWithFormat:@"%d",count];
+    
+    
+    //ASIHttpRequest
+    NSString *serverURL=@"http://coursepi.com/php/microCardup.php";
+    NSURL *url=[NSURL URLWithString:serverURL];
+    
+    ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
+    [request setDelegate:self];
+    [request setRequestMethod:@"POST"];
+    [request setDidFinishSelector:@selector(uploadRequestFinished:)];
+    [request setDidFailSelector:@selector(uploadRequestFailed:)];
+    
+    [request setPostValue:title forKey:@"title"];
+    [request setPostValue:quantity forKey:@"quantity"];
+    
+    for (int i=0; i<count; i++) {
+        
+        NSString *subtitlePath=[gm cardSubtitlePathAtGlossaryIndex:index cardIndex:i];
+        NSString *imagePath=[gm cardImagePathAtGlossaryIndex:index cardIndex:i];
+        NSString *audioPath=[gm cardAudioPathAtGlossaryIndex:index cardIndex:i];
+        
+        NSString *subtitleKey=[NSString stringWithFormat:@"%d_subtitle",i];
+        NSString *imageKey=[NSString stringWithFormat:@"%d_image",i];
+        NSString *audioKey=[NSString stringWithFormat:@"%d_audio",i];
+        
+        [request setFile:subtitlePath forKey:subtitleKey];
+        [request setFile:imagePath forKey:imageKey];
+        [request setFile:audioPath forKey:audioKey];
+        
+    }
+    
+    [request startAsynchronous];
+}
+
+- (void)uploadRequestFinished:(ASIHTTPRequest *)request{
+    NSData *responseData = [request responseData];
+    // Store incoming data into a string
+    NSString *response = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+    NSLog(@"Server response:%@", response);
+    
+    UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"上传成功" message:@"" delegate:self cancelButtonTitle:@"ok!" otherButtonTitles: nil];
+    [alert dismissWithClickedButtonIndex:0 animated:YES];
+    [alert show];
+}
+
+
+- (void)uploadRequestFailed:(ASIHTTPRequest *)request{
+    NSLog(@"fail");
+    
+    UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"上传失败" message:@"" delegate:self cancelButtonTitle:@"ok!" otherButtonTitles: nil];
+    [alert dismissWithClickedButtonIndex:0 animated:YES];
+    [alert show];
+}
+
+#pragma mark - init
 
 - (void)initBarItems{
     
@@ -150,17 +204,6 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)initGlossaryData{
-    
-    GlossaryManagement *gm=[[GlossaryManagement alloc] init];
-    
-    self.glossaryDefaults=[gm getDefaultGlossariesName];
-    self.glossaryCustom=[gm getCustomGlossariesName];
-    
-    
-}
-
-
 #pragma mark - defaults
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -181,8 +224,6 @@
     
     [self.mTableView setDelegate:self];
     [self.mTableView setDataSource:self];
-    
-    [self initGlossaryData];
     
     self.cellNib=[UINib nibWithNibName:@"GlossaryCell" bundle:nil];
     

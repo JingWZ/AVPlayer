@@ -11,6 +11,7 @@
 #import "ImagesPackage.h"
 #import "AudiosPackage.h"
 #import "MBProgressHUD.h"
+#import "LETGlossaryManagement.h"
 
 
 #define kTimeScale 60.0
@@ -34,6 +35,10 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
     CGFloat viewWidth;
     CGFloat viewHeight;
+    
+    CMTime currentT;
+    
+    LETGlossary *glossary;
 }
 @synthesize mPlayView;
 @synthesize lblEng, lblChi;
@@ -58,11 +63,16 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
             isShowingBars=NO;
         }
         
-    }else{
+        currentT=[mPlayer currentTime];
+    }
+    
+    else{
         [self pausePressed];
         [self showBarItems];
         isShowingBars=YES;
     }
+    
+    
 }
 
 - (void)playPressed{
@@ -84,33 +94,44 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     [self.playBtn setHidden:NO];
     [self.pauseBtn setHidden:YES];
     
-    //get current index
-    CMTime currentTime=[mPlayer currentTime];
-    subtitleIndex=[mSubtitlePackage indexOfBackForWard:currentTime];
+    currentT=[mPlayer currentTime];
 }
 
 - (void)backwardPressed{
-    //NSLog(@"origin:%d",subtitleIndex);
-
-    if (subtitleIndex>1) {
-        subtitleIndex-=1;
+    
+    Float64 current=CMTimeGetSeconds(currentT);
+    Float64 changed=current-2.0;
+    CMTime final=CMTimeMakeWithSeconds(changed, kTimeScale);
+    
+    if (CMTIME_COMPARE_INLINE(final, >, kCMTimeZero) && CMTIME_IS_VALID(final)) {
+        
+        [mPlayer seekToTime:final];
+        
+        [self syncSubtitle];
+        [self syncTimeLabel];
+        [self syncScrubber];
+        currentT=final;
     }
     
-    IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:subtitleIndex];
-    [mPlayer seekToTime:[currentSubtitle startTime]];
-    //NSLog(@"changed:%d",subtitleIndex);
+    
 }
 
 - (void)forwardPressed{
-    //NSLog(@"origin:%d",subtitleIndex);
-    if (subtitleIndex<mSubtitlePackage.subtitleItems.count) {
-        subtitleIndex+=1;
+    
+    Float64 current=CMTimeGetSeconds(currentT);
+    Float64 changed=current-2.0;
+    CMTime final=CMTimeMakeWithSeconds(changed, kTimeScale);
+    
+    if (CMTIME_COMPARE_INLINE(final, <, mPlayerItem.duration) && CMTIME_IS_VALID(final)) {
+        
+        [mPlayer seekToTime:final];
+        
+        [self syncSubtitle];
+        [self syncTimeLabel];
+        [self syncScrubber];
+        currentT=final;
     }
     
-    IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:subtitleIndex];
-    [mPlayer seekToTime:[currentSubtitle startTime]];
-    
-    //NSLog(@"changed:%d",subtitleIndex);
 }
 
 - (void)addPressed{
@@ -164,9 +185,17 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     //bottom bar
     [self.barBottomView setHidden:NO];
     
-    //get current index
-    CMTime currentTime=[mPlayer currentTime];
-    subtitleIndex=[mSubtitlePackage indexOfBackForWard:currentTime];
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    int deviceOrientation=[[UIDevice currentDevice] orientation];
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    
+    if (deviceOrientation==UIDeviceOrientationLandscapeLeft ||
+              deviceOrientation==UIDeviceOrientationLandscapeRight){
+    [self.lblEng setFrame:CGRectMake(0, 170, 480, 21)];
+    [self.lblChi setFrame:CGRectMake(0, 199, 480, 21)];
+    }
+    
+    
 }
 
 - (void)hideBarItems{
@@ -176,6 +205,18 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
     //bottom bar
     [self.barBottomView setHidden:YES];
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    int deviceOrientation=[[UIDevice currentDevice] orientation];
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    
+    if (deviceOrientation==UIDeviceOrientationLandscapeLeft ||
+        deviceOrientation==UIDeviceOrientationLandscapeRight){
+
+    [self.lblEng setFrame:CGRectMake(0, 230, 480, 21)];
+    [self.lblChi setFrame:CGRectMake(0, 259, 480, 21)];
+        
+    }
 }
 
 #pragma mark - synchronize
@@ -218,7 +259,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 
 
 - (void)syncCountLabel{
-        
+    
     if (self.count>9) {
         [self.countLbl setTextPointX:8 pointY:9];
     } else if (self.count>99){
@@ -302,11 +343,14 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
     [self createSaveFile];
     
+    
+    
     CMTime currentTime=[mPlayer currentTime];
     NSString *saveName=[mSubtitlePackage makeSaveName:currentTime];
     NSString *path=[[self savePath] stringByAppendingPathComponent:saveName];
     
     NSUInteger index=[mSubtitlePackage indexOfProperSubtitleWithGivenCMTime:currentTime];
+    
     IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:index];
     
     //if there is no English subtitle, do not extract the image
@@ -328,43 +372,24 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         IndividualSubtitle *currentSubtitle=[mSubtitlePackage.subtitleItems objectAtIndex:index];
         CMTimeRange range=CMTimeRangeFromTimeToTime(currentSubtitle.startTime, currentSubtitle.endTime);
         [audioPackage saveAudioWithRange:range inPath:path];
-     }
-    
+    }
     
     //sync in userDefault
-    GlossaryManagement *gm=[[GlossaryManagement alloc] init];
-    [gm addCardInDefaultWithSavePath:path
-                         recordCount:0
-                               video:self.videoPath
-                            subtitle:self.subtitlePath];
+     LETGlossaryManagement *gm=[LETGlossaryManagement sharedInstance];
+    
+    
+     glossary=[gm glossaryWithVideoPath:[self.videoPath lastPathComponent] SubtitlePath:[self.subtitlePath lastPathComponent]];
+    [gm addCardAtIndex:0 name:saveName recordCount:0];
     
 }
 
 - (void)createSaveFile{
-    
-    
-    GlossaryManagement *gm=[[GlossaryManagement alloc] init];
-    
+
     if (![[NSFileManager defaultManager] fileExistsAtPath:[self savePath]]) {
         
         //create a file, where save images, audios and subtitles
-        if ([[NSFileManager defaultManager] createDirectoryAtPath:[self savePath] withIntermediateDirectories:NO attributes:nil error:nil]) {
-            
-            //save this file path to userDefaults, to restore it in GlossaryView
-            NSMutableArray *cards=[NSMutableArray arrayWithCapacity:0];
-            NSDictionary *glossary=[gm getGlossaryWithGlossaryPath:[self savePath]
-                                                         videoPath:self.videoPath
-                                                      subtitlePath:self.subtitlePath
-                                                             cards:cards];
-            [gm addGlossaryInDefault:glossary];
-            
-        }
-    }else{
-        
-        [gm updateGlossaryToZeroIndexWithGlossaryPath:[self savePath]];
-        
+        [[NSFileManager defaultManager] createDirectoryAtPath:[self savePath] withIntermediateDirectories:NO attributes:nil error:nil];
     }
-    
 }
 
 - (NSString *)savePath{
@@ -450,9 +475,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
         mRestoreAfterScrubbingRate=0.f;
     }
     
-    //get current index
-    CMTime currentTime=[mPlayer currentTime];
-    subtitleIndex=[mSubtitlePackage indexOfBackForWard:currentTime];
+    currentT=[mPlayer currentTime];
 }
 
 
@@ -502,10 +525,10 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     UIColor *buttonColor=[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1];
     UIBarButtonItem *backButton=[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(backToFileView)];
     [backButton setTintColor:buttonColor];
-    UIBarButtonItem *cardButton=[[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleBordered target:self action:@selector(moveToCardView)];
-    [cardButton setTintColor:buttonColor];
+    //UIBarButtonItem *cardButton=[[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleBordered target:self action:@selector(moveToCardView)];
+    //[cardButton setTintColor:buttonColor];
     [self.navigationItem setLeftBarButtonItem:backButton];
-    [self.navigationItem setRightBarButtonItem:cardButton];
+    //[self.navigationItem setRightBarButtonItem:cardButton];
     
     //init top bar title
     self.titleView=[[LabelView alloc] init];
@@ -522,7 +545,8 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
     //init bottom bar
     [self.barBottomView setFrame:CGRectMake(0, self.view.bounds.size.height-self.barBottomView.bounds.size.height, self.view.bounds.size.width, kBottomBarHeight)];
-    [self.barBottomView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:.5]];
+    //[self.barBottomView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:.5]];
+    [self.barBottomView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.5]];
     [self.mPlayView addSubview:self.barBottomView];
     
     //init play button
@@ -558,6 +582,41 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     
 }
 
+- (void)bottomButtonsPortrait{
+    
+    [self.barBottomView setFrame:CGRectMake(0, viewHeight-kBottomBarHeight, viewWidth, kBottomBarHeight)];
+    
+    [self.mScrubber setFrame:CGRectMake(42, 45, 236, 23)];
+    [self.lblCurrentTime setFrame:CGRectMake(0, 45, 42, 21)];
+    [self.lblRemainTime setFrame:CGRectMake(278, 45, 42, 21)];
+    [self.pauseBtn setFrame:CGRectMake(138, 0, 45, 45)];
+    [self.playBtn setFrame:CGRectMake(138, 0, 45, 45)];
+    [self.backwardBtn setFrame:CGRectMake(93, 0, 45, 45)];
+    [self.forwardBtn setFrame:CGRectMake(183, 0, 45, 45)];
+    [self.addBtn setFrame:CGRectMake(275, 0, 45, 45)];
+    
+    [self.lblEng setFrame:CGRectMake(0, 285, 320, 21)];
+    [self.lblChi setFrame:CGRectMake(0, 310, 320, 21)];
+    
+}
+
+- (void)bottomButtonsLandscape{
+    
+    [self.barBottomView setFrame:CGRectMake(0, viewWidth-self.barBottomView.bounds.size.height, viewHeight, kBottomBarHeight)];
+    [self.mScrubber setFrame:CGRectMake(45, 45, 390, 23)];
+    [self.lblCurrentTime setFrame:CGRectMake(0, 45, 42, 21)];
+    [self.lblRemainTime setFrame:CGRectMake(438, 45, 42, 21)];
+    [self.pauseBtn setFrame:CGRectMake(218, 0, 45, 45)];
+    [self.playBtn setFrame:CGRectMake(218, 0, 45, 45)];
+    [self.backwardBtn setFrame:CGRectMake(168, 0, 45, 45)];
+    [self.forwardBtn setFrame:CGRectMake(268, 0, 45, 45)];
+    [self.addBtn setFrame:CGRectMake(435, 0, 45, 45)];
+    
+    [self.lblEng setFrame:CGRectMake(0, 240, 480, 21)];
+    [self.lblChi setFrame:CGRectMake(0, 269, 480, 21)];
+    
+}
+
 #pragma mark - defaults
 
 - (NSUInteger)supportedInterfaceOrientations{
@@ -584,13 +643,36 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     //init Subtitle
     mSubtitlePackage=[[SubtitlePackage alloc] initWithFile:self.subtitlePath];
     
-    //init top bar and bottom bar
-    [self initButtonsInBottomBar];
-    [self hideBarItems];
+    
     
     //add gestureRecognizer
     tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actWhenTap:)];
     [self.view addGestureRecognizer:tapGesture];
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    
+    //init top bar and bottom bar
+    [self initButtonsInBottomBar];
+    [self hideBarItems];
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    int deviceOrientation=[[UIDevice currentDevice] orientation];
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    
+    if (deviceOrientation==UIDeviceOrientationFaceDown ||
+        deviceOrientation==UIDeviceOrientationFaceUp ||
+        deviceOrientation==UIDeviceOrientationUnknown ||
+        deviceOrientation==UIDeviceOrientationPortrait) {
+        
+        [self bottomButtonsPortrait];
+        
+    }else if (deviceOrientation==UIDeviceOrientationLandscapeLeft ||
+              deviceOrientation==UIDeviceOrientationLandscapeRight){
+        
+        [self bottomButtonsLandscape];
+    }
     
 }
 
@@ -626,22 +708,27 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
     // e.g. self.myOutlet = nil;
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
+    
+    return toInterfaceOrientation==UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation==UIInterfaceOrientationLandscapeRight;
+}
+
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
     if (toInterfaceOrientation==UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation==UIInterfaceOrientationLandscapeRight) {
         
-        [self.barBottomView setFrame:CGRectMake(0, viewWidth-self.barBottomView.bounds.size.height, viewHeight, kBottomBarHeight)];
+        [self bottomButtonsLandscape];
+
     }
+    
+    if (toInterfaceOrientation==UIInterfaceOrientationPortrait) {
+        
+        [self bottomButtonsPortrait];
+    }
+    
+    
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft );
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
-    return UIInterfaceOrientationLandscapeLeft;
-}
 
 #pragma mark - player
 
@@ -686,7 +773,7 @@ static void *PlayViewControllerCurrentItemObservationContext = &PlayViewControll
 -(void)assetFailedToPrepareForPlayback:(NSError *)error{
     
     [self removeTimeObserver];
-
+    
     UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:[error localizedDescription] message:[error localizedFailureReason] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alertView show];
 }

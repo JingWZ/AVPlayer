@@ -7,9 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BackwardButton.h"
-#import "ForwardButton.h"
-
 
 @interface MultipleTrackSlider : UIControl
 
@@ -23,14 +20,13 @@
 @property (strong, nonatomic) UIView *rightTrackView;
 @property (strong, nonatomic) UIView *middleTrackView;
 
-@property (strong, nonatomic) ForwardButton *forwardBtn;
-@property (strong, nonatomic) BackwardButton *backwardBtn;
-@property (assign, nonatomic) CGFloat forBackWardScale;
+@property (strong, nonatomic) UILabel *leftLbl;
+@property (strong, nonatomic) UILabel *middleLbl;
+@property (strong, nonatomic) UILabel *rightLbl;
 
-@property (strong, nonatomic) UIPinchGestureRecognizer *pinGesture;
+@property (assign, nonatomic) NSInteger scale;
 
-- (id)initWithFrame:(CGRect)frame minValue:(CGFloat)min maxValue:(CGFloat)max;
-- (void)setMinValue:(CGFloat)min  maxValue:(CGFloat)max;
-
+- (id)initWithFrame:(CGRect)frame leftValue:(CGFloat)left rightValue:(CGFloat)right middleValue:(CGFloat)middle scale:(CGFloat)scale;
+- (void)updateScale:(NSInteger)scale;
 
 @end

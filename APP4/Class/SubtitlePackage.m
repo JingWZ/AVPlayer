@@ -8,10 +8,21 @@
 
 #import "SubtitlePackage.h"
 
+typedef enum {
+    
+    SubtitleScannerPositionIndex,
+    SubtitleScannerPositionTime,
+    SubtitleScannerPositionChi,
+    SubtitleScannerPositionEng
+    
+}SubtitleScanner;
+
 @implementation SubtitlePackage
 @synthesize subtitleItems;
 
 - (SubtitlePackage *)initWithFile:(NSString *)filePath{
+    
+    
     NSString *context=[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
     self.subtitleItems=[NSMutableArray arrayWithCapacity:0];
     
@@ -22,23 +33,97 @@
     [self.subtitleItems addObject:blankSubtitle];
     
     [self makeIndividualSubtitle:context];
+    
     return self;
 }
 
 #pragma mark - make individual subtitle item
 
 - (void)makeIndividualSubtitle:(NSString *)context{
+    
+    NSCharacterSet *alphanumericCharacterSet = [NSCharacterSet alphanumericCharacterSet];
+    
+    __block IndividualSubtitle *subtitle=[IndividualSubtitle new];
+    __block SubtitleScanner scanner=SubtitleScannerPositionIndex;
+    
+    [context enumerateLinesUsingBlock:^(NSString *line, BOOL *stop) {
+        
+        NSRange r = [line rangeOfCharacterFromSet:alphanumericCharacterSet];
+        
+        if (r.location != NSNotFound) {
+            
+            BOOL actionAlreadyTaken = NO;
+            
+            if (scanner == SubtitleScannerPositionIndex) {
+                
+                scanner = SubtitleScannerPositionTime; 
+                actionAlreadyTaken = YES;
+            }
+            
+            if ((scanner == SubtitleScannerPositionTime) && (!actionAlreadyTaken)) {
+                
+                subtitle.startTime=[self makeCMTimeStart:line];
+                subtitle.endTime=[self makeCMTimeEnd:line];
+                
+                scanner = SubtitleScannerPositionChi;
+                actionAlreadyTaken = YES;
+            }
+            
+            if ((scanner == SubtitleScannerPositionChi) && (!actionAlreadyTaken)) {
+                
+                subtitle.ChiSubtitle=[NSString stringWithString:line];
+                
+                scanner = SubtitleScannerPositionEng;
+                actionAlreadyTaken = YES;
+            }
+            
+            if ((scanner == SubtitleScannerPositionEng) && (!actionAlreadyTaken)) {
+                
+                NSString *current;
+                if ([line length]) {
+                    current=[NSString stringWithString:line];
+                }else{
+                    current=@" ";
+                }
+                
+                NSString *prev=subtitle.EngSubtitle;
+                if (prev==nil) {
+                    subtitle.EngSubtitle=current;
+                }else{
+                    subtitle.EngSubtitle=[subtitle.EngSubtitle stringByAppendingFormat:@"-%@",current];
+                }
+                
+                scanner = SubtitleScannerPositionEng;
+            }
+        }
+        else {
+            [self.subtitleItems addObject:subtitle];
+            subtitle = [IndividualSubtitle new];
+            scanner = SubtitleScannerPositionIndex;
+        }
+    }];
+    
+    if (scanner == SubtitleScannerPositionEng) {
+        
+        [self.subtitleItems addObject:subtitle];
+    }
+    
+    /*
     NSArray *contextLine=[context componentsSeparatedByString:@"\n"];
     
     for (int i=0; i<[contextLine count]; i++)
     {
+        
         NSRange firstCharRange=NSMakeRange(0, 1);
         NSString *lineIndex=[contextLine objectAtIndex:i];
+        
         if ([lineIndex length])  //to skip over blank lines
         {
+            
             if ([[lineIndex substringWithRange:firstCharRange] intValue]>=1 &&
                 [[lineIndex substringWithRange:firstCharRange] intValue]<=9) // the index line
             {
+                NSLog(@"cccccc");
                 NSString *lineTime=[contextLine objectAtIndex:i+1];
                 if ([[lineTime substringWithRange:firstCharRange] isEqualToString:@"0"]) //the time line
                 {
@@ -49,6 +134,7 @@
                     subtitle.startTime=[self makeCMTimeStart:lineTime];
                     subtitle.endTime=[self makeCMTimeEnd:lineTime];
                     subtitle.ChiSubtitle=[NSString stringWithString:lineChi];
+                    
                     if ([lineEng length]) {
                         subtitle.EngSubtitle=[NSString stringWithString:lineEng];
                     }else{
@@ -64,6 +150,8 @@
             }
         }
     }
+     
+     */
 }
 
 #pragma mark - choose proper subtitle by given CMTime
@@ -166,7 +254,9 @@
     [archiver encodeObject:currentSubtitle forKey:@"subtitle"];
     [archiver finishEncoding];
     
-    [data writeToFile:path atomically:YES];
+    NSString *savePath=[path stringByAppendingPathExtension:@"txt"];
+    
+    [data writeToFile:savePath atomically:YES];
     
 }
 
@@ -202,7 +292,46 @@
     return time;
 }
 
+#pragma mark - using in setting
 
+- (CGFloat)imageTimeWithName:(NSString *)name{
+    
+    NSArray *component=[name componentsSeparatedByString:@"-"];
+    
+    int hour=[[component objectAtIndex:0] intValue];
+    int min=[[component objectAtIndex:1] intValue];
+    int sec=[[component objectAtIndex:2] intValue];
+    int fra=[[component objectAtIndex:3] intValue];
+    
+    float seconds=hour*3600+min*60+sec+fra/100.0;
+
+    return seconds;
+}
+
+- (CGFloat)audioStartTimeWithName:(NSString *)name{
+    
+    CGFloat seconds=[self imageTimeWithName:name];
+    CMTime imageTime=CMTimeMakeWithSeconds(seconds, 600);
+    
+    NSUInteger index=[self indexOfProperSubtitleWithGivenCMTime:imageTime];
+    IndividualSubtitle *subtitle=[self.subtitleItems objectAtIndex:index];
+    CGFloat startTime=CMTimeGetSeconds(subtitle.startTime);
+    
+    return startTime;
+}
+
+- (CGFloat)audioEndTimeWithName:(NSString *)name{
+    
+    CGFloat seconds=[self imageTimeWithName:name];
+    CMTime imageTime=CMTimeMakeWithSeconds(seconds, 600);
+    
+    NSUInteger index=[self indexOfProperSubtitleWithGivenCMTime:imageTime];
+    IndividualSubtitle *subtitle=[self.subtitleItems objectAtIndex:index];
+    CGFloat endTime=CMTimeGetSeconds(subtitle.endTime);
+    
+    return endTime;
+
+}
 
 #pragma mark - NSCoding & NSCopying
 

@@ -11,21 +11,16 @@
 #import <UIKit/UIKit.h>
 #import "CardViewController.h"
 #import "GlossaryCell.h"
+#import "LETGlossaryManagement.h"
+#import "ASIHTTPRequest.h"
 
-#import "GlossaryManagement.h"
-
-
-@interface GlossaryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
-
-@property (strong, nonatomic) NSMutableArray *glossaryDefaults;
-@property (strong, nonatomic) NSMutableArray *glossaryCustom;
+@interface GlossaryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) UINib *cellNib;
 
+@property (strong, nonatomic) ASIHTTPRequest *aRequest;
 
 @property (weak, nonatomic) IBOutlet UITableView *mTableView;
 @property (strong, nonatomic) IBOutlet GlossaryCell *mGlossaryCell;
 
 @end
-
-//section0显示自定义生词本，section1显示默认生词本

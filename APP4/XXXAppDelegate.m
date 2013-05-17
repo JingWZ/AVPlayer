@@ -69,26 +69,4 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    
-    if (self.isLandscapeSupported) {
-        return (interfaceOrientation == UIInterfaceOrientationLandscapeRight);
-    }else{
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    }
-}
-
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
-    
-    if ([[viewController nibName] isEqualToString:@"PlayViewController"]) {
-        self.isLandscapeSupported=YES;
-    }else{
-        self.isLandscapeSupported=NO;
-    }
-    
-    [viewController viewWillAppear:animated];
-    
-}
-
 @end

@@ -14,6 +14,9 @@
 
 #import "ButtonView.h"
 #import "LabelView.h"
+#import "LETGlossaryManagement.h"
+
+#import "MBProgressHUD.h"
 
 @interface FirstViewController ()
 
@@ -49,6 +52,98 @@
 @synthesize titleLbl;
 @synthesize videoBtn;
 @synthesize glossaryBtn;
+
+static NSString *_WebAdressOfFreeboxWS_LOGIN_2_0 = @"http://freeboxgame.com/feiheApp/php/call_ajax.php?LOGIN=";
+
+/*
+ 
+#pragma mark - Http request delegations
+
+// 请求结束，获取 Response 数据
+- ( void )requestFinished:(ASIHTTPRequest *)request{
+    
+    if ([[[request responseString]substringToIndex:5]isEqualToString:@"LOGIN"])
+    {
+        if ([DataParser loginApplication:[self.request responseString]])
+        {
+            //NSLog(@"%@",[self.request responseString]);
+            [self loginSuccess];
+        }
+        else
+        {
+            [self loginFail];
+        }
+    }
+    else
+    {
+        UIAlertView *requstError = [[UIAlertView alloc]initWithTitle:@"服务器响应错误" message:@"与服务器连接异常，请确认网络连接后重试。" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [requstError show];
+        [requstError release];
+    }
+    [self.loginBtn setEnabled:YES];
+}
+
+// 请求失败，获取 error
+- ( void )requestFailed:( ASIHTTPRequest *)request{
+    
+    if ([self.request error])
+    {
+        NSLog(@"%@",[[self.request error] localizedDescription]) ;
+        NSString *str = [[self.request error] localizedDescription];
+        
+        UIAlertView *requstError = [[UIAlertView alloc]initWithTitle:@"网络错误" message:str delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [requstError show];
+        [requstError release];
+    }
+    [self.loginBtn setEnabled:YES];
+}
+
+*/
+
+- (IBAction)loginPassword:(id)sender {
+    self.userPassword=[sender text];
+}
+
+- (IBAction)login:(id)sender {
+    
+    LETGlossaryManagement *gm=[LETGlossaryManagement sharedInstance];
+    [gm saveUserID:self.userID andPassword:self.userPassword];
+    
+    
+    // —— 用户名或密码都不应为空
+    
+    // ========== MBProgressHUD ========== //
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    // 多线程异步处理
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        // ### ===== Do something... ===== ### //
+        // #=============================
+        NSString *userInput = [NSString stringWithFormat:@"%@@-%@",self.userID,self.userPassword];
+        NSString *loginresult = [NSString stringWithFormat:@"%@%@",_WebAdressOfFreeboxWS_LOGIN_2_0,userInput];
+        NSURL *url = [NSURL URLWithString:loginresult];
+        [self setRequest:[ASIHTTPRequest requestWithURL:url]];
+        //Customise our user agent, for no real reason
+        [self.request addRequestHeader:@"User-Agent" value:@"ASIHTTPRequest"];
+        // 设定委托，委托自己实现异步请求方法
+        [self.request setDelegate : self ];
+        // 开始异步请求
+        [self.request startAsynchronous];
+        // ### ===== Do something End ===== ### //
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [self.loginBtn setHidden:YES];
+            [self.loginIDTF setHidden:YES];
+            [self.loginPasswordTF setHidden:YES];
+            [self showButtonsAndLabel];
+        });
+    });
+    
+}
+
+- (IBAction)loginID:(id)sender {
+    
+    self.userID=[sender text];
+}
 
 #pragma mark - action
 
@@ -308,9 +403,31 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     [self.titleLbl setShadowOffset:CGSizeMake(0, 0)];
     [self.titleLbl setShadowRadius:20];
     
+    [self.titleLbl setHidden:NO];
+    [self.glossaryBtn setHidden:NO];
+    [self.videoBtn setHidden:NO];
+    
     CGColorSpaceRelease(cs);
     CGColorRelease(color);
 
+}
+
+//第一次启动时注册用户名和密码，然后把它存到userDefault，以后不再显示登陆项
+- (void)showLogInThing{
+    
+    [self.loginIDTF setFrame:CGRectMake(20, 150, 280, 30)];
+    [self.menuView addSubview:self.loginIDTF];
+    
+    [self.loginPasswordTF setFrame:CGRectMake(20, 200, 280, 30)];
+    [self.menuView addSubview:self.loginPasswordTF];
+    
+    [self.loginBtn setFrame:CGRectMake(140, 250, 50, 50)];
+    [self.menuView addSubview:self.loginBtn];
+    
+    [self.titleLbl setHidden:YES];
+    [self.glossaryBtn setHidden:YES];
+    [self.videoBtn setHidden:YES];
+    
 }
 
 #pragma mark - defaults
@@ -344,12 +461,27 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     tapGesture=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     [self.view addGestureRecognizer:tapGesture];
     
-    
     [self.view addSubview:self.menuView];
-    [self showButtonsAndLabel];
     [self.menuView setAlpha:0];
     
+    /*
+
+    //如果是第一次，则显示登陆控件
+    LETGlossaryManagement *gm=[LETGlossaryManagement sharedInstance];
+    if (![gm userID]) {
+        
+        [self showLogInThing];
+    }else{
+        
+        [self showButtonsAndLabel];
+        
+    }
+     */
     
+    [self showButtonsAndLabel];
+
+
+ 
     //初始化所有海报
     self.posters=[NSMutableArray arrayWithCapacity:0];
     self.postersCenterY=[NSMutableArray arrayWithCapacity:0];
@@ -374,10 +506,19 @@ CGFloat PRTweenTimingFunctionBounceOut (CGFloat t, CGFloat b, CGFloat c, CGFloat
     [self setVideoBtn:nil];
     [self setGlossaryBtn:nil];
     [self setTitleLbl:nil];
+    [self setLoginIDTF:nil];
+    [self setLoginPasswordTF:nil];
+    [self setLoginBtn:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
+    
+    return toInterfaceOrientation==UIInterfaceOrientationPortrait;
+    
 }
 
 @end

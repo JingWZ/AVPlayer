@@ -11,20 +11,19 @@
  1. 新增一个类customCell，父类是UITableViewCell
  2. 新增一个空的xib，加入一个UITableViewCell，在xib中把类型改为customCell
  3. 把xib的fileowner的类型改为那个使用cell的viewController
+ 4. 把xib的identifier写成tableView中的identifier
  4. 把xib中的UITableViewCell按control拖入viewController中（mCardCell）
  5. 在viewController中创建一个UINib
  6. 在viewDidLoad中初始化UINib，即nibWithNibName。。。
  7. 在tableView的delegate中，对UINib使用instantiateWithOwner，然后让cell=self.mCardCell;
 */
 
-#warning 图标的KVO在导航时可能造成内存泄露，需修改
-
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-#import "SettingViewController.h"
+#import "CardSetViewController.h"
+
 #import "CardCell.h"
-#import "GlossaryManagement.h"
 
 #import "CustomBarView.h"
 #import "MicrophoneButton.h"
@@ -32,9 +31,11 @@
 #import "SettingButton.h"
 #import "PlayButton.h"
 #import "PopMenu.h"
-#import "MultipleTrackSlider.h"
+#import "LETGlossaryManagement.h"
 
 @interface CardViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate>
+
+@property (assign, nonatomic) NSInteger glossaryIndex;
 
 @property (copy, nonatomic) NSString *savePath;
 @property (copy, nonatomic) NSString *videoPath;
@@ -56,7 +57,6 @@
 @property (strong, nonatomic) MicrophoneButton *microphoneBtn;
 @property (strong, nonatomic) PlayButton *playBtn;
 @property (strong, nonatomic) PopMenu *popMenu;
-@property (strong, nonatomic) MultipleTrackSlider *popSlider;
 
 @property (weak, nonatomic) IBOutlet UITableView *mTableView;
 @property (strong, nonatomic) IBOutlet CardCell *mCardCell;

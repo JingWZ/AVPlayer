@@ -11,7 +11,8 @@
 @interface GlossaryCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *glossaryImageView;
-@property (weak, nonatomic) IBOutlet UILabel *glossaryCountLbl;
 @property (weak, nonatomic) IBOutlet UILabel *glossaryNameLbl;
+@property (weak, nonatomic) IBOutlet UILabel *glossaryMaker;
+@property (weak, nonatomic) IBOutlet UILabel *glossaryCount;
 
 @end

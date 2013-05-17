@@ -33,5 +33,9 @@
 - (NSString *)makeSaveName:(CMTime)time;
 - (void)saveSubtitleWithTime:(CMTime)time inPath:(NSString *)path;
 
+//在setting里面使用
+- (CGFloat)imageTimeWithName:(NSString *)name;
+- (CGFloat)audioStartTimeWithName:(NSString *)name;
+- (CGFloat)audioEndTimeWithName:(NSString *)name;
 
 @end

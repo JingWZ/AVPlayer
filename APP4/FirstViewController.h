@@ -12,6 +12,7 @@
 //启用NSTimer，计算每一个时间点，所有海报的位置
 
 #import <UIKit/UIKit.h>
+#import "ASIHTTPRequest.h"
 
 @class ButtonView;
 @class LabelView;
@@ -28,10 +29,24 @@
 @property (assign, nonatomic) float currentTime;
 @property (strong) NSTimer *timer;
 
+@property (copy, nonatomic) NSString *userID;
+@property (copy, nonatomic) NSString *userPassword;
+
 @property (weak, nonatomic) IBOutlet UIView *menuView;
 @property (weak, nonatomic) IBOutlet LabelView *titleLbl;
 @property (weak, nonatomic) IBOutlet ButtonView *videoBtn;
 @property (weak, nonatomic) IBOutlet ButtonView *glossaryBtn;
+
+@property (strong, nonatomic) ASIHTTPRequest *request;
+
+
+@property (strong, nonatomic) IBOutlet UITextField *loginIDTF;
+@property (strong, nonatomic) IBOutlet UITextField *loginPasswordTF;
+@property (strong, nonatomic) IBOutlet UIButton *loginBtn;
+
+- (IBAction)loginID:(id)sender;
+- (IBAction)loginPassword:(id)sender;
+- (IBAction)login:(id)sender;
 
 - (IBAction)videoPressed:(id)sender;
 - (IBAction)glossaryPressed:(id)sender;
